@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  English | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.de.md">Deutsch</a>
+  English | <a href="README.ko.md">한국어</a> | <a href="README.ja.md">日本語</a> | <a href="README.de.md">Deutsch</a> | <a href="README.zh.md">中文</a>
 </p>
 
 # SuperPlugin for SAP (sp4sap)
@@ -171,7 +171,7 @@ Switch environments in-session with `/sp4sap:sap-option` (Claude Code) or by poi
 
 <p align="center">
   <a href="sp4sap_unleashed.png">
-    <img src="sp4sap_unleashed.png" alt="SC4SAP Unleashed" width="100%"/>
+    <img src="sp4sap_unleashed.png" alt="SuperPlugin for SAP Unleashed" width="100%"/>
   </a>
 </p>
 

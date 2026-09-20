@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> | <a href="README.ko.md">한국어</a> | 日本語 | <a href="README.de.md">Deutsch</a>
+  <a href="README.md">English</a> | <a href="README.ko.md">한국어</a> | 日本語 | <a href="README.de.md">Deutsch</a> | <a href="README.zh.md">中文</a>
 </p>
 
 # SuperPlugin for SAP (sp4sap)
@@ -47,7 +47,7 @@ SuperPlugin for SAP は Claude Code をフルスタック SAP 開発アシスタ
 
 <p align="center">
   <a href="sp4sap_unleashed.png">
-    <img src="sp4sap_unleashed.png" alt="SC4SAP Unleashed" width="100%"/>
+    <img src="sp4sap_unleashed.png" alt="SuperPlugin for SAP Unleashed" width="100%"/>
   </a>
 </p>
 
