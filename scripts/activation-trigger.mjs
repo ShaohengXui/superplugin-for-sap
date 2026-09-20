@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Activation Trigger Hook (PostToolUse) — SAP-SPECIFIC
+ * sp4sap Activation Trigger Hook (PostToolUse) — SAP-SPECIFIC
  *
  * Automatically reminds to activate ABAP objects after creation or modification.
  * Fires after successful MCP ABAP Create*/Update* tool calls.

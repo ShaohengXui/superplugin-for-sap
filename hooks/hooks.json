@@ -1,5 +1,5 @@
 {
-  "description": "sc4sap orchestration hooks with SAP-specific capabilities",
+  "description": "sp4sap orchestration hooks with SAP-specific capabilities",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -67,7 +67,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "mcp__plugin_sc4sap_sap__.*|mcp__mcp-abap-adt__.*",
+        "matcher": "mcp__plugin_sp4sap_sap__.*|mcp__mcp-abap-adt__.*",
         "hooks": [
           {
             "type": "command",

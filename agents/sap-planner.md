@@ -2,7 +2,7 @@
 name: sap-planner
 description: SAP project planning — implementation roadmaps, WRICEF planning, cutover planning (Opus, R/W)
 model: claude-opus-4-7
-tools: [Read, Grep, Glob, Bash, Edit, Write, WebFetch, WebSearch, mcp__plugin_sc4sap_sap__GetPackage, mcp__plugin_sc4sap_sap__GetPackageContents, mcp__plugin_sc4sap_sap__GetPackageTree, mcp__plugin_sc4sap_sap__SearchObject, mcp__plugin_sc4sap_sap__GetObjectsByType, mcp__plugin_sc4sap_sap__GetObjectInfo, mcp__plugin_sc4sap_sap__ListTransports, mcp__plugin_sc4sap_sap__GetTransport, mcp__plugin_sc4sap_sap__GetWhereUsed]
+tools: [Read, Grep, Glob, Bash, Edit, Write, WebFetch, WebSearch, mcp__plugin_sp4sap_sap__GetPackage, mcp__plugin_sp4sap_sap__GetPackageContents, mcp__plugin_sp4sap_sap__GetPackageTree, mcp__plugin_sp4sap_sap__SearchObject, mcp__plugin_sp4sap_sap__GetObjectsByType, mcp__plugin_sp4sap_sap__GetObjectInfo, mcp__plugin_sp4sap_sap__ListTransports, mcp__plugin_sp4sap_sap__GetTransport, mcp__plugin_sp4sap_sap__GetWhereUsed]
 ---
 
 <Agent_Prompt>
@@ -72,7 +72,7 @@ tools: [Read, Grep, Glob, Bash, Edit, Write, WebFetch, WebSearch, mcp__plugin_sc
     1. Identify country from `.sc4sap/config.json` → `country` (or `sap.env` → `SAP_COUNTRY`, ISO alpha-2 lowercase).
     2. Load `country/<iso>.md` (and `country/eu-common.md` for EU; multiple files for multi-country).
     3. Add plan phases/tasks for localization-mandatory items surfaced in the country file: e-invoicing go-live (SDI / SII / MTD / CFDI / NF-e / Korean Tax Invoice / Golden Tax / IRN / Peppol / STP), statutory-reporting interfaces, banking-format build (IBAN / BSB / CLABE / SPEI / PIX / UPI / GIRO / Zengin / CNAPS / SEPA), payroll localization, country-specific master-data validations.
-    4. Never produce a plan that ignores localization when the country has any jurisdictional dimension. If country is unset, add a Phase 0 `Set SAP_COUNTRY via /sc4sap:sap-option` task before anything else.
+    4. Never produce a plan that ignores localization when the country has any jurisdictional dimension. If country is unset, add a Phase 0 `Set SAP_COUNTRY via /sp4sap:sap-option` task before anything else.
     5. Multi-country rollouts: explicitly sequence cross-country integration phases (intercompany, intra-EU VAT, transfer pricing, shared service) and flag country-specific acceptance gates.
   </Country_Context>
 

@@ -32,11 +32,11 @@ Full procedure: **[`wizard-step-02-system-identification.md`](wizard-step-02-sys
 
 ## Step 3 — Install `abap-mcp-adt-powerup` MCP Server
 
-Clone (`github.com/babamba2/abap-mcp-adt-powerup.git`) and build the external MCP server into the **plugin root's** `vendor/abap-mcp-adt/` folder (typically `~/.claude/plugins/marketplaces/sc4sap/vendor/abap-mcp-adt/`), **NOT** the user's project directory.
+Clone (`github.com/babamba2/abap-mcp-adt-powerup.git`) and build the external MCP server into the **plugin root's** `vendor/abap-mcp-adt/` folder (typically `~/.claude/plugins/marketplaces/sp4sap/vendor/abap-mcp-adt/`), **NOT** the user's project directory.
 
 - **⚠️ Path resolution (MANDATORY)**: the install target must be the plugin root, not the current working directory. Resolve the plugin root **dynamically** — never hardcode the path. This skill file lives at `<PLUGIN_ROOT>/skills/setup/SKILL.md`, so:
   - `PLUGIN_ROOT` = absolute path of this `SKILL.md`, then go up two levels (`../..`)
-  - On Windows this will usually be `C:\Users\<user>\.claude\plugins\marketplaces\sc4sap`, but **derive it at runtime**, do not assume
+  - On Windows this will usually be `C:\Users\<user>\.claude\plugins\marketplaces\sp4sap`, but **derive it at runtime**, do not assume
 - **Invocation**: always call the script with its **absolute path**, not a relative path, so CWD is irrelevant:
   ```bash
   node "<PLUGIN_ROOT>/scripts/build-mcp-server.mjs"
@@ -89,7 +89,7 @@ Rules:
 - Write `systemInfo` as a nested object. Merge with existing fields — do not overwrite the full file.
 - `capturedAt` is an ISO timestamp so staleness can be detected later.
 - If `GetSession` fails, skip this write and tell the user the HUD will fall back to reading `SAP_USERNAME` / `SAP_CLIENT` from the profile env (SID will be blank until a session succeeds).
-- Re-run this step from `/sc4sap:sap-option` or by re-invoking `/sc4sap:setup` whenever the user connects to a different system. Each alias has its own `config.json` — data never crosses profiles.
+- Re-run this step from `/sp4sap:sap-option` or by re-invoking `/sp4sap:setup` whenever the user connects to a different system. Each alias has its own `config.json` — data never crosses profiles.
 
 ## Step 8 — ADT Access Check
 
@@ -115,7 +115,7 @@ Write the remaining plugin-side fields into `~/.sc4sap/profiles/<alias>/config.j
 
 The project folder NEVER has a `.sc4sap/config.json` in multi-profile mode (decision §4.3). Only `active-profile.txt` + `work/<alias>/` artifacts live there.
 
-Keep the profile's `sap.env` and `config.json` in sync: `sapVersion` / `abapRelease` / `industry` / `activeModules` are duplicated on purpose — the MCP server reads the env; plugin-side components (HUD, PreToolUse hook, skills, agents) read the config JSON. `/sc4sap:sap-option edit` maintains both atomically.
+Keep the profile's `sap.env` and `config.json` in sync: `sapVersion` / `abapRelease` / `industry` / `activeModules` are duplicated on purpose — the MCP server reads the env; plugin-side components (HUD, PreToolUse hook, skills, agents) read the config JSON. `/sp4sap:sap-option edit` maintains both atomically.
 
 ## Steps 11 & 11b — Optional Extraction (SPRO + Customizations)
 
@@ -134,9 +134,9 @@ node "<PLUGIN_ROOT>/scripts/hud/install-statusline.mjs"
 ```
 
 The installer is idempotent:
-- If no `statusLine` exists → writes the sc4sap HUD entry.
-- If a sc4sap entry already exists → refreshes it.
-- If a **non-sc4sap** `statusLine` exists → leaves it alone and prints a warning; re-run with `--force` only if the user confirms they want to overwrite their custom status line.
+- If no `statusLine` exists → writes the sp4sap HUD entry.
+- If a sp4sap entry already exists → refreshes it.
+- If a **non-sp4sap** `statusLine` exists → leaves it alone and prints a warning; re-run with `--force` only if the user confirms they want to overwrite their custom status line.
 
 After success, tell the user: "Restart Claude Code to see the HUD render below the input box." See `hud-statusline.md` for the full spec. The HUD reads `<project>/.sc4sap/active-profile.txt` + the profile env to render `{alias} [{tier}] {🔒 if readonly}`.
 

@@ -18,11 +18,11 @@ Every `sap-*-consultant` agent must load the project's industry file before resp
 Resolution order:
 1. `.sc4sap/config.json` → `industry` field (canonical plugin-side source)
 2. `.sc4sap/sap.env` → `SAP_INDUSTRY` (MCP-server mirror, must match config.json)
-3. If both are missing, ask the user and direct them to persist via `/sc4sap:sap-option`
+3. If both are missing, ask the user and direct them to persist via `/sp4sap:sap-option`
 4. If the value is `other`, skip the industry reference and fall back to standard, industry-agnostic recommendations
 
-**Change industry**: `/sc4sap:sap-option` → type `industry` (updates both files atomically).
-**Initial selection**: `/sc4sap:setup` wizard, step 2.
+**Change industry**: `/sp4sap:sap-option` → type `industry` (updates both files atomically).
+**Initial selection**: `/sp4sap:setup` wizard, step 2.
 
 ## Industry Files
 

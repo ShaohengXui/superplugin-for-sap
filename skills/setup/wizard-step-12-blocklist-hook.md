@@ -56,7 +56,7 @@ On success, report: `"✅ PreToolUse hooks installed (block-forbidden-tables + t
 ### C.1 — block-forbidden-tables
 
 ```bash
-echo '{"tool_name":"mcp__plugin_sc4sap_sap__GetTableContents","tool_input":{"table_name":"BNKA"}}' \
+echo '{"tool_name":"mcp__plugin_sp4sap_sap__GetTableContents","tool_input":{"table_name":"BNKA"}}' \
   | node "$CLAUDE_PLUGIN_ROOT/scripts/hooks/block-forbidden-tables.mjs"
 ```
 
@@ -71,7 +71,7 @@ TMP=$(mktemp -d)
 mkdir -p "$TMP/.sc4sap" "$HOME/.sc4sap/profiles/_SMOKE_QA"
 printf '_SMOKE_QA' > "$TMP/.sc4sap/active-profile.txt"
 printf 'SAP_TIER=QA\nSAP_URL=http://x\nSAP_CLIENT=100\n' > "$HOME/.sc4sap/profiles/_SMOKE_QA/sap.env"
-( cd "$TMP" && echo '{"tool_name":"mcp__plugin_sc4sap_sap__UpdateClass","tool_input":{}}' \
+( cd "$TMP" && echo '{"tool_name":"mcp__plugin_sp4sap_sap__UpdateClass","tool_input":{}}' \
   | node "$CLAUDE_PLUGIN_ROOT/scripts/hooks/tier-readonly-guard.mjs" )
 # Cleanup
 rm -rf "$TMP" "$HOME/.sc4sap/profiles/_SMOKE_QA"
@@ -85,8 +85,8 @@ If either smoke test fails, halt setup and surface the error.
 
 - Print: blocklist profile, extend file path (exists? y/n), custom file path (for custom mode), and the `.claude/settings.json` hook entries for BOTH hooks.
 - Remind the user:
-  - The **row-extraction L1 hook** can be re-tuned by re-running `/sc4sap:setup` or editing `.sc4sap/config.json` → `blocklistProfile`.
-  - The **tier guard L1 hook** reads `SAP_TIER` from the active profile every call — no setting to tune; changing tier requires profile remove+add via `/sc4sap:sap-option`.
-  - The **L2 MCP-server profile** (`MCP_BLOCKLIST_PROFILE` in the profile's `sap.env`) is managed via `/sc4sap:sap-option`.
+  - The **row-extraction L1 hook** can be re-tuned by re-running `/sp4sap:setup` or editing `.sc4sap/config.json` → `blocklistProfile`.
+  - The **tier guard L1 hook** reads `SAP_TIER` from the active profile every call — no setting to tune; changing tier requires profile remove+add via `/sp4sap:sap-option`.
+  - The **L2 MCP-server profile** (`MCP_BLOCKLIST_PROFILE` in the profile's `sap.env`) is managed via `/sp4sap:sap-option`.
 
 Setup cannot complete without Step 12 succeeding. If either hook install or smoke test fails (no node, permission error, path resolution bug, etc.), stop and report — do not mark setup as done.

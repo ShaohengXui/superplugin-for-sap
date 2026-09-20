@@ -1,4 +1,4 @@
-// sc4sap:package-to-process — Process-diagram image renderer.
+// sp4sap:package-to-process — Process-diagram image renderer.
 //
 // package-to-process used to embed Mermaid (`flowchart LR` macro + per-process
 // `sequenceDiagram`) text blocks whose quality depends entirely on the viewer.

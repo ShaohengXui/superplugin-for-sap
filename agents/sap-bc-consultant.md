@@ -2,7 +2,7 @@
 name: sap-bc-consultant
 description: SAP Basis administration — system monitoring, transport management, performance tuning, dump analysis (Opus, R/O)
 model: claude-opus-4-7
-tools: [Read, Grep, Glob, Bash, WebFetch, WebSearch, mcp__plugin_sc4sap_sap__RuntimeAnalyzeDump, mcp__plugin_sc4sap_sap__RuntimeGetDumpById, mcp__plugin_sc4sap_sap__RuntimeListDumps, mcp__plugin_sc4sap_sap__RuntimeAnalyzeProfilerTrace, mcp__plugin_sc4sap_sap__RuntimeCreateProfilerTraceParameters, mcp__plugin_sc4sap_sap__RuntimeGetProfilerTraceData, mcp__plugin_sc4sap_sap__RuntimeListProfilerTraceFiles, mcp__plugin_sc4sap_sap__RuntimeRunClassWithProfiling, mcp__plugin_sc4sap_sap__RuntimeRunProgramWithProfiling, mcp__plugin_sc4sap_sap__ListTransports, mcp__plugin_sc4sap_sap__GetTransport, mcp__plugin_sc4sap_sap__GetInactiveObjects, mcp__plugin_sc4sap_sap__GetSession, mcp__plugin_sc4sap_sap__GetObjectsByType, mcp__plugin_sc4sap_sap__SearchObject, mcp__plugin_sc4sap_sap__GetObjectInfo, mcp__plugin_sc4sap_sap__GetPackage, mcp__plugin_sc4sap_sap__GetPackageTree]
+tools: [Read, Grep, Glob, Bash, WebFetch, WebSearch, mcp__plugin_sp4sap_sap__RuntimeAnalyzeDump, mcp__plugin_sp4sap_sap__RuntimeGetDumpById, mcp__plugin_sp4sap_sap__RuntimeListDumps, mcp__plugin_sp4sap_sap__RuntimeAnalyzeProfilerTrace, mcp__plugin_sp4sap_sap__RuntimeCreateProfilerTraceParameters, mcp__plugin_sp4sap_sap__RuntimeGetProfilerTraceData, mcp__plugin_sp4sap_sap__RuntimeListProfilerTraceFiles, mcp__plugin_sp4sap_sap__RuntimeRunClassWithProfiling, mcp__plugin_sp4sap_sap__RuntimeRunProgramWithProfiling, mcp__plugin_sp4sap_sap__ListTransports, mcp__plugin_sp4sap_sap__GetTransport, mcp__plugin_sp4sap_sap__GetInactiveObjects, mcp__plugin_sp4sap_sap__GetSession, mcp__plugin_sp4sap_sap__GetObjectsByType, mcp__plugin_sp4sap_sap__SearchObject, mcp__plugin_sp4sap_sap__GetObjectInfo, mcp__plugin_sp4sap_sap__GetPackage, mcp__plugin_sp4sap_sap__GetPackageTree]
 disallowedTools: [Write, Edit]
 ---
 
@@ -75,7 +75,7 @@ disallowedTools: [Write, Edit]
        - If it is a `Z*` BAdI impl class → find its `standardName` in `badiImplementations[]` so the root cause can be explained against the standard BAdI contract.
        - If it is a customer include like `ZXV45U01` or a customized SAP include like `MV45AFZZ` → find it in `formBasedExits[]` and note the line count (heavy customization = higher likelihood of the dump being customer-side).
        - If it is a Z append structure / ZZ field on a standard table → find it in `extensions.json → appendStructures[]`.
-    4. Follow the protocol in `common/customization-lookup.md`. If the cache is missing, recommend `/sc4sap:setup customizations` before the next iteration but do not block the current analysis.
+    4. Follow the protocol in `common/customization-lookup.md`. If the cache is missing, recommend `/sp4sap:setup customizations` before the next iteration but do not block the current analysis.
   </Customization_Context>
 
   <Key_Transaction_Codes>

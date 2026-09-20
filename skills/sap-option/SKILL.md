@@ -1,6 +1,6 @@
 ---
-name: sc4sap:sap-option
-description: View SAP system status snapshot and edit values in `.sc4sap/sap.env` (connection, blocklist) and HUD usage limits in `~/.claude/settings.json` → `env` — single entrypoint for all sc4sap runtime options
+name: sp4sap:sap-option
+description: View SAP system status snapshot and edit values in `.sc4sap/sap.env` (connection, blocklist) and HUD usage limits in `~/.claude/settings.json` → `env` — single entrypoint for all sp4sap runtime options
 level: 2
 model: haiku
 ---
@@ -11,7 +11,7 @@ Single entrypoint to **inspect live SAP state** and **edit the values stored in 
 
 
 <Purpose>
-`sap.env` is the single source of truth for per-user runtime configuration of the sc4sap MCP server. This skill also replaces the former `/sc4sap:hud` snapshot: before editing, it shows a compact status panel (system ID, client, user, inactive object count, active transport, blocklist profile) so the user can confirm which system they are about to change settings for.
+`sap.env` is the single source of truth for per-user runtime configuration of the sp4sap MCP server. This skill also replaces the former `/sp4sap:hud` snapshot: before editing, it shows a compact status panel (system ID, client, user, inactive object count, active transport, blocklist profile) so the user can confirm which system they are about to change settings for.
 
 Users should not edit `sap.env` blindly; this skill surfaces the current values (masking secrets), explains each option, lets the user pick what to change, and writes the file back safely with a backup.
 </Purpose>
@@ -27,7 +27,7 @@ Every response triggered by this skill MUST begin with `[Model: <main-model> · 
 - User says "switch profile", "switch to KR-QA", "change system", "use the PRD system", "list profiles", "add a new profile", "register another system", "remove profile", "edit KR-DEV", "rotate credentials for KR-PRD" — route to the **Profile management** flow described in `<Profile_Management>` (see [`profile-management.md`](profile-management.md)).
 - User wants to change blocklist tier (`MCP_BLOCKLIST_PROFILE`) or manage `MCP_ALLOW_TABLE` / `MCP_BLOCKLIST_EXTEND`.
 - User is rotating credentials, moving to a new SAP system, or flipping language/client.
-- After `/sc4sap:setup` if the user wants to adjust without re-running full setup.
+- After `/sp4sap:setup` if the user wants to adjust without re-running full setup.
 - User says "hud limit", "5h limit", "weekly limit", "extra limit", "usage budget", "configure limit" — route to the **HUD limits** flow (see `<HUD_Limits>`), which edits `~/.claude/settings.json` → `env`, not `sap.env`.
 </Use_When>
 
@@ -51,8 +51,8 @@ If the user's intent is **status-only** (they just said "hud" / "show status"), 
 
 <File_Path>
 - **Plugin install path**: `${CLAUDE_PLUGIN_ROOT}/.sc4sap/sap.env`
-- Typical absolute path on Windows: `C:\Users\<user>\.claude\plugins\cache\sc4sap\sc4sap\<version>\.sc4sap\sap.env`
-- If the file does not exist, tell the user to run `/sc4sap:setup` first. Do NOT create it from scratch here — setup handles the initial interactive credential flow.
+- Typical absolute path on Windows: `C:\Users\<user>\.claude\plugins\cache\sp4sap\sp4sap\<version>\.sc4sap\sap.env`
+- If the file does not exist, tell the user to run `/sp4sap:setup` first. Do NOT create it from scratch here — setup handles the initial interactive credential flow.
 </File_Path>
 
 <Managed_Keys>
@@ -126,7 +126,7 @@ See [hud-limits.md](hud-limits.md).
 </Security>
 
 <Edge_Cases>
-- **File missing** → stop, direct to `/sc4sap:setup`. Do not create.
+- **File missing** → stop, direct to `/sp4sap:setup`. Do not create.
 - **File has syntax errors** (lines that are not `KEY=VALUE` or comments) → show the offending lines, ask user to clean manually, abort.
 - **User wants to add a key not in `<Managed_Keys>`** → warn, ask to confirm adding as a custom key (append at end with a `# custom` comment). Do not validate content.
 - **User wants to remove a required connection key** (e.g. `SAP_URL`) → refuse; required keys can only be changed, not removed.

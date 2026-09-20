@@ -1,6 +1,6 @@
 # Phase 3.5 — Execution Mode Gate
 
-Authoritative rule for the execution-mode selection that runs **between Phase 3 (spec approval) and Phase 4 (implementation)** in `/sc4sap:create-program`. Referenced from `agent-pipeline.md` and `SKILL.md`.
+Authoritative rule for the execution-mode selection that runs **between Phase 3 (spec approval) and Phase 4 (implementation)** in `/sp4sap:create-program`. Referenced from `agent-pipeline.md` and `SKILL.md`.
 
 ## Pipeline Position
 
@@ -85,7 +85,7 @@ Proceed to Phase {N}?
 
 ## Resume Behavior
 
-On next `/sc4sap:create-program` invocation with the same `{PROG}`:
+On next `/sp4sap:create-program` invocation with the same `{PROG}`:
 1. If `state.json` exists and has `execution_mode` set, skip Phase 0–3.5 re-prompting.
 2. Find the first phase with `status != "completed" && status != "skipped"` — resume from there.
 3. If user wants to restart a completed phase, they must delete the corresponding entry manually.

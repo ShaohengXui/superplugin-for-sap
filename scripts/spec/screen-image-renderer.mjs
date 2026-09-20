@@ -1,4 +1,4 @@
-// sc4sap:program-to-spec — Screen mockup renderer (SVG → PNG)
+// sp4sap:program-to-spec — Screen mockup renderer (SVG → PNG)
 //
 // PURPOSE
 //   Produce PNG images of Selection Screen and ALV layout for the
@@ -1589,7 +1589,7 @@ const CHROME_H_SLACK = 140;
 export async function rasterizeSvgToPng(svg, { width, height } = {}) {
   const browser = findBrowser();
   if (!browser) return null;
-  const dir = mkdtempSync(join(tmpdir(), 'sc4sap-svg-'));
+  const dir = mkdtempSync(join(tmpdir(), 'sp4sap-svg-'));
   try {
     const htmlPath = join(dir, 'in.html');
     const pngPath = join(dir, 'out.png');

@@ -1,6 +1,6 @@
 # Agent Pipeline — create-program
 
-Authoritative pipeline for the `sc4sap:create-program` skill. `SKILL.md` references this file instead of inlining the phase definitions. Every phase below is MANDATORY unless explicitly marked conditional. Do not skip, reorder, or merge phases.
+Authoritative pipeline for the `sp4sap:create-program` skill. `SKILL.md` references this file instead of inlining the phase definitions. Every phase below is MANDATORY unless explicitly marked conditional. Do not skip, reorder, or merge phases.
 
 **Context + model discipline** — every phase declares its context kit (files the lead agent MUST read) per [`../../common/context-loading-protocol.md`](../../common/context-loading-protocol.md), and its expected model (Sonnet / Opus) per [`../../common/model-routing-rule.md`](../../common/model-routing-rule.md). Per-phase values in the per-Wave detail file `phase4-parallel.md` and the bullets below are authoritative — do not preload beyond them.
 
@@ -16,7 +16,7 @@ Phase 1 splits into **Phase 1A (Module Interview)** and **Phase 1B (Program Inte
 ### Phase 1A — Module Interview (module consultant lead)
 
 - **Step 0 — Session Trust Bootstrap (MANDATORY, before any MCP call or user question)**:
-  Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:create-program` to pre-grant all MCP tool + file-op permissions for the session. This ensures interview-time MCP calls (`SearchObject`, `GetWhereUsed`, SPRO consultant queries, `program-to-spec` L1 lookups) do NOT trigger permission prompts.
+  Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:create-program` to pre-grant all MCP tool + file-op permissions for the session. This ensures interview-time MCP calls (`SearchObject`, `GetWhereUsed`, SPRO consultant queries, `program-to-spec` L1 lookups) do NOT trigger permission prompts.
   - If `.sc4sap/session-trust.log` has a line within the last 24h, skip silently.
   - Otherwise run it and surface the one-line confirmation.
   - Phase 3.5 no longer invokes trust-session; it assumes the bootstrap has already happened here.
@@ -38,7 +38,7 @@ Phase 1 splits into **Phase 1A (Module Interview)** and **Phase 1B (Program Inte
   3. Business reason / pain point — current Gap, manual workaround, regulatory driver
   4. Company-specific business rules — deviations from SAP standard process
   5. Reference assets — existing CBO packages, prior Z programs, vendor add-ons
-     - When a reference Z program is named: consultant MAY invoke `sc4sap:program-to-spec` at depth **L1 (Quick Spec)** for that single object. Inline the Purpose / inputs / outputs / main logic steps into `module-interview.md` (collapse the step list to 2–3 sentences if it runs long). Do NOT generate a full `spec.md` artifact for the reference object.
+     - When a reference Z program is named: consultant MAY invoke `sp4sap:program-to-spec` at depth **L1 (Quick Spec)** for that single object. Inline the Purpose / inputs / outputs / main logic steps into `module-interview.md` (collapse the step list to 2–3 sentences if it runs long). Do NOT generate a full `spec.md` artifact for the reference object.
   6. **Standard SAP solution screen (mandatory)** — consultant MUST propose at least one standard alternative (Fiori app, standard report/transaction, BAPI flow, CDS analytical query, embedded analytics) BEFORE agreeing to a custom build. Each rejection logged with reason.
 - **Skip rule**: Skip Phase 1A only for pure technical utilities with zero business logic (e.g., generic string helper, file converter). Default behavior is "do not skip".
 - **Gate**: business ambiguity ≤ 5%
@@ -117,7 +117,7 @@ Persist to `.sc4sap/program/{PROG}/state.json` → `phase1b.execution_style`. Ph
 
 Full procedure — `trust-session` invocation, auto/manual/hybrid mode prompt, state.json schema, resume behavior — lives in [`execution-mode.md`](./execution-mode.md). Read it before dispatching Phase 4.
 
-**One-line summary**: Invoke `/sc4sap:trust-session` (suppresses all tool permission prompts for the session) → prompt user for mode (`auto` / `manual` / `hybrid`) → persist to `state.json` → proceed to Phase 4 per the chosen cadence. Permission prompts are suppressed in ALL modes; the only prompt in `manual`/`hybrid` is the phase-transition confirmation.
+**One-line summary**: Invoke `/sp4sap:trust-session` (suppresses all tool permission prompts for the session) → prompt user for mode (`auto` / `manual` / `hybrid`) → persist to `state.json` → proceed to Phase 4 per the chosen cadence. Permission prompts are suppressed in ALL modes; the only prompt in `manual`/`hybrid` is the phase-transition confirmation.
 
 ## Phase 4 — Implementation: `sap-executor` (PARALLELIZED)
 

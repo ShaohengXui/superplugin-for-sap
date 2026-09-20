@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap PostToolUse Hook: Project Memory Learning
+ * sp4sap PostToolUse Hook: Project Memory Learning
  * Learns from tool outputs and updates project memory.
  * Adapted from OMC project-memory-posttool.mjs.
  *

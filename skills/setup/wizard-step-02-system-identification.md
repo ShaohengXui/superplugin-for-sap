@@ -47,6 +47,6 @@ Select your industry:
 This choice determines which `industry/*.md` reference file SAP consultant agents load when doing config analysis, business process design, Fit-Gap, or requirement interpretation. It is **important context**, not just metadata — consultants will ask the user to set it later if it is missing.
 
 - Accept either the number (1–15) or the canonical key (e.g. `retail`, `fashion`).
-- Store as `SAP_INDUSTRY=<key>` in `.sc4sap/sap.env` (step 4) **and** as `industry: "<key>"` in `.sc4sap/config.json` (step 10). Keep both in sync when changed via `/sc4sap:sap-option`.
-- If the user is unsure, accept `other` and tell them they can change it anytime via `/sc4sap:sap-option`.
+- Store as `SAP_INDUSTRY=<key>` in `.sc4sap/sap.env` (step 4) **and** as `industry: "<key>"` in `.sc4sap/config.json` (step 10). Keep both in sync when changed via `/sp4sap:sap-option`.
+- If the user is unsure, accept `other` and tell them they can change it anytime via `/sp4sap:sap-option`.
 - Validate against the 15 keys listed in `industry/README.md`. If a new industry MD is added later, this list must be updated here and in `sap-option`.

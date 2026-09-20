@@ -1,0 +1,58 @@
+# sp4sap — Codex command template (skill → prompt orchestration)
+#
+# Codex has no skills/agents concept. The migration pattern that needs no
+# server-side work is to collapse a sp4sap skill into ONE Codex command whose
+# prompt tells Codex which reference files to read and in what order. Codex
+# then orchestrates with its own native subagents instead of sp4sap's
+# Claude-Code-shaped `Agent(...)` dispatches.
+#
+# Install: copy to ~/.codex/commands/sp4sap-create-program.toml
+#          (or <repo>/.codex/commands/ for project scope)
+#
+# The prompt is deliberately self-contained: it must not assume the Claude Code
+# skill loader ran, so it names the files to read explicitly.
+
+description = "Create an ABAP program (Report/ALV/CRUD/Batch) end-to-end on SAP"
+prompt = """
+Act as the sp4sap create-program workflow. Follow this sequence, reading the
+named files from the sp4sap checkout (SC4SAP_ROOT) as you go — do not skip a
+step and do not invent conventions.
+
+1. Preflight. Read `.sc4sap/config.json` in the current project for `sapVersion`
+   (S4/ECC) and `abapRelease`. Every line of ABAP you write must be valid for
+   that release. Then call `GetSession` to confirm SAP connectivity.
+
+2. Interview. Resolve ambiguity BEFORE writing code: purpose, output shape
+   (ALV/CRUD/batch/interface), paradigm (OOP two-class split vs Procedural
+   PERFORM), selection screen fields, and the target package + transport.
+   Ask the user directly; Codex has no Socratic-interview skill to delegate to.
+
+3. Read the conventions. From SC4SAP_ROOT: `common/context-loading-protocol.md`,
+   `common/naming-conventions.md`, `common/clean-code.md` plus
+   `common/clean-code-oop.md` or `common/clean-code-procedural.md` depending on
+   the chosen paradigm, `common/include-structure.md`, and
+   `common/abap-release-reference.md`. Apply them literally.
+
+4. Inventory first. Before creating anything, search SAP for existing objects
+   that already do part of this (`SearchObject`, `GetPackageContents`,
+   `GetWhereUsed`). Prefer extending over duplicating.
+
+5. Plan, then confirm. Present the object list (main program + includes +
+   classes), the package, and the transport request. Wait for explicit user
+   approval before the first write.
+
+6. Implement. Create the objects with `Create*` tools, write the source with
+   `Update*`, then `ActivateObjects`. Smallest viable diff; match neighbouring
+   code style. If a `Create*`/`Update*` call fails, read the error and fix the
+   cause — never retry the identical call.
+
+7. Verify. `RunUnitTest` where a test class applies, then a syntax/activation
+   check. Report the activation result and any remaining warnings verbatim.
+
+8. Report. End with: objects created (name + type + package), transport number,
+   activation status, test status, and anything the user still has to do.
+
+Hard rules: never mutate SAP when the active profile is QA or PRD — if a write
+is rejected with ERR_READONLY_TIER, stop and tell the user to switch to a DEV
+profile. Never commit or print SAP credentials.
+"""

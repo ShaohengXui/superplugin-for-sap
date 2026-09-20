@@ -36,7 +36,7 @@ When a Step skips (e.g., Step 2 skipped because inventory exists), still print i
 Main thread (no agent dispatch).
 
 1. Print: `Step 0/7 · trust-session bootstrap   [░░░░░░░░░░░░░░░░░░░░]   0%`
-2. Run `/sc4sap:trust-session` with `parent_skill=sc4sap:package-to-process` unless `.sc4sap/session-trust.log` already has a line within 24h.
+2. Run `/sp4sap:trust-session` with `parent_skill=sp4sap:package-to-process` unless `.sc4sap/session-trust.log` already has a line within 24h.
 3. Surface the one-line confirmation. No interactive prompts.
 
 ---
@@ -172,8 +172,8 @@ Main thread (Sonnet 4.6).
       <N> processes · <M> Mermaid diagrams · <K> external-boundary calls
 
    Next options:
-     • /sc4sap:program-to-spec <PROG>   — drill into one program
-     • /sc4sap:compare-programs <P1,P2> — compare two flow members
-     • /sc4sap:ask-consultant           — resolve open questions
+     • /sp4sap:program-to-spec <PROG>   — drill into one program
+     • /sp4sap:compare-programs <P1,P2> — compare two flow members
+     • /sp4sap:ask-consultant           — resolve open questions
    ```
 4. If any validation fails → surface concrete failure + leave file in place; do NOT auto-regenerate without user instruction.

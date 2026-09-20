@@ -33,7 +33,7 @@ Classical Dynpro requires an OK_CODE element on the screen, and the **name** you
 
 **SE51 manual path**: Screen {num} → Element List → General attributes → **OK_CODE field** = `GV_OKCODE`.
 
-**ADT / `UpdateScreen` (sc4sap MCP) path**: the screen's `fields_to_containers[]` entry with `TYPE=OKCODE` MUST have `NAME=GV_OKCODE`. A screen whose OKCODE field has the default placeholder (`TEXT=____________________`) and no NAME causes the code to land in `sy-ucomm` only — defeating the whole pattern.
+**ADT / `UpdateScreen` (sp4sap MCP) path**: the screen's `fields_to_containers[]` entry with `TYPE=OKCODE` MUST have `NAME=GV_OKCODE`. A screen whose OKCODE field has the default placeholder (`TEXT=____________________`) and no NAME causes the code to land in `sy-ucomm` only — defeating the whole pattern.
 
 Example `UpdateScreen` payload fragment:
 ```json

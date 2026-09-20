@@ -32,7 +32,7 @@ Dedicated text pool (text elements) read/write function.
 
 ## Installation
 
-These are automatically created during `/sc4sap:setup` (step after MCP connection check).
+These are automatically created during `/sp4sap:setup` (step after MCP connection check).
 The setup uses `CreateFunctionGroup` and `CreateFunctionModule` MCP tools followed by `UpdateFunctionModule` to set the source code.
 
 ## Requirements

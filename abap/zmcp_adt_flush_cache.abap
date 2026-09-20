@@ -1,7 +1,7 @@
 *&---------------------------------------------------------------------*
 *& Report ZMCP_ADT_FLUSH_CACHE
 *&---------------------------------------------------------------------*
-*& Gateway OData operations for sc4sap ZMCP_ADT_SRV:
+*& Gateway OData operations for sp4sap ZMCP_ADT_SRV:
 *&   p_flush : cache flush (model + alias)
 *&   p_diag  : DPC_EXT direct invocation sanity check
 *&   p_reg   : programmatic backend (/IWBEP) service registration
@@ -19,7 +19,7 @@ DATA lx TYPE REF TO cx_root.
 
 START-OF-SELECTION.
 
-  WRITE: / '=== sc4sap OData Gateway flush + register + diag ==='.
+  WRITE: / '=== sp4sap OData Gateway flush + register + diag ==='.
   ULINE.
 
   IF p_reg = abap_true.

@@ -20,7 +20,7 @@ Emit phase banner per `common/model-routing-rule.md` § Phase Banner Convention:
 Dispatch the reviewer with a **minimal prompt** — the agent reads everything itself:
 ```
 Agent({
-  subagent_type: "sc4sap:sap-code-reviewer",
+  subagent_type: "sp4sap:sap-code-reviewer",
   description: "ABAP review — <OBJECT_NAME>",
   prompt: """
     Review ABAP object <OBJECT_NAME> (type: <OBJECT_TYPE>).
@@ -67,7 +67,7 @@ Triggered when `complexity_hint = "briefing"`. Emit banner:
 Dispatch:
 ```
 Agent({
-  subagent_type: "sc4sap:sap-writer",
+  subagent_type: "sp4sap:sap-writer",
   description: "ABAP review briefing — <OBJECT_NAME>",
   prompt: """
     Render a reader-facing briefing for the code review of <OBJECT_NAME> (language =
@@ -82,7 +82,7 @@ Agent({
     4. **🔗 Where-Used impact** — callers count + high-blast-radius call-outs.
     5. **✅ Top 3 impactful fixes** — ordered by estimated impact, not severity.
     6. **▶ Next step hint** — one line pointing to `UpdateClass`/`UpdateProgram` or
-       `/sc4sap:create-program` for full rewrite.
+       `/sp4sap:create-program` for full rewrite.
 
     Rules:
     - Do NOT re-fetch the object via MCP.
@@ -102,7 +102,7 @@ On writer BLOCKED → fallback to Branch A (canned) and log `briefing: "fallback
 
 After the report (canned or briefing), offer:
 
-1. **"Fix findings"** — explain options: manual `UpdateClass` / `UpdateProgram` / `UpdateInclude`, full rewrite via `/sc4sap:create-program`, or dispatch `sap-executor` here. If user picks executor delegation, emit banner `▶ phase=4.fix · agent=sap-executor · model=Sonnet 4.6` and dispatch.
+1. **"Fix findings"** — explain options: manual `UpdateClass` / `UpdateProgram` / `UpdateInclude`, full rewrite via `/sp4sap:create-program`, or dispatch `sap-executor` here. If user picks executor delegation, emit banner `▶ phase=4.fix · agent=sap-executor · model=Sonnet 4.6` and dispatch.
 2. **"Show where-used callers"** — display from the reviewer's where-used data (already in the response).
 3. **"Explain finding #N in more detail"** — Haiku main re-reads the specific finding entry and expands it.
 4. **"Save report to `.sc4sap/analysis/<object>-<timestamp>.md`"** — Haiku main writes to file.

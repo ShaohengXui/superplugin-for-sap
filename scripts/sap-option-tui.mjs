@@ -139,7 +139,7 @@ async function main() {
 
   if (!fs.existsSync(filePath)) {
     console.error(paint(`\n  ✗ sap.env not found: ${filePath}`, C.red));
-    console.error(paint('    Run `/sc4sap:setup` inside Claude Code first (or `/sc4sap:sap-option add` to register a profile), or pass --file <path>.\n', C.dim));
+    console.error(paint('    Run `/sp4sap:setup` inside Claude Code first (or `/sp4sap:sap-option add` to register a profile), or pass --file <path>.\n', C.dim));
     process.exit(1);
   }
 
@@ -177,7 +177,7 @@ async function main() {
     // eslint-disable-next-line no-constant-condition
     while (true) {
       clear();
-      console.log(paint('  sc4sap — sap.env option editor', C.bold, C.cyan));
+      console.log(paint('  sp4sap — sap.env option editor', C.bold, C.cyan));
       console.log(paint(`  ${filePath}`, C.dim));
       console.log(renderTable(entries));
       console.log();

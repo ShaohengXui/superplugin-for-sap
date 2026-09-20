@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap SPRO Injector Hook (UserPromptSubmit) — SAP-SPECIFIC
+ * sp4sap SPRO Injector Hook (UserPromptSubmit) — SAP-SPECIFIC
  *
  * Detects SAP module context in user prompts and injects relevant
  * SPRO (SAP Project Reference Object) configuration data.
@@ -210,7 +210,7 @@ async function main() {
 
     // Build injection message
     const parts = [
-      `<sc4sap-spro module="${detectedModule}">`,
+      `<sp4sap-spro module="${detectedModule}">`,
       '',
       `## SAP Module: ${detectedModule} — SPRO Configuration Reference`,
       '',
@@ -228,7 +228,7 @@ async function main() {
       parts.push('', '## Development Workflows', '', additionalConfigs.workflows);
     }
 
-    parts.push('', `</sc4sap-spro>`);
+    parts.push('', `</sp4sap-spro>`);
 
     console.log(JSON.stringify({
       continue: true,

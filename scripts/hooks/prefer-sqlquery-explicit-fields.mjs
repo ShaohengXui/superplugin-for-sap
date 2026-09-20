@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sc4sap PreToolUse hook — Prefer GetSqlQuery + Explicit Fields
+ * sp4sap PreToolUse hook — Prefer GetSqlQuery + Explicit Fields
  *
  * Credit-saving guard. Two rules:
  *
@@ -70,7 +70,7 @@ async function main() {
   if (/GetTableContents/i.test(toolName)) {
     const table = String(toolInput.table_name || toolInput.table || '').toUpperCase();
     const reason =
-      `sc4sap policy — credit-saving guard:\n` +
+      `sp4sap policy — credit-saving guard:\n` +
       `  GetTableContents${table ? `(${table})` : ''} returns every column (SELECT *).\n\n` +
       `Prefer GetSqlQuery with an explicit field list:\n` +
       `  SELECT field1, field2 FROM ${table || '<table>'} WHERE ... UP TO N ROWS\n\n` +
@@ -83,7 +83,7 @@ async function main() {
     const sql = String(toolInput.sql_query || toolInput.sql || toolInput.query || '');
     if (isSelectStar(sql)) {
       const reason =
-        `sc4sap policy — credit-saving guard:\n` +
+        `sp4sap policy — credit-saving guard:\n` +
         `  Query uses SELECT * — returns every column.\n\n` +
         `Rewrite the query to enumerate only the fields you actually need:\n` +
         `  SELECT field1, field2, field3 FROM ... WHERE ... UP TO N ROWS\n\n` +

@@ -17,33 +17,33 @@
 | **Claude Code** | CLI インストール済 (Max/Pro サブスクリプションまたは API キー) |
 | **SAP システム** | **SAP ECC 6.0** / **S/4HANA On-Premise** / **S/4HANA Cloud (Public & Private)** — ADT 有効 |
 
-> **MCP サーバー** ([abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)) は `/sc4sap:setup` 中に**自動インストール・設定**されます — 手動の事前インストール不要。
+> **MCP サーバー** ([abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)) は `/sp4sap:setup` 中に**自動インストール・設定**されます — 手動の事前インストール不要。
 
 ## インストール
 
-> **注** — sc4sap は**まだ公式 Claude Code プラグインマーケットプレイスに登録されていません**。当面はこのリポジトリをカスタムマーケットプレイスとして追加し、プラグインをインストールしてください。
+> **注** — sp4sap は**まだ公式 Claude Code プラグインマーケットプレイスに登録されていません**。当面はこのリポジトリをカスタムマーケットプレイスとして追加し、プラグインをインストールしてください。
 
 ### オプション A — カスタムマーケットプレイスとして追加 (推奨)
 
 Claude Code セッション内で:
 
 ```
-/plugin marketplace add https://github.com/babamba2/superclaude-for-sap.git
-/plugin install sc4sap
+/plugin marketplace add https://github.com/ShaohengXui/superplugin-for-sap.git
+/plugin install sp4sap
 ```
 
 更新:
 
 ```
-/plugin marketplace update babamba2/superclaude-for-sap
-/plugin install sc4sap
+/plugin marketplace update ShaohengXui/superplugin-for-sap
+/plugin install sp4sap
 ```
 
 ### オプション B — ソースからインストール
 
 ```bash
-git clone https://github.com/babamba2/superclaude-for-sap.git
-cd superclaude-for-sap
+git clone https://github.com/ShaohengXui/superplugin-for-sap.git
+cd superplugin-for-sap
 npm install && npm run build
 ```
 
@@ -53,22 +53,22 @@ npm install && npm run build
 
 ```bash
 # セットアップスキルを実行 — ウィザードが1問ずつ案内
-/sc4sap:setup
+/sp4sap:setup
 ```
 
 ### サブコマンド
 
 ```bash
-/sc4sap:setup                # フルウィザード (デフォルト)
-/sc4sap:setup doctor         # /sc4sap:sap-doctor へルーティング
-/sc4sap:setup mcp            # /sc4sap:mcp-setup へルーティング
-/sc4sap:setup spro           # SPRO 設定自動抽出のみ
-/sc4sap:setup customizations # Z*/Y* 拡張・エクステンションインベントリのみ
+/sp4sap:setup                # フルウィザード (デフォルト)
+/sp4sap:setup doctor         # /sp4sap:sap-doctor へルーティング
+/sp4sap:setup mcp            # /sp4sap:mcp-setup へルーティング
+/sp4sap:setup spro           # SPRO 設定自動抽出のみ
+/sp4sap:setup customizations # Z*/Y* 拡張・エクステンションインベントリのみ
 ```
 
 ### マルチプロファイルアーキテクチャ (0.6.0+)
 
-sc4sap は同一の Claude Code セッション内で複数の SAP 接続 (Dev / QA / Prod × N 社) をサポートします。
+sp4sap は同一の Claude Code セッション内で複数の SAP 接続 (Dev / QA / Prod × N 社) をサポートします。
 
 ```
 ~/.sc4sap/                                    ← ユーザーホーム (リポジトリ間で共有)
@@ -86,7 +86,7 @@ sc4sap は同一の Claude Code セッション内で複数の SAP 接続 (Dev /
 
 Tier enum (`DEV` / `QA` / `PRD`) が readonly 強制の基準: QA/PRD プロファイルは `Create*` / `Update*` / `Delete*` を 2 レイヤーで遮断 — PreToolUse フック (L1, ワイヤ以前) + MCP サーバー自身のガード (L2, バイパス不可)。QA/PRD プロファイルは Step 9 ABAP ユーティリティインストールも **拒否** — 対応する DEV プロファイルでインストールし CTS 経由で転送してください。
 
-パスワードは OS キーチェーン (Windows 資格情報マネージャー / macOS Keychain / Linux libsecret) に `@napi-rs/keyring` で保存されます。キーチェーンが利用できない環境 (headless / Docker / optional 依存未インストール) では sc4sap が自動的にプロファイル env の平文にフォールバックし、ユーザーに警告します。
+パスワードは OS キーチェーン (Windows 資格情報マネージャー / macOS Keychain / Linux libsecret) に `@napi-rs/keyring` で保存されます。キーチェーンが利用できない環境 (headless / Docker / optional 依存未インストール) では sp4sap が自動的にプロファイル env の平文にフォールバックし、ユーザーに警告します。
 
 全設計: [`multi-profile-design.md`](multi-profile-design.md)。アーティファクト解決ルール: [`../common/multi-profile-artifact-resolution.md`](../common/multi-profile-artifact-resolution.md)。
 
@@ -111,7 +111,7 @@ Tier enum (`DEV` / `QA` / `PRD`) が readonly 強制の基準: QA/PRD プロフ�
 | 11 | **SPRO 抽出 (任意)** | `y/N` — トークン消費は大きいが `<project>/.sc4sap/work/<alias>/spro-config.json` キャッシュで以後のトークン使用量を大幅削減 |
 | 11b | **カスタマイズインベントリ (任意)** | `y/N` — `Z*`/`Y*` 拡張 + アペンド構造をスキャン。`<project>/.sc4sap/work/<alias>/customizations/{MODULE}/{enhancements,extensions}.json` に保存 |
 | **12** | **🔒 PreToolUse フック (必須)** | `.claude/settings.json` に `block-forbidden-tables.mjs` (行抽出ガード) **および** `tier-readonly-guard.mjs` (tier ベースの変更ガード) の **両方** をインストール (`node scripts/install-hooks.mjs --project`)。両方のスモークテストを実行。どちらか失敗すればセットアップ未完了 |
-| 13 | **HUD ステータスライン** | `~/.claude/settings.json` に sc4sap ステータスラインを登録。再起動後、HUD が `{alias} [{tier}] {🔒 if readonly}` + トークン使用量を表示 |
+| 13 | **HUD ステータスライン** | `~/.claude/settings.json` に sp4sap ステータスラインを登録。再起動後、HUD が `{alias} [{tier}] {🔒 if readonly}` + トークン使用量を表示 |
 
 > **多層防御 — 3 つの enforcement レイヤー**
 > - **L1a (Step 12、行抽出)** — Claude Code `PreToolUse` フック。プロファイルは `~/.sc4sap/profiles/<alias>/config.json → blocklistProfile`。機密テーブルの `GetTableContents` / `GetSqlQuery` を拒否
@@ -124,18 +124,18 @@ Tier enum (`DEV` / `QA` / `PRD`) が readonly 強制の基準: QA/PRD プロフ�
 
 ### プロファイル操作
 
-- アクティブシステム切替: `/sc4sap:sap-option switch <alias>` (またはインタラクティブピッカー — `AskUserQuestion` で tier + 許可ツールマトリクスをプレビュー)
-- 別会社 / tier 追加: `/sc4sap:sap-option add` (ウィザード: alias → tier → オプショナル同一企業メタコピー → 接続 + キーチェーンパスワード取得)
-- プロファイル一覧: `/sc4sap:sap-option list` — alias、tier バッジ、ホスト、アクティブ プロファイルの `●` マーカー
-- 削除 / ローテーション / パージ: `/sc4sap:sap-option remove|edit|purge` — ソフト削除は `~/.sc4sap/profiles/.trash/<alias>-<ts>/` へ 7 日自動パージ
+- アクティブシステム切替: `/sp4sap:sap-option switch <alias>` (またはインタラクティブピッカー — `AskUserQuestion` で tier + 許可ツールマトリクスをプレビュー)
+- 別会社 / tier 追加: `/sp4sap:sap-option add` (ウィザード: alias → tier → オプショナル同一企業メタコピー → 接続 + キーチェーンパスワード取得)
+- プロファイル一覧: `/sp4sap:sap-option list` — alias、tier バッジ、ホスト、アクティブ プロファイルの `●` マーカー
+- 削除 / ローテーション / パージ: `/sp4sap:sap-option remove|edit|purge` — ソフト削除は `~/.sc4sap/profiles/.trash/<alias>-<ts>/` へ 7 日自動パージ
 - Tier は既存プロファイル上で不変 — 変更するには remove + add
 
 ### ヘルス & メンテナンス
 
-- ヘルスチェック: `/sc4sap:sap-doctor`
-- 認証情報ローテーション / 業界変更 / L2 MCP ブロックリスト調整: `/sc4sap:sap-option`
-- SPRO 再抽出: `/sc4sap:setup spro` (アクティブプロファイル必須)
-- カスタマイズインベントリ再実行: `/sc4sap:setup customizations` (アクティブプロファイル必須)
+- ヘルスチェック: `/sp4sap:sap-doctor`
+- 認証情報ローテーション / 業界変更 / L2 MCP ブロックリスト調整: `/sp4sap:sap-option`
+- SPRO 再抽出: `/sp4sap:setup spro` (アクティブプロファイル必須)
+- カスタマイズインベントリ再実行: `/sp4sap:setup customizations` (アクティブプロファイル必須)
 
 ### マイグレーションのロールバック (0.6.0 アップグレードを元に戻す)
 
@@ -144,7 +144,7 @@ mv .sc4sap/sap.env.legacy .sc4sap/sap.env
 rm .sc4sap/active-profile.txt
 rm -rf ~/.sc4sap/profiles/<alias>
 # パスワードをキーチェーンに保存した場合 (plaintext fallback ではない):
-echo '{"service":"sc4sap","account":"<alias>/<user>"}' \
+echo '{"service":"sp4sap","account":"<alias>/<user>"}' \
   | node "$CLAUDE_PLUGIN_ROOT/scripts/sap-profile-cli.mjs" keychain-delete
 ```
 

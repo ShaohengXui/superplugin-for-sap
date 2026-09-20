@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sc4sap Profile CLI — backend for the sap-option skill's multi-profile flows.
+ * sp4sap Profile CLI — backend for the sap-option skill's multi-profile flows.
  *
  * All side effects (profile file writes, keychain updates, active-profile
  * pointer changes) live here so the skill markdown can stay declarative.
@@ -63,18 +63,18 @@ const KEYRING_REQUIRE = createRequire(
   join(dirname(fileURLToPath(import.meta.url)), '..', 'runtime-deps', 'keyring', 'package.json'),
 );
 
-const KEYCHAIN_SERVICE_DEFAULT = 'sc4sap';
+const KEYCHAIN_SERVICE_DEFAULT = 'sp4sap';
 
 const CLI_VERSION = '1.0.0';
 // Multi-profile infrastructure was introduced here. Used by detect-legacy
 // banner so the plugin can tell users what changed.
 const MULTI_PROFILE_SINCE = '0.6.0';
 
-function sc4sapHome() {
+function sp4sapHome() {
   return process.env.SC4SAP_HOME_DIR || join(homedir(), '.sc4sap');
 }
 function profilesDir() {
-  return join(sc4sapHome(), 'profiles');
+  return join(sp4sapHome(), 'profiles');
 }
 function trashDir() {
   return join(profilesDir(), '.trash');

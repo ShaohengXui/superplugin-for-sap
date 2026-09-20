@@ -15,7 +15,7 @@ Referenced by `workflow.md` §§ Step 4, Step 5. Both dispatches use the agent's
 
 ```
 Agent({
-  subagent_type: "sc4sap:sap-analyst",
+  subagent_type: "sp4sap:sap-analyst",
   description: "Process grouping for <PACKAGE>",
   prompt: """
     Group the programs in package <PACKAGE> (module <MODULE>, SAP version <SAPV>)
@@ -69,7 +69,7 @@ Main thread then presents `processes[]` + `residue[]` to the user via `AskUserQu
 
 ```
 Agent({
-  subagent_type: "sc4sap:sap-analyst",
+  subagent_type: "sp4sap:sap-analyst",
   description: "Per-process narrative for <PACKAGE>",
   prompt: """
     Produce per-process narratives for the user-approved process list of package

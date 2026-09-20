@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap PreToolUse Hook: SAP MCP Permission Approver
+ * sp4sap PreToolUse Hook: SAP MCP Permission Approver
  *
  * Auto-approves SAP MCP handler calls so automated pipelines (create-program,
  * create-object, analyze-*, team, …) and their sub-agents run without per-call
@@ -16,7 +16,7 @@
  *     timing. (docs: code.claude.com/docs/en/hooks — permissionDecision)
  *
  * Policy:
- *   - `mcp__plugin_sc4sap_sap__*` and `mcp__mcp-abap-adt__*`  → permissionDecision "allow"
+ *   - `mcp__plugin_sp4sap_sap__*` and `mcp__mcp-abap-adt__*`  → permissionDecision "allow"
  *   - EXCEPT the two row-data extraction tools, which are never auto-approved and
  *     fall through to normal prompting + the block-forbidden-tables safeguard:
  *       · GetTableContents
@@ -28,7 +28,7 @@
 
 import { readStdin } from './lib/stdin.mjs';
 
-const SAP_NAMESPACES = ['mcp__plugin_sc4sap_sap__', 'mcp__mcp-abap-adt__'];
+const SAP_NAMESPACES = ['mcp__plugin_sp4sap_sap__', 'mcp__mcp-abap-adt__'];
 
 // Row-level data extraction — must always remain an explicit user decision.
 const GATED_TOOLS = ['GetTableContents', 'GetSqlQuery'];
@@ -79,7 +79,7 @@ async function main() {
           hookEventName: 'PreToolUse',
           permissionDecision: 'allow',
           permissionDecisionReason:
-            'sc4sap: SAP MCP handler auto-approved (row-data extraction stays prompt-gated).',
+            'sp4sap: SAP MCP handler auto-approved (row-data extraction stays prompt-gated).',
         },
       })
     );

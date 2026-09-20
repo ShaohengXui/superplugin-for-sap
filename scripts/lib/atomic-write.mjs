@@ -1,5 +1,5 @@
 /**
- * Atomic file writes for sc4sap hooks.
+ * Atomic file writes for sp4sap hooks.
  * Ported from OMC. Self-contained module with no external dependencies.
  */
 

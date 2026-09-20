@@ -1,6 +1,6 @@
-# sc4sap — Team Consultation Architecture
+# sp4sap — Team Consultation Architecture
 
-> Design document for applying Claude Code agent teams to sc4sap's multi-specialist deliberation workflows. Status: **draft**, ask-consultant prototype pending.
+> Design document for applying Claude Code agent teams to sp4sap's multi-specialist deliberation workflows. Status: **draft**, ask-consultant prototype pending.
 
 ## 1. Problem
 
@@ -54,7 +54,7 @@ Agent teams (Claude Code experimental feature, `CLAUDE_CODE_EXPERIMENTAL_AGENT_T
 ```
 
 - Lead = whatever Claude Code session runs the invoking skill (frontmatter `model:` is declarative; see `skill-model-architecture.md`).
-- Members = sc4sap agents spawned via `Agent(..., team_name="...")`.
+- Members = sp4sap agents spawned via `Agent(..., team_name="...")`.
 - Task list under `~/.claude/tasks/<team-name>/` is the shared scratchpad.
 - **Members cannot spawn further agents** — same `Agent()` constraint as single-dispatch. Deliberation scope must be bounded.
 - **Name addressability is ephemeral** — a teammate is reachable by `name=` only while it's actively running; cross-turn re-address requires UUID from the spawn return.
@@ -68,10 +68,10 @@ Agent teams (Claude Code experimental feature, `CLAUDE_CODE_EXPERIMENTAL_AGENT_T
 **Purpose**: business-layer consensus on cross-module questions.
 
 **Applies to**:
-- `/sc4sap:ask-consultant` — when ≥ 2 modules matched AND (topic crosses boundaries OR answers diverge).
-- `/sc4sap:create-program` Phase 1A (module interview) — when active modules ≥ 2.
-- `/sc4sap:create-program` Phase 2 (planning) — when spec declares cross-module touchpoints.
-- `/sc4sap:compare-programs` Step 4b — when sample set spans 2+ modules.
+- `/sp4sap:ask-consultant` — when ≥ 2 modules matched AND (topic crosses boundaries OR answers diverge).
+- `/sp4sap:create-program` Phase 1A (module interview) — when active modules ≥ 2.
+- `/sp4sap:create-program` Phase 2 (planning) — when spec declares cross-module touchpoints.
+- `/sp4sap:compare-programs` Step 4b — when sample set spans 2+ modules.
 
 **Deliberation style**: symmetric. Each consultant posts POSITION → peers CHALLENGE → REFINEMENT → CONCUR / ESCALATE.
 
@@ -90,8 +90,8 @@ Agent teams (Claude Code experimental feature, `CLAUDE_CODE_EXPERIMENTAL_AGENT_T
 **Purpose**: validate code artifacts against module best-practice **during** authoring, not post-hoc.
 
 **Applies to**:
-- `/sc4sap:create-program` Phase 4 (implementation) — executor drafts code touching multiple modules.
-- `/sc4sap:analyze-code` — reviewer runs the 14-dimension review with live consultant input on business-alignment dimensions (§ 1-2 business relevance, § 13 cross-module side-effects).
+- `/sp4sap:create-program` Phase 4 (implementation) — executor drafts code touching multiple modules.
+- `/sp4sap:analyze-code` — reviewer runs the 14-dimension review with live consultant input on business-alignment dimensions (§ 1-2 business relevance, § 13 cross-module side-effects).
 
 **Deliberation style**: worker-centric.
 - Worker posts DRAFT (code snippet + intent).
@@ -111,7 +111,7 @@ Agent teams (Claude Code experimental feature, `CLAUDE_CODE_EXPERIMENTAL_AGENT_T
 **Purpose**: root-cause analysis mixing technical (BC: kernel/update-task/RFC/transport) + business (module: business flow, TCode purpose, customizing) lenses.
 
 **Applies to**:
-- `/sc4sap:analyze-symptom` — when dump/symptom touches a Z/Y object in a module context (not a pure kernel issue).
+- `/sp4sap:analyze-symptom` — when dump/symptom touches a Z/Y object in a module context (not a pure kernel issue).
 
 **Deliberation style**: debugger-centric. Debugger collects evidence (dump, trace, where-used) → BC shares technical lens → module shares business lens → debugger narrows hypothesis → loops until one hypothesis survives both lenses.
 
@@ -128,7 +128,7 @@ Agent teams (Claude Code experimental feature, `CLAUDE_CODE_EXPERIMENTAL_AGENT_T
 **Purpose**: live cross-check of business requirements against technical feasibility during interview, before spec is frozen.
 
 **Applies to**:
-- `/sc4sap:create-program` Phase 1A ↔ 1B bridge — current flow is sequential (1A interviews module, 1B interviews program structure). Teaming lets consultant flag "this requirement implies CDS+Fiori, not ALV" in-turn.
+- `/sp4sap:create-program` Phase 1A ↔ 1B bridge — current flow is sequential (1A interviews module, 1B interviews program structure). Teaming lets consultant flag "this requirement implies CDS+Fiori, not ALV" in-turn.
 
 **Deliberation style**: analyst-driven.
 - Analyst posts QUESTION (business intent).
@@ -263,18 +263,18 @@ Priority sequenced by ROI × risk. Never attempt all skills at once.
 - Update this doc.
 
 ### Phase 4 — Type A rollout
-- `/sc4sap:create-program` Phase 1A / Phase 2.
-- `/sc4sap:compare-programs` Step 4b.
+- `/sp4sap:create-program` Phase 1A / Phase 2.
+- `/sp4sap:compare-programs` Step 4b.
 
 ### Phase 5 — Type B rollout (Coder ↔ Consultant)
-- `/sc4sap:create-program` Phase 4 (in-loop validation).
-- `/sc4sap:analyze-code` (§ 1-2 + § 13 dimensions).
+- `/sp4sap:create-program` Phase 4 (in-loop validation).
+- `/sp4sap:analyze-code` (§ 1-2 + § 13 dimensions).
 
 ### Phase 6 — Type C rollout (Incident Triage)
-- `/sc4sap:analyze-symptom`.
+- `/sp4sap:analyze-symptom`.
 
 ### Phase 7 — Type D rollout (Interview Synthesis)
-- `/sc4sap:create-program` Phase 1A ↔ 1B bridge.
+- `/sp4sap:create-program` Phase 1A ↔ 1B bridge.
 
 ## 9. Open questions for the ask-consultant prototype
 

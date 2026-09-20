@@ -1,41 +1,41 @@
 <p align="center">
-  <img src="sc4sap.png" alt="SuperClaude for SAP" width="720"/>
+  <img src="sp4sap.png" alt="SuperPlugin for SAP" width="720"/>
 </p>
 
 <p align="center">
   <a href="README.md">English</a> | <a href="README.ko.md">한국어</a> | 日本語 | <a href="README.de.md">Deutsch</a>
 </p>
 
-# SuperClaude for SAP (sc4sap)
+# SuperPlugin for SAP (sp4sap)
 
 > SAP ABAP 開発向け Claude Code プラグイン — SAP ECC / S/4HANA On-Premise / S/4HANA Cloud (Public & Private) 対応
 
 [![MCP server on npm](https://img.shields.io/npm/v/@babamba2/abap-mcp-adt-powerup?label=mcp-server&color=cb3837&logo=npm)](https://www.npmjs.com/package/@babamba2/abap-mcp-adt-powerup)
-[![Plugin version](https://img.shields.io/badge/sc4sap-v0.6.0-6B4FBB)](https://github.com/babamba2/superclaude-for-sap/releases)
-[![GitHub stars](https://img.shields.io/github/stars/babamba2/superclaude-for-sap?style=flat&color=yellow)](https://github.com/babamba2/superclaude-for-sap)
+[![Plugin on npm](https://img.shields.io/npm/v/@shaohengxui/superplugin-for-sap?label=plugin&color=cb3837&logo=npm)](https://www.npmjs.com/package/@shaohengxui/superplugin-for-sap)
+[![GitHub stars](https://img.shields.io/github/stars/ShaohengXui/superplugin-for-sap?style=flat&color=yellow)](https://github.com/ShaohengXui/superplugin-for-sap)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## sc4sap とは
+## sp4sap とは
 
-SuperClaude for SAP は Claude Code をフルスタック SAP 開発アシスタントに変換します。[MCP ABAP ADT サーバー](https://github.com/babamba2/abap-mcp-adt-powerup)(150+ ツール)経由で SAP システムに接続し、クラス・関数モジュール・レポート・CDS ビュー・Dynpro・GUI ステータスなどの ABAP オブジェクトを直接作成・読み取り・更新・削除します。
+SuperPlugin for SAP は Claude Code をフルスタック SAP 開発アシスタントに変換します。[MCP ABAP ADT サーバー](https://github.com/babamba2/abap-mcp-adt-powerup)(150+ ツール)経由で SAP システムに接続し、クラス・関数モジュール・レポート・CDS ビュー・Dynpro・GUI ステータスなどの ABAP オブジェクトを直接作成・読み取り・更新・削除します。
 
 ## 主要機能
 
 | 機能 | 説明 |
 |------|------|
-| 🔌 **MCP 自動インストール** | `/sc4sap:setup` 中に `abap-mcp-adt-powerup` を自動インストール・設定・接続テスト。手動 MCP 配線不要。 |
-| 🌐 **マルチ環境プロファイル (Dev / QA / Prod)** | 会社・ティア別に複数の SAP システム(`KR-DEV`、`KR-QA`、`KR-PRD`、`US-DEV` など)を登録し、`/sc4sap:sap-option` でセッション中に即時切り替え。**QA / Prod プロファイルは自動で読み取り専用保護**:PreToolUse フックと MCP サーバーガードの 2 層防御が `Create*/Update*/Delete*`、`CreateTransport`、コード実行ツールをブロック — フックを回避してもサーバー側で依然として拒否。パスワードは **OS 資格情報ストア** (`@napi-rs/keyring` — Windows Credential Manager / macOS Keychain / libsecret) に保管され、`.sc4sap/` が git にシークレットを漏洩させるリスクなし。成果物(仕様書、CBO カタログ、監査)はプロファイル別に分離され、読み取り専用のクロスビューを提供 — QA セッションが Dev 生成の仕様を汚染せずに参照可能。 |
+| 🔌 **MCP 自動インストール** | `/sp4sap:setup` 中に `abap-mcp-adt-powerup` を自動インストール・設定・接続テスト。手動 MCP 配線不要。 |
+| 🌐 **マルチ環境プロファイル (Dev / QA / Prod)** | 会社・ティア別に複数の SAP システム(`KR-DEV`、`KR-QA`、`KR-PRD`、`US-DEV` など)を登録し、`/sp4sap:sap-option` でセッション中に即時切り替え。**QA / Prod プロファイルは自動で読み取り専用保護**:PreToolUse フックと MCP サーバーガードの 2 層防御が `Create*/Update*/Delete*`、`CreateTransport`、コード実行ツールをブロック — フックを回避してもサーバー側で依然として拒否。パスワードは **OS 資格情報ストア** (`@napi-rs/keyring` — Windows Credential Manager / macOS Keychain / libsecret) に保管され、`.sc4sap/` が git にシークレットを漏洩させるリスクなし。成果物(仕様書、CBO カタログ、監査)はプロファイル別に分離され、読み取り専用のクロスビューを提供 — QA セッションが Dev 生成の仕様を汚染せずに参照可能。 |
 | 🏗️ **自動プログラムメーカー** | ABAP プログラムのエンドツーエンド生成:Main + 条件付き Include、OOP/Procedural、フル ALV + Docking、Dynpro + GUI ステータス、必須 Text Elements、ABAP Unit — プラットフォーム対応(ECC / S4 On-Prem / Cloud)。 |
 | 🔍 **プログラム解析** | MCP で ABAP オブジェクトを読み取り → Clean ABAP / パフォーマンス / セキュリティレビュー、または機能/技術仕様へのリバースエンジニアリング(Markdown/Excel)。 |
-| 🧪 **コード解析** | `/sc4sap:analyze-code` — `sap-code-reviewer` 専用の静的レビュー:Clean ABAP / パフォーマンス / セキュリティ / SAP 標準準拠。重大度順の指摘と具体的な修正提案。 |
-| 🔀 **プログラム比較** | `/sc4sap:compare-programs` — 同一の業務シナリオを共有しつつモジュール(MM/CO)・国(KR/EU)・ペルソナ(コントローラー/倉庫)で分岐した 2〜5 本の ABAP プログラムをコンサルタント視点で 10 次元比較 → Markdown レポート。 |
+| 🧪 **コード解析** | `/sp4sap:analyze-code` — `sap-code-reviewer` 専用の静的レビュー:Clean ABAP / パフォーマンス / セキュリティ / SAP 標準準拠。重大度順の指摘と具体的な修正提案。 |
+| 🔀 **プログラム比較** | `/sp4sap:compare-programs` — 同一の業務シナリオを共有しつつモジュール(MM/CO)・国(KR/EU)・ペルソナ(コントローラー/倉庫)で分岐した 2〜5 本の ABAP プログラムをコンサルタント視点で 10 次元比較 → Markdown レポート。 |
 | 🩺 **運用診断** | 運用トリアージ:ST22 ダンプ、SM02、/IWFND/ERROR_LOG、プロファイラトレース、ログ、where-used — すべて Claude から。 |
 | ♻️ **CBO 再利用** | Z パッケージを一度棚卸し → `create-program` / `program-to-spec` が既存 CBO 資産を優先再利用。ブラウンフィールドに必須。 |
 | 🧷 **CBO 拡張認識 (CMOD / GGB1·2 / BAdI / APPEND)** | ユーザーエグジット (CMOD)、置換/検証 (GGB1/GGB2)、BAdI 実装、APPEND ストラクチャを棚卸し。`create-program` / BAPI 呼び出しでは既存の拡張フィールド(例:BAPI `EXTENSIONIN` / テーブル append)を新規 CBO より優先;ダンプ・障害対応では拡張ポイントを第一容疑者として検査。 |
 | 🏭 **業界コンテキスト** | 14 業界リファレンス (retail, fashion, cosmetics, tire, automotive, pharma, F&B, chemical, electronics, construction, steel, utilities, banking, public-sector)。 |
 | 🌏 **国別ローカライゼーション** | 15 カ国 + EU 共通 (KR/JP/CN/US/DE/GB/FR/IT/ES/NL/BR/MX/IN/AU/SG)。適格請求書、銀行、給与、税制。 |
 | 🧩 **アクティブモジュール認識** | クロスモジュール統合ヒント:MM + PS 有効 → MM CBO に WBS フィールド自動提案;SD + CO 有効 → CO-PA 派生。[詳細 →](common/active-modules.md) |
-| 🤝 **モジュールコンサルテーション** | `sap-analyst` / `sap-critic` / `sap-planner` / `sap-architect` がビジネス判断が必要な場合、14 モジュールコンサルタント + 1 BC コンサルタントに委任。ユーザーが直接質問する場合は `/sc4sap:ask-consultant` — キーワードで SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC を自動ルーティングし、プロジェクトに設定された SAP 環境(バージョン・業界・国・アクティブモジュール)に沿って回答、読み取り専用。 |
+| 🤝 **モジュールコンサルテーション** | `sap-analyst` / `sap-critic` / `sap-planner` / `sap-architect` がビジネス判断が必要な場合、14 モジュールコンサルタント + 1 BC コンサルタントに委任。ユーザーが直接質問する場合は `/sp4sap:ask-consultant` — キーワードで SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC を自動ルーティングし、プロジェクトに設定された SAP 環境(バージョン・業界・国・アクティブモジュール)に沿って回答、読み取り専用。 |
 
 ## ドキュメント
 
@@ -46,8 +46,8 @@ SuperClaude for SAP は Claude Code をフルスタック SAP 開発アシスタ
 ## Unleashed
 
 <p align="center">
-  <a href="sc4sap_unleashed.png">
-    <img src="sc4sap_unleashed.png" alt="SC4SAP Unleashed" width="100%"/>
+  <a href="sp4sap_unleashed.png">
+    <img src="sp4sap_unleashed.png" alt="SC4SAP Unleashed" width="100%"/>
   </a>
 </p>
 

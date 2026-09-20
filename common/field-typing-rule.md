@@ -1,6 +1,6 @@
 # Field Typing Rule — Data Element First
 
-**Scope.** Every Table / Structure / Table Type field-type decision made by sc4sap skills or agents (standard `CreateTable` / `CreateStructure` flow **and** the ECC helper-program fallback under `ecc-ddic-fallback.md`).
+**Scope.** Every Table / Structure / Table Type field-type decision made by sp4sap skills or agents (standard `CreateTable` / `CreateStructure` flow **and** the ECC helper-program fallback under `ecc-ddic-fallback.md`).
 
 **Problem this rule fixes.** Past runs generated fields like `LIFNR CHAR 10`, `MATNR CHAR 40`, `WERKS CHAR 4` — raw data-type + length — even though SAP ships authoritative Data Elements with exactly the same semantics (`LIFNR`, `MATNR`, `WERKS_D`, …). That strips search helps, foreign-key propagation, conversion exits, and documentation from every consuming program. Reuse is mandatory, not optional.
 

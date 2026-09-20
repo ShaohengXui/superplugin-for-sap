@@ -2,7 +2,7 @@
 
 ## Why this exists
 
-Claude Code installs plugins by `git clone` — it does not run `npm install`. To deliver working keychain support on first launch, sc4sap commits the `@napi-rs/keyring` npm package and its four platform-native `.node` binaries under `runtime-deps/keyring/node_modules/` (see 0.6.9 release note).
+Claude Code installs plugins by `git clone` — it does not run `npm install`. To deliver working keychain support on first launch, sp4sap commits the `@napi-rs/keyring` npm package and its four platform-native `.node` binaries under `runtime-deps/keyring/node_modules/` (see 0.6.9 release note).
 
 A committed `.node` binary has zero built-in tamper detection. Integrity verification closes that gap so we notice if bytes in the bundle change between merges, rebases, or cross-platform clones.
 
@@ -95,4 +95,4 @@ An additional subcommand that fetches each package's tarball from its recorded `
 2. The registry-side tarball verification npm itself performs at install time already covers the "trust upstream" angle for the window in which the bundle is produced.
 3. We have no concrete adversary model in which an upstream tarball silently rotates behind a pinned version without a yanked-version signal from npm.
 
-Future trigger: if sc4sap bundles additional native dependencies (`better-sqlite3`, `@ast-grep/napi`) whose upstream release cadence is faster than the sc4sap release cadence, upstream re-verification becomes proportionally more valuable.
+Future trigger: if sp4sap bundles additional native dependencies (`better-sqlite3`, `@ast-grep/napi`) whose upstream release cadence is faster than the sp4sap release cadence, upstream re-verification becomes proportionally more valuable.

@@ -1,4 +1,4 @@
-// sc4sap:program-to-spec — Template-clone xlsx renderer.
+// sp4sap:program-to-spec — Template-clone xlsx renderer.
 //
 // Strategy (양식 보존 / format-preserving):
 //   1. Read asset/template_base.xlsx (canonical reference workbook —

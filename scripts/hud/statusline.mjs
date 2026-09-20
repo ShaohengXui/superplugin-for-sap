@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// sc4sap HUD statusline — runs per statusLine refresh (~300ms cadence).
+// sp4sap HUD statusline — runs per statusLine refresh (~300ms cadence).
 // Protocol: Claude Code pipes a JSON payload on stdin and reads stdout as the line to render.
 // Payload (partial): { session_id, transcript_path, cwd, model:{id,display_name}, workspace:{current_dir,project_dir}, version }
 
 import { join } from 'path';
 import { priceFor, costOf } from './lib/pricing.mjs';
 import { latestUsage, contextSize, collectBlockUsage, collectWeeklyUsage, activityState, mcpConnectionState } from './lib/transcript.mjs';
-import { readConfig, sapEnvPresent, mcpInstalled, systemInfo, activeTransport, activeProfile } from './lib/sc4sap-status.mjs';
+import { readConfig, sapEnvPresent, mcpInstalled, systemInfo, activeTransport, activeProfile } from './lib/sp4sap-status.mjs';
 import { color, paint, humanTokens, humanUsd, humanDuration, pctColor } from './lib/format.mjs';
 import { readCache, writeCache, hudCacheDir } from './lib/cache.mjs';
 import { getUsage } from './lib/usage-api.mjs';
@@ -201,7 +201,7 @@ async function main() {
     //   red    = process missing, OR recent transcript error, OR launcher not installed
     //   yellow = probe indeterminate (no PowerShell / pgrep)
     const probe = probeMcpState(ws);
-    const transcriptState = transcript ? mcpConnectionState(transcript, 'mcp__plugin_sc4sap_sap__', 2 * 60 * 1000) : 'unknown';
+    const transcriptState = transcript ? mcpConnectionState(transcript, 'mcp__plugin_sp4sap_sap__', 2 * 60 * 1000) : 'unknown';
     let mcp;
     if (transcriptState === 'error')      mcp = paint('●', color.red);
     else if (probe === 'ok')              mcp = paint('●', color.green);
@@ -234,7 +234,7 @@ async function main() {
     // Assemble — compact one-liner
     const sep = paint(' │ ', color.gray);
     const parts = [
-      paint('sc4sap', color.bold, color.cyan),
+      paint('sp4sap', color.bold, color.cyan),
       `MCP${mcp} ENV${env}`,
       actStr,
       segment('ctx', ctxStr),
@@ -266,14 +266,14 @@ async function main() {
       if (at?.trkorr) bits.push(paint('CTS',    color.gray, color.dim) + ' ' + paint(at.trkorr, color.yellow));
       if (bits.length > 0) line2 = bits.join(sep);
     } else {
-      line2 = paint('SAP not configured — run /sc4sap:setup', color.gray, color.dim);
+      line2 = paint('SAP not configured — run /sp4sap:setup', color.gray, color.dim);
     }
 
     const ctxWarn = ctxWarningLine(ctxPct);
     const out = parts.join(sep) + '\n' + line2 + (ctxWarn ? '\n' + ctxWarn : '');
     process.stdout.write(out);
   } catch {
-    process.stdout.write(paint('sc4sap', color.cyan) + ' ' + paint('hud error', color.red));
+    process.stdout.write(paint('sp4sap', color.cyan) + ' ' + paint('hud error', color.red));
   }
 }
 

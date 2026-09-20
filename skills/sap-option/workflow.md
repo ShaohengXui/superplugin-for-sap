@@ -1,6 +1,6 @@
 # Workflow
 
-1. **Locate** `.sc4sap/sap.env`. If missing, stop and direct the user to `/sc4sap:setup`.
+1. **Locate** `.sc4sap/sap.env`. If missing, stop and direct the user to `/sp4sap:setup`.
 
 2. **Parse** existing values with a simple `KEY=VALUE` reader. Preserve:
    - comment lines (`#`)
@@ -38,6 +38,6 @@
 
 9. **Backup + write** — copy existing `sap.env` to `sap.env.bak` (overwrite previous backup), then write the new content atomically (write to `sap.env.tmp` then rename).
 
-10. **Advise reconnection** — remind the user to run `/mcp` → reconnect `plugin:sc4sap:sap` for changes to take effect. Changes to `sap.env` are not hot-reloaded.
+10. **Advise reconnection** — remind the user to run `/mcp` → reconnect `plugin:sp4sap:sap` for changes to take effect. Changes to `sap.env` are not hot-reloaded.
 
 11. **Report** — list the keys changed, indicate backup path, and state "Please reconnect MCP (`/mcp`) to apply."

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Session Start Hook
+ * sp4sap Session Start Hook
  * Restores persistent mode states and injects SAP context on session start.
  * Adapted from OMC session-start.mjs.
  */
@@ -32,7 +32,7 @@ async function main() {
 
     // Inject SAP development context reminder
     messages.push(`<system-reminder>
-[SC4SAP] SuperClaude for SAP is active. SAP development standards enforced:
+[SC4SAP] SuperPlugin for SAP is active. SAP development standards enforced:
 - Custom objects require Z/Y prefix
 - All changes must be assigned to transport requests
 - Objects must be activated after creation/modification

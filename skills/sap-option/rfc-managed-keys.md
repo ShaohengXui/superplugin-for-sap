@@ -48,7 +48,7 @@ Referenced by `SKILL.md` from `<Managed_Keys>` and `<Validation>`. Per-backend e
   - → `native`: warn `SAP_RFC_USER`/`SAP_RFC_PASSWD`/`SAP_RFC_CLIENT` and one of (`SAP_RFC_ASHOST`+`SAP_RFC_SYSNR`) or (`SAP_RFC_MSHOST`+`SAP_RFC_SYSID`) must be set before MCP reconnect
   - → `gateway`: warn `SAP_RFC_GATEWAY_URL` must be set and the gateway must be reachable
   - → `odata`: warn `SAP_RFC_ODATA_SERVICE_URL` must be set, MPC/DPC classes must be installed (setup Step 9c), and the service must be registered in `/IWFND/MAINT_SERVICE`
-  - Always suggest running `/sc4sap:sap-doctor` afterwards to exercise Layer 6.
+  - Always suggest running `/sp4sap:sap-doctor` afterwards to exercise Layer 6.
 - `SAP_RFC_SYSNR`: exactly 2 digits (`00`–`99`).
 - `SAP_RFC_CLIENT`: exactly 3 digits.
 - `SAP_RFC_LANG`: 2-letter uppercase.

@@ -1,0 +1,20 @@
+{
+  "name": "sp4sap",
+  "version": "0.7.0",
+  "description": "SuperPlugin for SAP — SAP ABAP development for ZCode. Connects to SAP On-Premise S/4HANA over the abap-mcp-adt MCP server (150+ ADT tools) with Dev/QA/Prod write protection, 25 SAP-specialized agents, and 14 workflow skills.",
+  "author": {
+    "name": "paek seunghyun"
+  },
+  "license": "MIT",
+  "keywords": [
+    "sap",
+    "abap",
+    "s4hana",
+    "erp",
+    "abap-development",
+    "mcp",
+    "on-premise"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

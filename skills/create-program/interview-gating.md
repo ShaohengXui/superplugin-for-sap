@@ -2,7 +2,7 @@
 
 Authoritative content for the `<Interview_Gating>` block referenced by `SKILL.md`. Phase 1 of the pipeline. **MANDATORY — never skip, never shortcut, never merge.**
 
-Phase 1 runs as **two sequential sub-phases** (1A then 1B) on every `sc4sap:create-program` invocation. Skipping a dimension, accepting "just build it" to bypass questioning, inferring answers from context, **or bulk-proposing multiple dimensions in a single message** is a protocol violation. If the user pushes to skip, answer: *"The interview is mandatory — I will run Module Interview first, then Program Interview, one question at a time."*
+Phase 1 runs as **two sequential sub-phases** (1A then 1B) on every `sp4sap:create-program` invocation. Skipping a dimension, accepting "just build it" to bypass questioning, inferring answers from context, **or bulk-proposing multiple dimensions in a single message** is a protocol violation. If the user pushes to skip, answer: *"The interview is mandatory — I will run Module Interview first, then Program Interview, one question at a time."*
 
 **Two-stage rule**: Phase 1B (technical) NEVER starts before Phase 1A (business) closes. The technical conversation has no meaning without business context.
 
@@ -23,7 +23,7 @@ Phase 1 runs as **two sequential sub-phases** (1A then 1B) on every `sc4sap:crea
 3. Continue with **the next single dimension only**, presenting your recommended default as part of that one question (not as part of a block).
 4. Wait for the user's response. Advance only after they confirm or modify that one dimension.
 
-**First-time user safeguard**: The person running `/sc4sap:create-program` for the first time does not know what "Paradigm OOP vs Procedural" or "Full CL_GUI_ALV_GRID vs SALV" actually means. Bulk-proposing all 7 dimensions at once denies them the chance to ask "what does this mean?" on each one. Always keep the door open for one dimension at a time.
+**First-time user safeguard**: The person running `/sp4sap:create-program` for the first time does not know what "Paradigm OOP vs Procedural" or "Full CL_GUI_ALV_GRID vs SALV" actually means. Bulk-proposing all 7 dimensions at once denies them the chance to ask "what does this mean?" on each one. Always keep the door open for one dimension at a time.
 
 **Recovery clause**: If you already bulk-proposed (protocol violation), apologize, roll back, and restart the sub-phase from the first unanswered dimension with strict one-question cadence. Do NOT count a block "ok" as approval for a block proposal — it is invalid by protocol.
 

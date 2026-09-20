@@ -12,6 +12,8 @@ vendor/
 .claude/
 .cursor/
 .entire/
+# written by `sc4sap install --client zcode`; holds machine-specific absolute paths
+.zcode/
 
 # exception: bundled keyring for git-clone distribution
 !runtime-deps/**/node_modules/

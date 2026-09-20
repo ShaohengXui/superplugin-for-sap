@@ -4,7 +4,7 @@ Comprehensive reference of the differences between **ECC 6.0** and **S/4HANA** t
 
 Agents MUST check `SAP_VERSION` from `.sc4sap/config.json` (or `sap.env`) **before** recommending any TCode, table, BAPI, or pattern. Agents MUST also check `ABAP_RELEASE` before generating ABAP code — see `common/abap-release-reference.md` for release-by-release syntax.
 
-If `SAP_VERSION` is unset, fail safe: ask the user to run `/sc4sap:setup` or `/sc4sap:sap-option` before proceeding.
+If `SAP_VERSION` is unset, fail safe: ask the user to run `/sp4sap:setup` or `/sp4sap:sap-option` before proceeding.
 
 ---
 
@@ -172,6 +172,6 @@ If `SAP_VERSION` is unset, fail safe: ask the user to run `/sc4sap:setup` or `/s
 
 - Agents MUST check `SAP_VERSION` from config before recommending TCodes, tables, BAPIs, or development patterns.
 - Agents MUST check `ABAP_RELEASE` from config before generating ABAP code — using unsupported syntax causes activation errors.
-- If `SAP_VERSION` is unset, fail safe: ask the user to run `/sc4sap:setup` or `/sc4sap:sap-option` before proceeding.
+- If `SAP_VERSION` is unset, fail safe: ask the user to run `/sp4sap:setup` or `/sp4sap:sap-option` before proceeding.
 - When migrating ECC→S/4HANA scripts, never assume compatibility views alone are enough — verify with `GetView` before SELECT.
 - For S/4HANA ABAP Cloud tier (`SAP_SYSTEM_TYPE=cloud`), only released APIs (C1 tier) are callable — consult `common/spro-lookup.md` and SAP Note guidance before recommending classic FMs/BAPIs.

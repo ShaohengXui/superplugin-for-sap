@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Permission Handler Hook (PermissionRequest, matcher: Bash)
+ * sp4sap Permission Handler Hook (PermissionRequest, matcher: Bash)
  * Handles Bash permission requests with SAP-aware context.
  * Adapted from OMC permission-handler.mjs.
  *

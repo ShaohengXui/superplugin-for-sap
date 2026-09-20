@@ -5,7 +5,7 @@ Companion to `multi-profile-design.md`. Sequences work across the three layers s
 **Layers**:
 - **L3** — seven `@babamba2/*` npm packages (`mcp-abap-adt-clients`, `mcp-abap-connection`, `mcp-abap-adt-auth-broker`, `mcp-abap-adt-auth-providers`, `mcp-abap-adt-auth-stores`, `mcp-abap-adt-header-validator`, `mcp-abap-adt-interfaces`, `mcp-abap-adt-logger`). Consumed as npm dependencies.
 - **L2** — `@babamba2/abap-mcp-adt-powerup` (MCP server at `~/.claude/plugins/marketplaces/abap-mcp-adt-powerup`; depends on all L3 packages)
-- **L1** — `sc4sap` plugin (skills, hooks, HUD; depends on L2)
+- **L1** — `sp4sap` plugin (skills, hooks, HUD; depends on L2)
 
 Each phase lists **deliverables**, **verification**, and **blocking dependencies**.
 
@@ -36,7 +36,7 @@ Goal: add password-from-keychain support in the MCP server. No L3 package modifi
 | 0.2 | L2 | Add `@napi-rs/keyring` as an optional dependency (declare in `optionalDependencies`, same pattern as `node-rfc`). |
 | 0.3 | L2 | Unit tests under `src/__tests__/lib/secrets.test.ts` covering: plain-string passthrough, `keychain:` parse, missing keychain entry, @napi-rs/keyring unavailable. |
 
-**Verification**: `npm test` green (requires npm install for @napi-rs/keyring — ASK USER before running). `resolveSecret("plain")` returns `"plain"`. `resolveSecret("keychain:sc4sap/KR-DEV/DEV")` resolves against the OS keychain.
+**Verification**: `npm test` green (requires npm install for @napi-rs/keyring — ASK USER before running). `resolveSecret("plain")` returns `"plain"`. `resolveSecret("keychain:sp4sap/KR-DEV/DEV")` resolves against the OS keychain.
 
 **Dependencies**: none.
 
@@ -169,7 +169,7 @@ Phase 0 (L2 keychain)  ─  Phase 1 (L2 ReloadProfile + guard)  ─┬─ Phase 
                                                                                   Phase 5 (UX polish)  ─  Phase 6 ──┘
 ```
 
-Phases 0→1→2 are strictly sequential (functional dependency). Phase 5 items can be parallelized with Phase 4 once Phase 3 is done. No L3 npm package needs republishing — everything lives in L1 (sc4sap plugin) and L2 (abap-mcp-adt-powerup).
+Phases 0→1→2 are strictly sequential (functional dependency). Phase 5 items can be parallelized with Phase 4 once Phase 3 is done. No L3 npm package needs republishing — everything lives in L1 (sp4sap plugin) and L2 (abap-mcp-adt-powerup).
 
 ## Risk register
 

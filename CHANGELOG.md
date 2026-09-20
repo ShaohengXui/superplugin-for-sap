@@ -1,7 +1,217 @@
 # Changelog
 
-All notable changes to **SuperClaude for SAP (sc4sap)** will be documented in this file.
+All notable changes to **SuperPlugin for SAP (sp4sap)** will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows [SemVer](https://semver.org/spec/v2.0.0.html).
+
+## [0.7.0] — 2026-09-18
+
+### Added — sp4sap now runs on ZCode, Codex and any MCP client
+
+The SAP capability was never Claude-Code-specific: the 150+ ADT tools live in the
+vendored `abap-mcp-adt-powerup` server, and `bridge/mcp-server.cjs` was already a
+client-agnostic launcher that derives its own root from `__dirname` and contains
+no Claude Code API call. What was Claude-Code-only was everything *around* it —
+the orchestration hooks, the agents, the model routing, and the L1 write guard.
+This release removes the coupling that mattered and adds a one-command installer.
+
+**`bridge/cli.cjs` (new) — the `sp4sap` installer.** `package.json` had always
+declared a `sc4sap` bin entry pointing at `bridge/cli.cjs`, but the file did not
+exist, so an npm-installed command was broken. It now provides:
+
+```bash
+sp4sap install [--client codex|zcode|claude|all] [--scope user|project]
+               [--mcp-only] [--tier-guard|--no-tier-guard] [--dry-run]
+sp4sap uninstall / status / doctor
+```
+
+| Client | Primary path | Fallback |
+|---|---|---|
+| Claude Code | `claude plugin marketplace add` + `claude plugin install -y` | `claude mcp add -s user` |
+| Codex | `codex plugin marketplace add` + `codex plugin add` | `codex mcp add` |
+| ZCode | `<repo>/.zcode/config.json` → `mcp.servers.sap` | — (ZCode has no MCP subcommand) |
+
+Only one registration per client is made: the plugin route already carries the
+MCP server, and registering both would expose the same tools twice. The CLI
+prefers each client's own CLI over editing its config, backs up any file it
+edits, is idempotent, refuses to edit a config file that is not valid JSON, and
+never writes a credential.
+
+**Multi-client manifests and templates.** `.zcode-plugin/plugin.json`,
+`.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json` were added so
+each client has a manifest in its own schema; `mcp/` carries configuration
+templates for ZCode, Codex, Claude Desktop and generic clients, plus a worked
+skill→Codex-command example.
+
+**Portable tier guard.** `scripts/lib/tier-guard.mjs` (new) is now the single
+source of the QA/PRD block matrix, shared by the Claude Code hook, a new
+MCP-layer proxy and a new standalone CLI, so the three can no longer disagree.
+`scripts/tier-guard-cli.mjs` exposes it to any client's hook system and to CI
+(exit 0 allowed / 3 denied / 2 error).
+
+**MCP-layer write guard (`SC4SAP_TIER_GUARD=proxy`).** For clients with no hook
+system, `bridge/mcp-server.cjs` can now relay JSON-RPC and reject blocked
+`tools/call` requests before they reach SAP. Verified end-to-end against a stub
+vendor: on a PRD profile `UpdateClass`, `DeleteProgram` and `ActivateObjects`
+return JSON-RPC error `-32001` and the vendor never sees them, while `GetClass`
+and `tools/list` forward normally; the same mutation on DEV forwards. **Default
+off**, so the Claude Code in-process launch path is byte-identical to before.
+
+**Generic-client environment knobs.** `SC4SAP_ENV_FILE` / `MCP_ENV_PATH` are now
+honored as an explicit, highest-precedence env-file path, plus `SC4SAP_PROJECT_DIR`
+and `SC4SAP_VENDOR_DIR`. Credentials supplied purely through the process
+environment (no file on disk) are now a supported configuration instead of a
+hard startup failure.
+
+### Fixed — the L1 hook matcher never routed four tool families to the guard
+
+`scripts/install-hooks.mjs` installed `tier-readonly-guard.mjs` with the matcher
+`mcp__.*__(Create|Update|Delete|RunUnitTest|RuntimeRunProgramWithProfiling|RuntimeRunClassWithProfiling)`.
+The guard's own matrix had been widened in 0.6.18 to cover `Patch`, `Write`,
+`Activate` and `RuntimeCreateProfilerTraceParameters`, but the matcher was not —
+so on QA and PRD those four tools were never routed to L1 and only the
+server-side L2 guard applied. The matcher now mirrors the matrix, and a test
+asserts `matcher ⊇ MUTATION_PREFIXES ∪ RUNTIME_EXEC` so the two cannot drift
+again. The guard itself also no longer pre-filters by tool name: it evaluates
+whatever it receives, which makes a narrow client matcher a performance issue
+rather than a security one.
+
+### Verified — the block matrix now checks out against the full tool catalog
+
+The matrix had only ever been hand-maintained; nothing compared it to the tools
+the server actually registers. It is now asserted against the committed
+inventory in `data/sp4sap-mcp-tools-{read,write,runtime}.md`:
+
+- every catalogued mutation and ABAP execution is blocked on PRD (and every
+  mutation on QA);
+- no catalogued read tool is blocked (0 false positives across the read tools);
+- the nine runtime *diagnostics* (`RuntimeListDumps`, `RuntimeListFeeds`,
+  `RuntimeListProfilerTraceFiles`, `RuntimeListSystemMessages`,
+  `RuntimeGetDumpById`, `RuntimeGetProfilerTraceData`, `RuntimeAnalyzeDump`,
+  `RuntimeAnalyzeProfilerTrace`, `ValidateServiceBinding`) are allowed on QA/PRD
+  **by design** — they read dumps, traces and system messages rather than
+  mutating SAP or executing ABAP, and blocking them would cost diagnosis
+  capability for no security gain. Data-exposure risk belongs to the blocklist
+  layer (`block-forbidden-tables.mjs`, `MCP_BLOCKLIST_PROFILE`), not the tier
+  guard. The allowlist is exhaustive and asserted, so a future execution tool
+  cannot quietly join it.
+
+### Verified — the vendored server was probed directly
+
+The real `vendor/abap-mcp-adt/dist/server/launcher.js` was installed at the
+pinned SHA and driven over stdio (`initialize` + `tools/list`):
+
+- **stdio framing is newline-delimited JSON**, not `Content-Length`. This was the
+  main unverified assumption behind the L1.5 proxy guard; it is now confirmed, so
+  the proxy's message inspection is valid.
+- The server registers **143 tools**. The catalog lists 169. The difference is
+  dominated by the Screen / GuiStatus / TextElement / Include / Program families
+  (`CreateProgram`, `UpdateProgram`, `DeleteProgram`, `PatchGuiStatus`,
+  `WriteTextElementsBulk`, `RuntimeRunProgramWithProfiling`, …), which the probe
+  did not see. **This remains open**: the probe had no reachable SAP system, so
+  the server may register connection-dependent tool sets only after a successful
+  login. Whether the catalog is stale or the tool set is connection-gated cannot
+  be settled without a live system.
+- Three tools the server *does* register were missing from the catalog and have
+  been added: `RuntimeListFeeds`, `RuntimeListSystemMessages`, `ReloadProfile`.
+  `GetTableContents` and `GetSqlQuery` are also absent from the read catalog, but
+  deliberately so — that file's header documents them as prompt-gated
+  exclusions. The catalog test now pins all three facts so the inventory cannot
+  silently drift again.
+
+### Fixed — vendor dependency completeness
+
+A clean `npm ci` in the vendor leaves axios's `form-data` nested at
+`node_modules/axios/node_modules/form-data` rather than hoisted. The bridge's
+`findMissingDep()` only checks `node_modules/<dep>/package.json` for *declared*
+dependencies, so it cannot see a missing or nested transitive dependency — an
+incomplete vendor tree therefore reaches `require(LAUNCHER)` and dies with
+`Cannot find module 'form-data'` instead of triggering the self-heal. Recorded
+here rather than fixed: making the check authoritative needs a lockfile-wide
+scan, which is a behaviour change to the startup path and belongs in its own
+release. Recovery today: `npm ci --ignore-scripts` inside `vendor/abap-mcp-adt/`.
+
+### Changed — `mcp-setup` skill rewritten for the multi-profile flow
+
+`skills/mcp-setup/SKILL.md` still documented the pre-0.6.0 layout: create
+`.sc4sap/sap.env` *in the plugin directory*, `SAP_SYSTEM_TYPE=onprem`, no
+keychain, no `MCP_ENV_PATH`. Following it produced a misconfigured connection.
+It now documents the profile store (`~/.sc4sap/profiles/<alias>/`), the
+`keychain:` password reference, `SAP_TIER` and the four-step env-file
+precedence, and adds the non-Claude-Code install path. The troubleshooting entry
+that pointed only at the Claude Code log directory now also covers ZCode.
+
+### Renamed — `sc4sap` → `sp4sap`, "SuperClaude for SAP" → "SuperPlugin for SAP"
+
+This tree is a fork of [babamba2/superclaude-for-sap](https://github.com/babamba2/superclaude-for-sap),
+renamed and republished as its own project. The rename touches four identifiers:
+
+| Identifier | Was | Now |
+|---|---|---|
+| Display name | `SuperClaude for SAP` | `SuperPlugin for SAP` |
+| Plugin / slug | `sc4sap` | `sp4sap` |
+| Repository | `babamba2/superclaude-for-sap` | `ShaohengXui/superplugin-for-sap` |
+| npm package | `@babamba2/superclaude-for-sap` | `@shaohengxui/superplugin-for-sap` |
+
+The MCP tool namespace (`mcp__plugin_sp4sap_sap__*`) and the skill namespace
+(`/sp4sap:*`) follow the plugin name, so `agents/*.md` tool lists, the
+`data/sp4sap-mcp-tools-*.md` catalog, and `scripts/permission-approver.mjs` were
+all updated in lockstep.
+
+**Three namespaces were deliberately NOT renamed**, because the pinned vendored
+MCP server depends on them:
+
+- **`.sc4sap/`** — hardcoded in `vendor/abap-mcp-adt/dist/lib/profile.js`
+  (`<cwd>/.sc4sap/active-profile.txt`, `<cwd>/.sc4sap/sap.env`) and in
+  `handleReloadProfile.js` plus all four RFC backends. `SC4SAP_HOME_DIR` overrides
+  only the home directory, not the project-level name, so this cannot be changed
+  without patching the vendor.
+- **`SC4SAP_HOME_DIR`** — the only `SC4SAP_*` variable the vendor reads.
+- **The other `SC4SAP_*` variables** — kept for consistency with the directory and
+  because they are a configuration contract: renaming them would silently
+  invalidate every client config already written, leaving the server to fall back
+  to cwd discovery and report `Config not found`.
+
+Also unchanged, because they belong to other projects: `@babamba2/abap-mcp-adt-powerup`
+and the seven `@babamba2/mcp-abap-adt-*` packages, `babamba2/abap-mcp-adt-powerup`,
+`babamba2/OOALV`, and the SAP-side objects (`ZMCP_ADT_*`, `ZCL_ZMCP_ADT_*`,
+`ZCX_S4SAP_EXCP`) which live in the SAP system rather than in this repository.
+
+Historical CHANGELOG entries below retain the original names.
+
+### Version
+
+All six version fields (`package.json`, `package-lock.json`, `.claude-plugin/plugin.json`,
+`.claude-plugin/marketplace.json` root & `plugins[0]`, `.zcode-plugin/plugin.json`,
+`.codex-plugin/plugin.json`) bumped 0.6.18 → 0.7.0.
+
+### Not in this release
+
+- **The Claude Code and Codex plugin-install paths were not executed** — only
+  their command syntax and manifest schemas were verified. The ZCode config-file
+  path was exercised end to end (install → idempotent re-run → uninstall →
+  backup).
+- **No live SAP verification.** `GetSession`, reading an ABAP object, ABAP Unit
+  runs and the real QA/PRD write rejection were not run; they need a SAP system.
+  The guard layers were verified against a stub vendor, the committed tool
+  catalog, and a direct stdio probe of the real server. **ATC is not available at
+  all** — the vendor registers no ATC handler, so "run ATC" is not a valid
+  verification step for this tool set.
+- **The tool-set size discrepancy is unresolved** (143 registered vs 169
+  catalogued). See the vendored-server section above.
+- **The bridge's dependency check cannot see missing transitive deps.** See the
+  vendor-dependency section above.
+- **Phase 3 is not done.** Skills still contain Claude-shaped `Agent(...)`
+  dispatch prose, `agents/*.md` still carries hardcoded Claude model IDs (which
+  `tests/validation/agents.test.ts` requires), and no Codex agent definitions or
+  Codex slash commands ship yet.
+- Open, unchanged: the L2 guard caches its tier at `ReloadProfile` time, so a
+  bare client that never calls it may leave L2 unaware of the tier — which is
+  exactly why `SC4SAP_TIER_GUARD=proxy` exists. Also unchanged: the RFC backend
+  default is documented inconsistently (`soap` in `rfc-managed-keys.md`, `odata`
+  since 2026-04-22 in `rfc-backend-selection.md`), `SAP_PASSWORD_STORAGE=file` is
+  documented in `docs/FEATURES.md` but implemented nowhere, and
+  `skills/setup/wizard-step-04-profile-creation.md` contains a real-looking
+  hostname and SAP user ID in an example payload (no secret is committed).
 
 ## [0.6.18] — 2026-08-23
 
@@ -20,7 +230,7 @@ Verified by running the hook as a real child process against an isolated project
 
 - `Patch`, `Write` and `Activate` join `MUTATION_PREFIXES` as prefixes rather than literals — each matches exactly one registered tool today, so a future sibling is covered on the day it ships. `Create` still matches by `startsWith`, so `RuntimeCreate*` is not swept in and stays in the explicit runtime set.
 - `RuntimeCreateProfilerTraceParameters` joins `RUNTIME_EXEC` alongside the `RuntimeRun*` executions it configures.
-- `data/sc4sap-mcp-tools-write.md` gains the missing `Write*` section. It already listed `ActivateObjects` and `PatchGuiStatus` as write tools, so the classification and the guard now agree.
+- `data/sp4sap-mcp-tools-write.md` gains the missing `Write*` section. It already listed `ActivateObjects` and `PatchGuiStatus` as write tools, so the classification and the guard now agree.
 
 **No behaviour change on DEV** — the guard returns `null` on its first line for that tier, confirmed for all ten probed tools. On QA/PRD nothing usable is lost: activation and text-pool writes are unreachable once `Create*` / `Update*` are denied, and profiler-trace setup pairs with runs that were blocked already.
 
@@ -41,7 +251,7 @@ All four version fields (`package.json`, `.claude-plugin/plugin.json`, `.claude-
 
 ## [0.6.17] — 2026-08-23
 
-### Fixed — hook payload never reached hook scripts (all sc4sap hooks silently broken)
+### Fixed — hook payload never reached hook scripts (all sp4sap hooks silently broken)
 
 `scripts/run.cjs` launched each hook script with `execFile` but never forwarded the parent's stdin — the hook payload JSON — to the child process. Every stdin-reading hook (`skill-injector`, `keyword-detector`, `spro-injector`, `pre-tool-enforcer`, `transport-validator`, `post-tool-verifier`, `session-*`, …) therefore blocked until its internal `readStdin()` 5s timeout fired and then ran with an empty payload. Under Claude Code's stricter per-hook timeout enforcement this surfaced as `UserPromptSubmit hook timed out after 3s`, leaving keyword / skill / SPRO injection non-functional.
 
@@ -51,7 +261,7 @@ All four version fields (`package.json`, `.claude-plugin/plugin.json`, `.claude-
 
 A Claude Code permission update deprecated the Agent tool's `mode` parameter: `mode: "dontAsk"` is now ignored, and sub-agents inherit the parent session's permission mode (agent frontmatter `permissionMode` may override it, but there `dontAsk` means auto-DENY, not auto-approve). `trust-session`'s Layer 2 — passing `mode: "dontAsk"` on every `Agent` dispatch — was therefore fully non-functional, and pipeline sub-agents began prompting mid-run.
 
-- New PreToolUse hook `scripts/permission-approver.mjs` (wired in `hooks/hooks.json`, matcher `mcp__plugin_sc4sap_sap__.*|mcp__mcp-abap-adt__.*`) returns `permissionDecision: "allow"` for all SAP MCP handlers **except** `GetTableContents` / `GetSqlQuery`, which fall through to normal prompting plus the `block-forbidden-tables` safeguard. The hook runs in both the main thread and sub-agents, independent of session permission mode, so SAP MCP calls are auto-approved without the deprecated parameter.
+- New PreToolUse hook `scripts/permission-approver.mjs` (wired in `hooks/hooks.json`, matcher `mcp__plugin_sp4sap_sap__.*|mcp__mcp-abap-adt__.*`) returns `permissionDecision: "allow"` for all SAP MCP handlers **except** `GetTableContents` / `GetSqlQuery`, which fall through to normal prompting plus the `block-forbidden-tables` safeguard. The hook runs in both the main thread and sub-agents, independent of session permission mode, so SAP MCP calls are auto-approved without the deprecated parameter.
 - `skills/trust-session/SKILL.md` rewritten: no longer enumerates SAP MCP tools in `settings.local.json` and no longer references `mode: "dontAsk"`; it now only pre-approves `Agent(*)` dispatch and `.sc4sap/**` state-file I/O, and documents the hook as the SAP MCP approval mechanism.
 - Removed the now-ignored `mode: "dontAsk"` directive from 22 skill files across `create-program`, `create-object`, `analyze-cbo-obj`, `analyze-code`, `analyze-symptom`, `compare-programs`, `package-to-process`, `ask-consultant`, and `setup`. (`program-to-spec` is owned by another contributor and was left untouched.)
 
@@ -68,7 +278,7 @@ The setup wizard's system-type question (Step 4 profile creation) now offers `s4
 
 ### Removed — `deep-interview`, `team`, `release` skills (OMC leftovers)
 
-Three skills carried over from the original oh-my-claudecode base were retired. `deep-interview` and `team` were generic OMC orchestration leftovers; `release` (CTS transport release workflow) is no longer needed. The `teamMode` feature woven into `create-program` / `compare-programs` / `ask-consultant` / `analyze-symptom` / `analyze-code` (and `common/team-consultation-protocol.md`) is a separate, sc4sap-native capability and is **retained** — only the standalone `/sc4sap:team` skill was removed.
+Three skills carried over from the original oh-my-claudecode base were retired. `deep-interview` and `team` were generic OMC orchestration leftovers; `release` (CTS transport release workflow) is no longer needed. The `teamMode` feature woven into `create-program` / `compare-programs` / `ask-consultant` / `analyze-symptom` / `analyze-code` (and `common/team-consultation-protocol.md`) is a separate, sp4sap-native capability and is **retained** — only the standalone `/sp4sap:team` skill was removed.
 
 - Deleted `skills/{deep-interview,team,release}/`.
 - Registration updated: `.claude-plugin/plugin.json` + `marketplace.json` descriptions and skill count (17 → 14 workflow skills); `CLAUDE.md` skill list; `docs/FEATURES.md` (+ ko/ja/de) table rows and sections; `tests/validation/skills.test.ts` expected-skills list.
@@ -161,9 +371,9 @@ Type D (Phase 1A↔1B Interview Synthesis) now activates only when the user expl
 - `docs/skill-model-architecture.md` — scope updated to "13 user-facing skills", §2 table row added, §3 dispatch map sub-section added, Pattern 3 override example (`sap-writer` → Sonnet for L3/L4 specs) added
 - `docs/team-consultation-architecture.md` + `.ko.md` — §6 gating table row: `program-to-spec` N/A (single-object read-only reverse-engineering), with future-extension note for L3/L4 depth + ≥ 2-module `GetWhereUsed` graph scenario
 
-### Fixed — `sc4sap:` subagent_type prefix sweep across skill docs
+### Fixed — `sp4sap:` subagent_type prefix sweep across skill docs
 
-Every `Agent(...)` dispatch example in skill MDs now uses the fully-qualified `"sc4sap:sap-<name>"` form — bare `"sap-<name>"` fails at runtime due to Claude Code plugin auto-namespacing (memory `feedback_sc4sap_subagent_prefix`). Files touched: `skills/analyze-cbo-obj/workflow-steps.md`, `skills/analyze-code/workflow.md`, `skills/analyze-symptom/workflow-steps.md`, `skills/ask-consultant/SKILL.md`, `skills/ask-consultant/team-rounds.md`, `skills/compare-programs/team-mode.md`, `skills/compare-programs/workflow.md`, `skills/create-object/workflow-steps.md`, `skills/create-program/inventory-lookups.md`, `skills/create-program/multi-executor-split.md`, `skills/create-program/phase6-buckets.md`. `phase6-buckets.md` additionally reformats the 4-bucket dispatch block from the abbreviated positional signature to full JSON form with `description` + `prompt`.
+Every `Agent(...)` dispatch example in skill MDs now uses the fully-qualified `"sp4sap:sap-<name>"` form — bare `"sap-<name>"` fails at runtime due to Claude Code plugin auto-namespacing (memory `feedback_sp4sap_subagent_prefix`). Files touched: `skills/analyze-cbo-obj/workflow-steps.md`, `skills/analyze-code/workflow.md`, `skills/analyze-symptom/workflow-steps.md`, `skills/ask-consultant/SKILL.md`, `skills/ask-consultant/team-rounds.md`, `skills/compare-programs/team-mode.md`, `skills/compare-programs/workflow.md`, `skills/create-object/workflow-steps.md`, `skills/create-program/inventory-lookups.md`, `skills/create-program/multi-executor-split.md`, `skills/create-program/phase6-buckets.md`. `phase6-buckets.md` additionally reformats the 4-bucket dispatch block from the abbreviated positional signature to full JSON form with `description` + `prompt`.
 
 ### Validated — Phase 7 Type D runtime (Phase 1A↔1B bridge, create-program)
 
@@ -195,7 +405,7 @@ Follow-up patch to 0.6.9. Three independent fixes + one missing implementation; 
 
 ### Fixed — HUD showed "SAP not configured" when launched from a subdirectory
 
-`scripts/hud/lib/sc4sap-status.mjs` resolved the active profile only at the exact `cwd`, while the MCP server walked up the ancestry chain — so launching Claude Code from a nested dev repo (e.g. the plugin source inside a larger workspace) produced HUD line 2 "SAP not configured" even though the MCP connection, `/sc4sap:sap-doctor`, and tool calls all reported the profile live.
+`scripts/hud/lib/sp4sap-status.mjs` resolved the active profile only at the exact `cwd`, while the MCP server walked up the ancestry chain — so launching Claude Code from a nested dev repo (e.g. the plugin source inside a larger workspace) produced HUD line 2 "SAP not configured" even though the MCP connection, `/sp4sap:sap-doctor`, and tool calls all reported the profile live.
 
 `scripts/lib/profile-resolve.mjs` now exposes a shared `findDotSc4sapDir()` + `resolveWorkspaceRoot()`. `readActiveAlias()`, `resolveSapEnvPath()`, and `resolveConfigJsonPath()` accept a `startDir` and walk up until they find a `.sc4sap/` that contains profile state (`active-profile.txt`, `sap.env`, or `config.json`) — skipping any intermediate `.sc4sap/` that holds only artifact folders (`comparisons/`, `test-reports/`, `cbo/`). Falls back to the first `.sc4sap/` on the chain when no ancestor has state. The HUD's `activeProfile()` switched to the shared resolver; downstream `SID` / `client` / `user` fields now render correctly from any subdirectory.
 
@@ -207,9 +417,9 @@ Replaced the single-match helper with `matchBlocklistAll()` (returns every match
 
 ### Added — `scripts/prune-cache.mjs` implementation (Layer 7 cache hygiene)
 
-`skills/sap-doctor/SKILL.md` advertised `/sc4sap:sap-doctor --prune` and `--prune --yes` flags since the doctor skill was introduced, but the underlying `scripts/prune-cache.mjs` implementation had never been committed — running the option hit "script not found" at runtime.
+`skills/sap-doctor/SKILL.md` advertised `/sp4sap:sap-doctor --prune` and `--prune --yes` flags since the doctor skill was introduced, but the underlying `scripts/prune-cache.mjs` implementation had never been committed — running the option hit "script not found" at runtime.
 
-Ships the missing script (227 LOC, dry-run by default, `--yes` to actually delete; `--json` for machine output). It resolves the active plugin version from the marketplace `plugin.json`, walks `~/.claude/plugins/cache/<marketplace>/sc4sap/` to list stale version directories (each typically carrying its own ~500–800 MB `vendor/abap-mcp-adt/node_modules/` subtree), reports sizes in MB, and refuses to run when the active version cannot be resolved. Never touches the marketplace directory or the active cache directory.
+Ships the missing script (227 LOC, dry-run by default, `--yes` to actually delete; `--json` for machine output). It resolves the active plugin version from the marketplace `plugin.json`, walks `~/.claude/plugins/cache/<marketplace>/sp4sap/` to list stale version directories (each typically carrying its own ~500–800 MB `vendor/abap-mcp-adt/node_modules/` subtree), reports sizes in MB, and refuses to run when the active version cannot be resolved. Never touches the marketplace directory or the active cache directory.
 
 `skills/sap-doctor/diagnostic-checks.md` gains a "Layer 7 — Cache Hygiene" section: PASS at zero stale versions, INFO when stale < 500 MB, WARN when stale ≥ 500 MB. Runs independently of Layer 2/3 connectivity so cache bloat is reported even when the SAP system is unreachable.
 
@@ -217,7 +427,7 @@ Ships the missing script (227 LOC, dry-run by default, `--yes` to actually delet
 
 ### Fixed — Keychain storage silently degraded to plaintext on git-clone installs
 
-Claude Code plugin installation is a **git clone**, not an `npm install`. `@napi-rs/keyring` was declared in `optionalDependencies`, but since end users receive only what is committed to the repo (and `node_modules/` is gitignored), the plugin shipped with no keyring module at all. At runtime `scripts/sap-profile-cli.mjs` → `loadKeyring()` → `require('@napi-rs/keyring')` failed silently, `keychainWrite()` threw `KeychainUnavailableError`, and `cmdAdd` caught the error and wrote `SAP_PASSWORD=<plaintext>` to `sap.env` with only a stderr warning that the setup wizard never surfaced. New profiles created via `/sc4sap:sap-option` therefore stored passwords in plaintext regardless of OS keychain support.
+Claude Code plugin installation is a **git clone**, not an `npm install`. `@napi-rs/keyring` was declared in `optionalDependencies`, but since end users receive only what is committed to the repo (and `node_modules/` is gitignored), the plugin shipped with no keyring module at all. At runtime `scripts/sap-profile-cli.mjs` → `loadKeyring()` → `require('@napi-rs/keyring')` failed silently, `keychainWrite()` threw `KeychainUnavailableError`, and `cmdAdd` caught the error and wrote `SAP_PASSWORD=<plaintext>` to `sap.env` with only a stderr warning that the setup wizard never surfaced. New profiles created via `/sp4sap:sap-option` therefore stored passwords in plaintext regardless of OS keychain support.
 
 **Fix — bundle keyring under `runtime-deps/`**:
 - `runtime-deps/keyring/package.json` — `createRequire` anchor.
@@ -232,7 +442,7 @@ Claude Code plugin installation is a **git clone**, not an `npm install`. `@napi
 
 **Bundle size**: 4.4 MB committed (Linux x64 binary dominates at 3.0 MB; Windows/macOS binaries each ~450–470 KB).
 
-**Post-install behaviour**: `/sc4sap:sap-option` and the setup wizard now store new profile passwords as `SAP_PASSWORD=keychain:<service>/<alias>/<user>` and write the plaintext into the OS-native credential store (Windows Credential Manager / macOS Keychain / libsecret), matching the design documented in `scripts/sap-profile-cli.mjs` since 0.6.0. Existing plaintext profiles remain functional; they can be migrated in-place by deleting and re-adding the profile after upgrading to 0.6.9.
+**Post-install behaviour**: `/sp4sap:sap-option` and the setup wizard now store new profile passwords as `SAP_PASSWORD=keychain:<service>/<alias>/<user>` and write the plaintext into the OS-native credential store (Windows Credential Manager / macOS Keychain / libsecret), matching the design documented in `scripts/sap-profile-cli.mjs` since 0.6.0. Existing plaintext profiles remain functional; they can be migrated in-place by deleting and re-adding the profile after upgrading to 0.6.9.
 
 ### Deferred — Stage 3-lite bundle integrity verification
 
@@ -244,7 +454,7 @@ Design recorded in `.sc4sap/stage3-lite-bundle-integrity.md`. Adds an `integrity
 
 Reverts the enforcement layer introduced in 0.6.7. The per-skill `model:` frontmatter returns to being a **declarative hint**; no active sub-dispatch is performed.
 
-**Why**: 2026-04-23 smoke validation (`.sc4sap/test-reports/enforcement-validation-20260423.md`) confirmed a Claude Code architectural limit — sub-dispatched `general-purpose` agents do not receive the `Agent`/`Task` spawn tool and do not have the `mcp__plugin_sc4sap_sap__*` MCP tools in their deferred-tool registry. The 0.6.7 design assumed a Sonnet sub-orchestrator could fan out to phase agents (`sap-code-reviewer`, `sap-stocker`, `sap-analyst`, …); empirically it cannot. 12/14 in-scope skills were functionally broken under 0.6.7; the 2 file-only skills that happened to work did so only by falling back to local file reads rather than live MCP calls.
+**Why**: 2026-04-23 smoke validation (`.sc4sap/test-reports/enforcement-validation-20260423.md`) confirmed a Claude Code architectural limit — sub-dispatched `general-purpose` agents do not receive the `Agent`/`Task` spawn tool and do not have the `mcp__plugin_sp4sap_sap__*` MCP tools in their deferred-tool registry. The 0.6.7 design assumed a Sonnet sub-orchestrator could fan out to phase agents (`sap-code-reviewer`, `sap-stocker`, `sap-analyst`, …); empirically it cannot. 12/14 in-scope skills were functionally broken under 0.6.7; the 2 file-only skills that happened to work did so only by falling back to local file reads rather than live MCP calls.
 
 **What reverted**:
 - `common/main-thread-dispatch.md` — deleted (0.6.7 new file).
@@ -270,7 +480,7 @@ No other changes — 0.6.5 is a pure publish-workflow follow-up to 0.6.4.
 
 ### Changed — Vendor pin bump
 
-- `scripts/build-mcp-server.mjs` `DEFAULT_PINNED_SHA` → `b41d4df546e2cccfa3f6693b656e16868b6facb6` (abap-mcp-adt-powerup **v4.8.1**, previously pinned at a pre-v4.8.0 SHA). npm installers of sc4sap 0.6.4 now receive the ECC DDIC write fallback vendored into the plugin.
+- `scripts/build-mcp-server.mjs` `DEFAULT_PINNED_SHA` → `b41d4df546e2cccfa3f6693b656e16868b6facb6` (abap-mcp-adt-powerup **v4.8.1**, previously pinned at a pre-v4.8.0 SHA). npm installers of sp4sap 0.6.4 now receive the ECC DDIC write fallback vendored into the plugin.
 
 No other functional changes — 0.6.4 is a pure vendor-pin follow-up to 0.6.3.
 
@@ -303,18 +513,18 @@ Register multiple SAP systems per company and hot-switch between them without re
 - **Tier-based readonly enforcement** — `SAP_TIER` enum (`DEV` | `QA` | `PRD`). QA/PRD profiles auto-block `Create*/Update*/Delete*`, `CreateTransport`, and runtime-execution tools. Two-layer defense:
   - Layer 1: PreToolUse hook `scripts/hooks/tier-readonly-guard.mjs` (installed via `scripts/install-hooks.mjs`) — fast, explanatory deny.
   - Layer 2: MCP-server guard in `abap-mcp-adt-powerup/src/lib/readonlyGuard.ts` — uncircumventable; fires even when the hook is missing, disabled, or the plugin is not yet installed. `ReloadProfile` always allowed (the escape hatch back to DEV).
-- **OS keychain passwords** — `SAP_PASSWORD=keychain:sc4sap/<alias>/<user>` references resolved via `@napi-rs/keyring` (Windows Credential Manager / macOS Keychain / libsecret). Declared as `optionalDependencies`; headless environments fall back to plaintext with a loud warning. Added to both `sc4sap` and `abap-mcp-adt-powerup` package.json.
+- **OS keychain passwords** — `SAP_PASSWORD=keychain:sp4sap/<alias>/<user>` references resolved via `@napi-rs/keyring` (Windows Credential Manager / macOS Keychain / libsecret). Declared as `optionalDependencies`; headless environments fall back to plaintext with a loud warning. Added to both `sp4sap` and `abap-mcp-adt-powerup` package.json.
 - **MCP server extensions** (`abap-mcp-adt-powerup`) — new `src/lib/{profile,readonlyGuard,secrets}.ts` (37 new unit tests, no regression on 276 existing), `ReloadProfile` MCP tool, launcher startup hook that activates the profile before the config manager runs. Guard wired into `BaseHandlerGroup.registerToolOnServer` so every tool is checked from a single chokepoint.
 - **`sap-option` multi-profile UX** — new `skills/sap-option/profile-management.md` and `skills/sap-option/migration.md` companions describing switch / add / remove / edit / purge / migrate flows. Status snapshot now shows active profile + tier.
 - **HUD** — Line 2 renders `{alias} [{tier}]` with a 🔒 when tier ≠ DEV. No color is used; the lock icon is the single, theme-independent readonly signal.
 - **Profile CLI** (`scripts/sap-profile-cli.mjs`) — JSON-in/JSON-out backend for skill flows: `list`, `show`, `switch`, `add`, `remove`, `purge`, `migrate`, `detect-legacy`, `keychain-set`, `keychain-delete`, `version`.
-- **Legacy auto-detection** — SessionStart hook `scripts/legacy-migration-banner.mjs` emits a one-time notice when a project has `.sc4sap/sap.env` but no `active-profile.txt`, pointing the user to `/sc4sap:sap-option`. The migration wizard records the version threshold (`multiProfileSince: "0.6.0"`) so the CLI can make upgrade-aware decisions.
+- **Legacy auto-detection** — SessionStart hook `scripts/legacy-migration-banner.mjs` emits a one-time notice when a project has `.sc4sap/sap.env` but no `active-profile.txt`, pointing the user to `/sp4sap:sap-option`. The migration wizard records the version threshold (`multiProfileSince: "0.6.0"`) so the CLI can make upgrade-aware decisions.
 
 **Design docs**: [`docs/multi-profile-design.md`](multi-profile-design.md), [`docs/multi-profile-implementation-plan.md`](multi-profile-implementation-plan.md).
 
 ### Non-breaking
 
-Projects that never migrate keep working: the profile loader falls back to legacy `<project>/.sc4sap/sap.env` and treats missing `SAP_TIER` as `DEV` (permissive). Migration is explicit — triggered only when the user runs `/sc4sap:sap-option` after the banner.
+Projects that never migrate keep working: the profile loader falls back to legacy `<project>/.sc4sap/sap.env` and treats missing `SAP_TIER` as `DEV` (permissive). Migration is explicit — triggered only when the user runs `/sp4sap:sap-option` after the banner.
 
 ## [0.5.4] — 2026-04-20
 
@@ -338,7 +548,7 @@ No skill / agent / rule file changed in this release. Only version fields + mani
 
 ## [0.5.3] — 2026-04-20
 
-### Added — `/sc4sap:ask-consultant` skill
+### Added — `/sp4sap:ask-consultant` skill
 
 New user-facing direct-Q&A skill for consulting with a module consultant agent without running a full create-program / create-object pipeline.
 
@@ -346,14 +556,14 @@ New user-facing direct-Q&A skill for consulting with a module consultant agent w
 - **Read-only**: no `Create*` / `Update*` / `Delete*` / `Activate*` / `CreateTransport` calls. DDIC metadata reads are fine; row extraction (`GetTableContents` / `GetSqlQuery`) is prohibited.
 - **Inherits v0.5.2 conventions**: `<Response_Prefix>` block at top (prefix format `[Model: <main> · Dispatched: Opus×<n> (<consultants>)]`); consultant agents load Tier 1 + Tier 2 per `common/context-loading-protocol.md` so `configs/{MODULE}/*.md` are always available.
 
-### Added — `/sc4sap:compare-programs` skill documentation
+### Added — `/sp4sap:compare-programs` skill documentation
 
 `compare-programs` existed in the skills folder but was missing from `docs/FEATURES.md` skill table. Added to all 4 language variants (en/ko/de/ja).
 
 ### Changed
 
 - **`README.md` / `README.ko.md` / `README.ja.md` / `README.de.md`** — new "Ask Consultant" row in the Core Capabilities table; `FEATURES →` link updated from "18 skills" to "19 skills" count.
-- **`CLAUDE.md`** (sc4sap root) — `/sc4sap:ask-consultant` added to the Skills list.
+- **`CLAUDE.md`** (sp4sap root) — `/sp4sap:ask-consultant` added to the Skills list.
 - **`docs/FEATURES.md` (en/ko/de/ja)** — skills table now has 16 entries (added `compare-programs` + `ask-consultant`); heading updated from "18 Skills" to "16 Skills" (matches actual count).
 
 ## [0.5.2] — 2026-04-20
@@ -380,7 +590,7 @@ New user-facing direct-Q&A skill for consulting with a module consultant agent w
 
 ### Added — Response Prefix Convention
 
-Every `/sc4sap:*` skill-triggered response now begins with `[Model: <main-model> · Dispatched: <sub-summary>]` so the user sees at a glance which model is doing the work. Defined in `model-routing-rule.md` § *Response Prefix Convention*; each of the 15 `/sc4sap:*` SKILL.md files has a `<Response_Prefix>` block pointing to the convention.
+Every `/sp4sap:*` skill-triggered response now begins with `[Model: <main-model> · Dispatched: <sub-summary>]` so the user sees at a glance which model is doing the work. Defined in `model-routing-rule.md` § *Response Prefix Convention*; each of the 15 `/sp4sap:*` SKILL.md files has a `<Response_Prefix>` block pointing to the convention.
 
 ### Changed
 
@@ -417,10 +627,10 @@ The ZMMR00010–ZMMR00200 repair sweep (20 programs, ~150 MCP writes) ran as a s
 
 ### Added — Context Loading Protocol + Model Routing Rule
 
-Two cross-cutting architectural rules that change how every `Agent(...)` dispatch in sc4sap consumes context and selects a model. Result: lower per-dispatch tokens, higher enforcement accuracy, cheaper repetitive bulk work.
+Two cross-cutting architectural rules that change how every `Agent(...)` dispatch in sp4sap consumes context and selects a model. Result: lower per-dispatch tokens, higher enforcement accuracy, cheaper repetitive bulk work.
 
 - **`common/context-loading-protocol.md`** *(new, 85 lines)* — `CLAUDE.md` is an index, not a payload. Every dispatch declares a **Context kit** (minimal file set) + optional triggered reads. Agents read only the kit; expansion requires a logged on-demand fetch or `BLOCKED` return. Kills the implicit "load 25 rule files just in case" anti-pattern observed in past runs.
-- **`common/model-routing-rule.md`** *(new, 88 lines)* — 3-tier heuristic (Sonnet for reads + repetitive bulk + template writes; Opus for novel code + cross-file reasoning + ambiguity; Haiku for trivial lookups). Per-phase / per-Wave routing table for `/sc4sap:create-program`. Sonnet → Opus escalation pattern for hard blockers.
+- **`common/model-routing-rule.md`** *(new, 88 lines)* — 3-tier heuristic (Sonnet for reads + repetitive bulk + template writes; Opus for novel code + cross-file reasoning + ambiguity; Haiku for trivial lookups). Per-phase / per-Wave routing table for `/sp4sap:create-program`. Sonnet → Opus escalation pattern for hard blockers.
 
 ### Changed — Every phase now declares kit + model
 
@@ -433,12 +643,12 @@ Two cross-cutting architectural rules that change how every `Agent(...)` dispatc
 
 ### Why
 
-The `/sc4sap:create-program` pipeline was running every agent with the implicit "load every common/*.md referenced by CLAUDE.md" behavior. Two measured costs: (1) per-dispatch token overhead of ~40–60% on simple repetitive tasks, (2) reviewer attention dilution — 12-bucket checklist gets skimmed because all 12 rule files are in context at once. The context kit + model routing fix both in the same release.
+The `/sp4sap:create-program` pipeline was running every agent with the implicit "load every common/*.md referenced by CLAUDE.md" behavior. Two measured costs: (1) per-dispatch token overhead of ~40–60% on simple repetitive tasks, (2) reviewer attention dilution — 12-bucket checklist gets skimmed because all 12 rule files are in context at once. The context kit + model routing fix both in the same release.
 
 ### Expected effects
 
 - Per-dispatch tokens: −40 to −60% on Sonnet-tier work.
-- Opus usage share: −50% across `/sc4sap:create-program` (previously all Opus; now only Waves that need reasoning).
+- Opus usage share: −50% across `/sp4sap:create-program` (previously all Opus; now only Waves that need reasoning).
 - Phase 6 reviewer consistency: MAJOR-finding detection improves because each bucket runs with only its relevant rule in context.
 
 ## [0.4.1] — 2026-04-20
@@ -464,7 +674,7 @@ Observed during the ZMMR00010–ZMMR00200 batch fix: every `user_command_xxxx` F
 
 ### Changed — Phase 4 / Phase 6 Hardening
 
-Phase 4 and Phase 6 of `/sc4sap:create-program` now block a class of silent-failure regressions where the SAP MCP `Create*` call returned 200 but the resulting object was an empty shell, and where reviewer reported "완료" without re-verifying activation state.
+Phase 4 and Phase 6 of `/sp4sap:create-program` now block a class of silent-failure regressions where the SAP MCP `Create*` call returned 200 but the resulting object was an empty shell, and where reviewer reported "완료" without re-verifying activation state.
 
 - **`common/text-element-rule.md`** — Four pool types (`I` / `S` / `R` / `H`) defined explicitly. Type `S` (Selection Text) is now **mandatory** for every `SELECT-OPTIONS` / `PARAMETERS` name — previously missing, which made selection screens render technical names (`S_BUDAT`, `P_FILE`) at runtime.
 - **`common/include-structure.md`** — Activation protocol made explicit (`UpdateProgram(activate=true)` does NOT cascade to sub-includes; every include must be activated individually or via batch `ActivateObjects`). Six anti-patterns enumerated as MAJOR Phase 6 findings, including Procedural `{PROG}E` presence and "5/5 활성화 OK" reports that leave sub-includes inactive.

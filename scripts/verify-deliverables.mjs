@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Deliverable Verification Hook (SubagentStop)
+ * sp4sap Deliverable Verification Hook (SubagentStop)
  * Checks that completing agents produced their expected deliverables.
  * Adapted from OMC verify-deliverables.mjs.
  *

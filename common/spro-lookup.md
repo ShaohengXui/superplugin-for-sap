@@ -1,6 +1,6 @@
 # SPRO Lookup Protocol
 
-**MANDATORY for all sc4sap consultant agents and any skill that needs SAP Customizing / IMG data.**
+**MANDATORY for all sp4sap consultant agents and any skill that needs SAP Customizing / IMG data.**
 
 When you need SAP Customizing information for a module, resolve the lookup in this order. Steps 2 and 3 are typically combined — the static docs tell you *which table to look at*, the live MCP call tells you *what the customer actually configured*.
 
@@ -66,8 +66,8 @@ question about SAP customizing
 
 ## Setup Awareness
 
-- The cache is populated by `/sc4sap:setup spro` (optional step during setup)
-- If the cache is missing, you MAY recommend the user run `/sc4sap:setup spro` after the current task — but do not block the current task on it
+- The cache is populated by `/sp4sap:setup spro` (optional step during setup)
+- If the cache is missing, you MAY recommend the user run `/sp4sap:setup spro` after the current task — but do not block the current task on it
 - Treat a stale cache (> 90 days, or user-indicated customizing change) as a prompt to suggest refresh, but still prefer it over live query unless the user explicitly opts out
 
 ## Agent Integration Checklist

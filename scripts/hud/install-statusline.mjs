@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Inject sc4sap HUD statusLine into the user's Claude Code settings.json.
+// Inject sp4sap HUD statusLine into the user's Claude Code settings.json.
 // Idempotent: overwrites any existing statusLine only if --force, otherwise
 // leaves a user-customized statusLine untouched.
 //
@@ -50,10 +50,10 @@ if (UNINSTALL) {
 }
 
 const current = settings.statusLine;
-const isSc4sap = current && typeof current.command === 'string' && current.command.includes('sc4sap') && current.command.includes('statusline.mjs');
+const isSc4sap = current && typeof current.command === 'string' && current.command.includes('sp4sap') && current.command.includes('statusline.mjs');
 
 if (current && !isSc4sap && !FORCE) {
-  console.log('⚠️  Existing non-sc4sap statusLine found in', settingsPath);
+  console.log('⚠️  Existing non-sp4sap statusLine found in', settingsPath);
   console.log('    Current:', JSON.stringify(current));
   console.log('    Re-run with --force to overwrite.');
   process.exit(0);
@@ -61,5 +61,5 @@ if (current && !isSc4sap && !FORCE) {
 
 settings.statusLine = desired;
 writeJson(settingsPath, settings);
-console.log('✅ Installed sc4sap HUD statusLine into', settingsPath);
+console.log('✅ Installed sp4sap HUD statusLine into', settingsPath);
 console.log('   Restart Claude Code to see it render below the input box.');

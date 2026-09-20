@@ -16,7 +16,7 @@ Referenced by `workflow.md` § Step 6. Dispatch uses a depth-driven model overri
 
 ```
 Agent({
-  subagent_type: "sc4sap:sap-writer",
+  subagent_type: "sp4sap:sap-writer",
   description: "Render package-to-process master .md for <PACKAGE>",
   model: "sonnet",
   prompt: """

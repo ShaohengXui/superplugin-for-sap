@@ -20,7 +20,7 @@ describe('Skills Validation', () => {
   });
 
   for (const skill of EXPECTED_SKILLS) {
-    describe(`sc4sap:${skill}`, () => {
+    describe(`sp4sap:${skill}`, () => {
       const skillFile = join(SKILLS_DIR, skill, 'SKILL.md');
 
       it('SKILL.md exists', () => {
@@ -37,11 +37,11 @@ describe('Skills Validation', () => {
         expect(fm).toContain('description:');
       });
 
-      it('has sc4sap: prefix in name', () => {
+      it('has sp4sap: prefix in name', () => {
         if (!existsSync(skillFile)) return;
         const content = readFileSync(skillFile, 'utf-8');
-        const nameMatch = content.match(/name:\s*sc4sap:/);
-        expect(nameMatch, 'Skill name must have sc4sap: prefix').toBeTruthy();
+        const nameMatch = content.match(/name:\s*sp4sap:/);
+        expect(nameMatch, 'Skill name must have sp4sap: prefix').toBeTruthy();
       });
     });
   }

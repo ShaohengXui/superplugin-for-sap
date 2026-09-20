@@ -1,0 +1,30 @@
+{
+  "_comment": [
+    "sp4sap — generic MCP client configuration template (stdio).",
+    "Works verbatim for any MCP client that supports the mcpServers JSON shape",
+    "(Claude Desktop, Cline, Continue, Zed, ...).",
+    "",
+    "Replace <SC4SAP_ROOT> with the ABSOLUTE path to this plugin checkout.",
+    "Template variables are NOT expanded by configuration-file MCP servers in",
+    "most clients — use a real absolute path here.",
+    "",
+    "Credentials resolve in this order (see bridge/mcp-server.cjs):",
+    "  1. SC4SAP_ENV_FILE / MCP_ENV_PATH  (absolute path to a profile sap.env)",
+    "  2. <cwd>/.sc4sap/active-profile.txt -> <home>/profiles/<alias>/sap.env",
+    "  3. <cwd>/.sc4sap/sap.env  (legacy)",
+    "  4. SAP_* variables in the env block below (no file needed)",
+    "",
+    "NEVER put a SAP password in this file. Use a keychain: reference in the",
+    "profile sap.env, or export it from a secret manager at launch time."
+  ],
+  "mcpServers": {
+    "sap": {
+      "command": "node",
+      "args": ["<SC4SAP_ROOT>/bridge/mcp-server.cjs"],
+      "env": {
+        "SC4SAP_ENV_FILE": "<HOME>/.sc4sap/profiles/<ALIAS>/sap.env",
+        "SC4SAP_TIER_GUARD": "proxy"
+      }
+    }
+  }
+}

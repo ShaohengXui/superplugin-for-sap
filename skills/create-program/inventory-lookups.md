@@ -12,18 +12,18 @@ Steps:
 2. Check whether `.sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json` exists.
    - **Exists** → Read it. Extract the `objects[]` array. Treat every entry as a **reuse candidate** and surface it in Phase 2 / Phase 3 so the planner and writer prefer the existing asset over creating a new one.
    - **Does not exist** → Offer the user three options in one question:
-     > "No CBO inventory at `.sc4sap/cbo/<MODULE>/<PACKAGE>/`. Pick one: **(A) stock now** — dispatch `sap-stocker` inline (Sonnet, ~2-5 min, recommended) · **(B) skip** — continue without reuse analysis · **(C) cancel** — I'll run `/sc4sap:analyze-cbo-obj` separately first."
+     > "No CBO inventory at `.sc4sap/cbo/<MODULE>/<PACKAGE>/`. Pick one: **(A) stock now** — dispatch `sap-stocker` inline (Sonnet, ~2-5 min, recommended) · **(B) skip** — continue without reuse analysis · **(C) cancel** — I'll run `/sp4sap:analyze-cbo-obj` separately first."
      - **(A) stock now** → Emit phase banner `▶ phase=1.CBO-stock · agent=sap-stocker · model=Sonnet 4.6` and dispatch:
        ```
        Agent({
-         subagent_type: "sc4sap:sap-stocker",
+         subagent_type: "sp4sap:sap-stocker",
          description: "CBO inventory — <PACKAGE>",
          prompt: "Stock the CBO package <PACKAGE> (module <MODULE>). Flagship programs: none (invoked from create-program). Follow your Investigation_Protocol and return success block."
        })
        ```
        On stocker success, re-read the freshly written `inventory.json` and continue to step 3. On `BLOCKED`, surface the reason, fall back to option (B), and log `cbo_inventory: "stock_failed: <reason>"`.
      - **(B) skip** → Record `cbo_inventory: "skipped"` in `.sc4sap/program/{PROG}/platform.md` and continue.
-     - **(C) cancel** → Stop the skill and let the user run `/sc4sap:analyze-cbo-obj` manually.
+     - **(C) cancel** → Stop the skill and let the user run `/sp4sap:analyze-cbo-obj` manually.
 3. Persist the loaded inventory to `.sc4sap/program/{PROG}/cbo-context.md` — one bullet per reusable object: name · type · role · one-line purpose · `reuse_hint`. Planner, writer, and executor all read this file.
 
 Reuse gating rule (applied by `sap-planner` and `sap-writer`):
@@ -37,7 +37,7 @@ Steps:
 1. For the resolved `<MODULE>`, check whether `.sc4sap/customizations/<MODULE>/enhancements.json` **and/or** `.sc4sap/customizations/<MODULE>/extensions.json` exist.
    - **Exists** → Read both files. Treat every `badiImplementations[]` entry, `cmodProjects[]` entry, `formBasedExits[]` entry, and `appendStructures[]` entry as a **reuse candidate**.
    - **Does not exist** → Print one line to the user:
-     > "No customization inventory at `.sc4sap/customizations/<MODULE>/`. Run `/sc4sap:setup customizations` to scan this module's Z*/Y* enhancements first, or type `skip` to proceed without customization reuse analysis."
+     > "No customization inventory at `.sc4sap/customizations/<MODULE>/`. Run `/sp4sap:setup customizations` to scan this module's Z*/Y* enhancements first, or type `skip` to proceed without customization reuse analysis."
      If the user chooses to skip, record `customization_inventory: "skipped"` in `.sc4sap/program/{PROG}/platform.md` and continue.
 2. Persist the loaded inventory to `.sc4sap/program/{PROG}/customization-context.md`. One bullet per entry:
    - BAdI impl: `• BAdI {standardName} → existing impl {Z*_CLASS} (impl name: {impl_name}) — reuse target for any new hook into this BAdI`

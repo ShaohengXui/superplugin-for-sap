@@ -1,4 +1,4 @@
-// sc4sap:package-to-process — BPML (Business Process Master List) builder.
+// sp4sap:package-to-process — BPML (Business Process Master List) builder.
 // Emits .xlsx (styled two-sheet workbook) OR .md (same data as Markdown) —
 // CLI picks the mode from the output file extension.
 //

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Skill Injector Hook (UserPromptSubmit)
+ * sp4sap Skill Injector Hook (UserPromptSubmit)
  * Injects relevant learned skills into context based on prompt triggers.
  * Adapted from OMC skill-injector.mjs.
  *
@@ -144,7 +144,7 @@ function findMatchingSkills(prompt, directory, sessionId) {
 // Format skills for injection
 function formatSkillsMessage(skills) {
   const lines = [
-    '<sc4sap-skills>',
+    '<sp4sap-skills>',
     '',
     '## Relevant SAP Skills',
     '',
@@ -161,7 +161,7 @@ function formatSkillsMessage(skills) {
     lines.push('');
   }
 
-  lines.push('</sc4sap-skills>');
+  lines.push('</sp4sap-skills>');
   return lines.join('\n');
 }
 

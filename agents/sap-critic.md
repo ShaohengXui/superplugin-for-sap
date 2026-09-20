@@ -2,7 +2,7 @@
 name: sap-critic
 description: SAP quality gate — functional specification review, configuration validation, and implementation plan critique (Opus, R/O)
 model: claude-opus-4-7
-tools: [Read, Grep, Glob, Bash, WebFetch, WebSearch, mcp__plugin_sc4sap_sap__GetPackage, mcp__plugin_sc4sap_sap__GetPackageContents, mcp__plugin_sc4sap_sap__GetPackageTree, mcp__plugin_sc4sap_sap__GetObjectsByType, mcp__plugin_sc4sap_sap__SearchObject, mcp__plugin_sc4sap_sap__GetTable, mcp__plugin_sc4sap_sap__GetStructure, mcp__plugin_sc4sap_sap__GetDataElement, mcp__plugin_sc4sap_sap__GetDomain, mcp__plugin_sc4sap_sap__GetView, mcp__plugin_sc4sap_sap__GetClass, mcp__plugin_sc4sap_sap__GetProgram, mcp__plugin_sc4sap_sap__GetFunctionModule, mcp__plugin_sc4sap_sap__GetInterface, mcp__plugin_sc4sap_sap__GetAbapSemanticAnalysis, mcp__plugin_sc4sap_sap__GetInactiveObjects, mcp__plugin_sc4sap_sap__GetTransport, mcp__plugin_sc4sap_sap__ListTransports, mcp__plugin_sc4sap_sap__GetObjectInfo, mcp__plugin_sc4sap_sap__GetWhereUsed]
+tools: [Read, Grep, Glob, Bash, WebFetch, WebSearch, mcp__plugin_sp4sap_sap__GetPackage, mcp__plugin_sp4sap_sap__GetPackageContents, mcp__plugin_sp4sap_sap__GetPackageTree, mcp__plugin_sp4sap_sap__GetObjectsByType, mcp__plugin_sp4sap_sap__SearchObject, mcp__plugin_sp4sap_sap__GetTable, mcp__plugin_sp4sap_sap__GetStructure, mcp__plugin_sp4sap_sap__GetDataElement, mcp__plugin_sp4sap_sap__GetDomain, mcp__plugin_sp4sap_sap__GetView, mcp__plugin_sp4sap_sap__GetClass, mcp__plugin_sp4sap_sap__GetProgram, mcp__plugin_sp4sap_sap__GetFunctionModule, mcp__plugin_sp4sap_sap__GetInterface, mcp__plugin_sp4sap_sap__GetAbapSemanticAnalysis, mcp__plugin_sp4sap_sap__GetInactiveObjects, mcp__plugin_sp4sap_sap__GetTransport, mcp__plugin_sp4sap_sap__ListTransports, mcp__plugin_sp4sap_sap__GetObjectInfo, mcp__plugin_sp4sap_sap__GetWhereUsed]
 disallowedTools: [Write, Edit]
 ---
 
@@ -87,7 +87,7 @@ disallowedTools: [Write, Edit]
        - A **second append structure** on a base table that already appears in `extensions.json → appendStructures[]` with a `CI_*` / `Z*` append — unless the plan explicitly justifies non-reuse.
        - A **new form-based user-exit** edit that conflicts with an existing customization surfaced in `formBasedExits[]` (e.g., routine overlap).
     4. Raise a **CRITICAL finding** when the plan proposes a new Z object that would **shadow or silently override** an existing active Z implementation surfaced by the cache (name collision, overlapping filter criteria on the same BAdI, duplicate append on the same field).
-    5. If the cache file is missing for an involved module, downgrade findings in this category to **"pending customization inventory"** and require the team to run `/sc4sap:setup customizations {MODULE}` before the plan can be ACCEPTED. Do not green-light a plan that touches enhancements/extensions without either the cache present OR a documented opt-out justification.
+    5. If the cache file is missing for an involved module, downgrade findings in this category to **"pending customization inventory"** and require the team to run `/sp4sap:setup customizations {MODULE}` before the plan can be ACCEPTED. Do not green-light a plan that touches enhancements/extensions without either the cache present OR a documented opt-out justification.
     6. Always cite the cache `timestamp` in your critique so reviewers know how fresh the evidence is.
   </Customization_Context>
 

@@ -144,12 +144,12 @@ export function activityState(transcriptPath) {
 }
 
 // Scan transcript tail for recent tool_result blocks whose matching tool_use
-// has name starting with `prefix` (e.g. `mcp__plugin_sc4sap_sap__`).
+// has name starting with `prefix` (e.g. `mcp__plugin_sp4sap_sap__`).
 // Returns 'ok' | 'error' | 'unknown' based on the most recent such call.
 // 'error' when the tool_result has is_error:true or content looks like an MCP
 // transport error (disconnected / not available). 'unknown' when no matching
 // call was seen within windowMs — caller falls back to the installed-file check.
-export function mcpConnectionState(transcriptPath, prefix = 'mcp__plugin_sc4sap_sap__', windowMs = 10 * 60 * 1000) {
+export function mcpConnectionState(transcriptPath, prefix = 'mcp__plugin_sp4sap_sap__', windowMs = 10 * 60 * 1000) {
   if (!transcriptPath || !existsSync(transcriptPath)) return 'unknown';
   const tail = readTail(transcriptPath, 512 * 1024);
   const lines = tail.split('\n');

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sc4sap install-hooks — register sc4sap PreToolUse hooks in Claude Code
+ * sp4sap install-hooks — register sp4sap PreToolUse hooks in Claude Code
  * `settings.json`. Installs two hooks:
  *
  *   1. block-forbidden-tables   — row-extraction safety for
@@ -11,7 +11,7 @@
  * Usage:
  *   node scripts/install-hooks.mjs              # install into user settings (~/.claude/settings.json)
  *   node scripts/install-hooks.mjs --project    # install into project .claude/settings.json
- *   node scripts/install-hooks.mjs --uninstall  # remove both sc4sap hooks
+ *   node scripts/install-hooks.mjs --uninstall  # remove both sp4sap hooks
  *
  * Idempotent: detects each hook by marker (basename) and upserts it. Existing
  * single-hook installs (block-forbidden-tables only) are preserved — the new
@@ -37,7 +37,7 @@ function resolveHookScript(basename) {
       '.claude',
       'plugins',
       'marketplaces',
-      'sc4sap',
+      'sp4sap',
       'scripts',
       'hooks',
       basename,
@@ -58,10 +58,16 @@ const HOOKS = [
   },
   {
     marker: 'tier-readonly-guard.mjs',
+    // Must mirror MUTATION_PREFIXES + RUNTIME_EXEC in scripts/lib/tier-guard.mjs.
+    // The earlier matcher omitted Patch/Write/Activate and
+    // RuntimeCreateProfilerTraceParameters, so the hook was never invoked for
+    // those tools even though its matrix blocked them. The guard itself no
+    // longer depends on this regex (it evaluates whatever it receives), but a
+    // stale matcher still costs a full tool round-trip before L2 rejects.
     matcher:
-      'mcp__.*__(Create|Update|Delete|RunUnitTest|RuntimeRunProgramWithProfiling|RuntimeRunClassWithProfiling)',
+      'mcp__.*__(Create|Update|Delete|Patch|Write|Activate|RunUnitTest|RuntimeRunProgramWithProfiling|RuntimeRunClassWithProfiling|RuntimeCreateProfilerTraceParameters)',
     testHint:
-      'Test it by switching to a QA/PRD profile via /sc4sap:sap-option, then calling an Update* tool — the call should be denied.',
+      'Test it by switching to a QA/PRD profile via /sp4sap:sap-option, then calling an Update* tool — the call should be denied.',
   },
 ];
 
@@ -78,7 +84,7 @@ function loadSettings() {
   try {
     return JSON.parse(readFileSync(settingsPath, 'utf8'));
   } catch (err) {
-    console.error(`[sc4sap] Could not parse ${settingsPath}: ${err.message}`);
+    console.error(`[sp4sap] Could not parse ${settingsPath}: ${err.message}`);
     process.exit(1);
   }
 }
@@ -137,15 +143,15 @@ if (uninstall) {
   let removed = 0;
   for (const spec of HOOKS) {
     if (uninstallOne(settings, spec)) {
-      console.log(`[sc4sap] Removed ${spec.marker} hook.`);
+      console.log(`[sp4sap] Removed ${spec.marker} hook.`);
       removed++;
     }
   }
   if (removed === 0) {
-    console.log('[sc4sap] No sc4sap hooks found — nothing to remove.');
+    console.log('[sp4sap] No sp4sap hooks found — nothing to remove.');
   } else {
     saveSettings(settings);
-    console.log(`[sc4sap] Updated ${settingsPath}`);
+    console.log(`[sp4sap] Updated ${settingsPath}`);
   }
   process.exit(0);
 }
@@ -156,7 +162,7 @@ for (const spec of HOOKS) {
 }
 saveSettings(settings);
 
-console.log(`[sc4sap] Updated ${settingsPath}`);
+console.log(`[sp4sap] Updated ${settingsPath}`);
 for (const { spec, result } of results) {
   console.log('');
   console.log(`  ${result.action}: ${spec.marker}`);

@@ -1,6 +1,6 @@
 # Phase 6 — Code Review (MANDATORY, Unconditional)
 
-This file is the authoritative checklist for the Phase 6 review step of `/sc4sap:create-program`. SKILL.md references this file — do not duplicate the content there.
+This file is the authoritative checklist for the Phase 6 review step of `/sp4sap:create-program`. SKILL.md references this file — do not duplicate the content there.
 
 ## Purpose
 
@@ -119,7 +119,7 @@ Core (clean-code.md, both paradigms):
 - [ ] No commented-out code, no debug statements (`BREAK-POINT`, `MESSAGE 'TEST'`)
 
 Paradigm = OOP → load `clean-code-oop.md` and check:
-- [ ] **Main program structure matches `../../common/oop-sample/zrsc4sap_oop_ex.prog.abap`** — REPORT statement, INCLUDE order, event block layout, two-class bootstrap (`go_data = NEW lcl_data( )` / `go_alv = NEW lcl_alv( go_data )`). Any structural deviation must be justified in `spec.md`; otherwise MAJOR finding.
+- [ ] **Main program structure matches `../../common/oop-sample/zrsp4sap_oop_ex.prog.abap`** — REPORT statement, INCLUDE order, event block layout, two-class bootstrap (`go_data = NEW lcl_data( )` / `go_alv = NEW lcl_alv( go_data )`). Any structural deviation must be justified in `spec.md`; otherwise MAJOR finding.
 - [ ] Classes `FINAL` unless designed for inheritance; members `PRIVATE` by default
 - [ ] Methods do one thing, ≤ 30 lines, single abstraction level, ≤ 3 IMPORTING parameters
 - [ ] Methods return one value (`RETURNING` over `EXPORTING`); no boolean input parameters

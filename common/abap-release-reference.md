@@ -2,7 +2,7 @@
 
 Syntax feature inventory by ABAP release. Agents MUST NOT emit features newer than the configured `ABAP_RELEASE` in `.sc4sap/config.json` (or `sap.env`) — doing so causes activation failures on the target system.
 
-If `ABAP_RELEASE` is unset, fail safe: ask the user to run `/sc4sap:setup` or `/sc4sap:sap-option` before generating code.
+If `ABAP_RELEASE` is unset, fail safe: ask the user to run `/sp4sap:setup` or `/sp4sap:sap-option` before generating code.
 
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: sc4sap:analyze-code
+name: sp4sap:analyze-code
 description: ABAP code analysis — delegate source reads + AST/semantic/where-used analysis + rule-based review to sap-code-reviewer, then optionally render a rich briefing via sap-writer
 level: 2
 model: sonnet
@@ -11,7 +11,7 @@ Reviews an ABAP object by delegating the heavy work (source read, structural/sem
 
 
 <Purpose>
-sc4sap:analyze-code provides a comprehensive, severity-rated ABAP code review backed by the AST, semantic analysis, and where-used data that only the live SAP system can produce. The flow is deliberately thin on the main thread: the reviewer agent owns context-heavy work so the skill orchestrator stays light.
+sp4sap:analyze-code provides a comprehensive, severity-rated ABAP code review backed by the AST, semantic analysis, and where-used data that only the live SAP system can produce. The flow is deliberately thin on the main thread: the reviewer agent owns context-heavy work so the skill orchestrator stays light.
 </Purpose>
 
 <Response_Prefix>
@@ -35,15 +35,15 @@ Type B (Coder ↔ Consultant) teamMode activates between Step 2 (reviewer full r
 </Use_When>
 
 <Do_Not_Use_When>
-- User wants to modify the code immediately → `/sc4sap:create-program` (full program flows) or direct `UpdateClass` / `UpdateProgram` / `UpdateInclude` MCP calls
-- Object doesn't exist yet → `/sc4sap:create-object`
+- User wants to modify the code immediately → `/sp4sap:create-program` (full program flows) or direct `UpdateClass` / `UpdateProgram` / `UpdateInclude` MCP calls
+- Object doesn't exist yet → `/sp4sap:create-object`
 - User just wants to read the source → `ReadClass`, `ReadProgram` etc. directly
 </Do_Not_Use_When>
 
 <Session_Trust_Bootstrap>
 **MANDATORY — runs as Step 0 before any MCP call or user interaction.**
 
-Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:analyze-code` to pre-grant all MCP tool + file-op permissions for this session (eliminates per-tool "Allow this tool?" prompts during the review flow).
+Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:analyze-code` to pre-grant all MCP tool + file-op permissions for this session (eliminates per-tool "Allow this tool?" prompts during the review flow).
 
 - If `.sc4sap/session-trust.log` already has a line within the last 24h, skip silently.
 - Otherwise run it and surface the one-line confirmation.

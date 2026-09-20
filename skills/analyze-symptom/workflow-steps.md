@@ -4,7 +4,7 @@ Referenced from `SKILL.md` → `<Workflow_Steps>`. Main thread runs Haiku 4.5; t
 
 ## Step 0 — Trust Session (skill-to-skill, Haiku)
 
-Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:analyze-symptom`. Skip silently if already trusted within 24h.
+Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:analyze-symptom`. Skip silently if already trusted within 24h.
 
 ## Step 1 — Initial Triage (main thread, Haiku)
 
@@ -26,7 +26,7 @@ Emit phase banner per `common/model-routing-rule.md` § Phase Banner Convention:
 Dispatch:
 ```
 Agent({
-  subagent_type: "sc4sap:sap-debugger",
+  subagent_type: "sp4sap:sap-debugger",
   model: "opus",                                  // override base Sonnet — production incident triage needs Opus
   description: "Symptom triage — round <N>",
   prompt: """
@@ -129,8 +129,8 @@ Draw directly from the debugger's `hypotheses[].confirmation_path`. Static class
 After hypothesis confirmation, hand off to the correct follow-up:
 
 - **Custom code fix** → direct `UpdateClass` / `UpdateProgram` / `UpdateInclude` MCP calls, or dispatch `sap-debugger` (write mode, base Sonnet — no Opus override needed for mechanical fix)
-- **Code quality review** → `/sc4sap:analyze-code`
-- **Module-specific configuration deep-dive** → `/sc4sap:ask-consultant` with the target module
+- **Code quality review** → `/sp4sap:analyze-code`
+- **Module-specific configuration deep-dive** → `/sp4sap:ask-consultant` with the target module
 - **Dump reproduction** → dispatch `sap-debugger` with `RuntimeRunClassWithProfiling` / `RuntimeRunProgramWithProfiling`
 - **Runtime investigation needing cross-user auth check** → user does SU53 externally
 

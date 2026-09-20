@@ -2,7 +2,7 @@
 
 ← [README に戻る](../README.ja.md) · [インストール](INSTALLATION.ja.md) · [機能](FEATURES.ja.md)
 
-sc4sap のすべての注目すべき変更をここに記録しています。完全なリリースノートは [GitHub Releases](https://github.com/babamba2/superclaude-for-sap/releases) を参照。
+sp4sap のすべての注目すべき変更をここに記録しています。完全なリリースノートは [GitHub Releases](https://github.com/ShaohengXui/superplugin-for-sap/releases) を参照。
 
 本プロジェクトは [Semantic Versioning](https://semver.org/) および [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 形式に従います。
 
@@ -17,7 +17,7 @@ _未リリース変更なし。_
 ## [0.6.1] - 2026-04-21
 
 ### 追加
-- **`/sc4sap:setup` マルチプロファイル認識** — ウィザードに Step 0 (レガシー検出 + プロファイルブートストラップ) と専用プロファイル作成フロー (`skills/setup/wizard-step-04-profile-creation.md`) を追加。0.6.0 以前の `<project>/.sc4sap/sap.env` ユーザーは `sap-profile-cli.mjs migrate` で自動マイグレーション; 新規インストールは `~/.sc4sap/profiles/<alias>/` に最初のプロファイルを OS キーチェーンバックの認証情報付きで作成。
+- **`/sp4sap:setup` マルチプロファイル認識** — ウィザードに Step 0 (レガシー検出 + プロファイルブートストラップ) と専用プロファイル作成フロー (`skills/setup/wizard-step-04-profile-creation.md`) を追加。0.6.0 以前の `<project>/.sc4sap/sap.env` ユーザーは `sap-profile-cli.mjs migrate` で自動マイグレーション; 新規インストールは `~/.sc4sap/profiles/<alias>/` に最初のプロファイルを OS キーチェーンバックの認証情報付きで作成。
 - **Tier ゲート Step 9** — ABAP ユーティリティインストール (`ZMCP_ADT_UTILS`, `ZCL_S4SAP_CM_*`, OData/ZRFC クラス) は `SAP_TIER=DEV` でのみ実行。QA/PRD プロファイルはインストール拒否 + CTS インポートガイド出力; DEV インストールは `SAP_URL+SAP_CLIENT` で sibling プロファイル間 dedup (`~/.sc4sap/profiles/<alias>/.abap-utils-installed` sentinel)。
 - **Step 12 PreToolUse ダブルフック** — `.claude/settings.json` (プロジェクトレベル) に `block-forbidden-tables.mjs` と `tier-readonly-guard.mjs` の **両方** をインストール、各々のスモークテスト実施。
 - **共有プロファイル resolver** (`scripts/lib/profile-resolve.mjs`) — `resolveSapEnvPath`, `resolveConfigJsonPath`, `resolveArtifactBase`, `readActiveSapEnv`, `readActiveConfigJson`, `readDotenv`, `normalizeTier`。HUD / フック / スクリプトが使用する active-profile → `~/.sc4sap/profiles/<alias>/` 解決パターンを一元化。
@@ -34,7 +34,7 @@ _未リリース変更なし。_
 
 ### 修正
 - **`sap-profile-cli.mjs list`/`show` パスワード漏洩** — プロファイル env が plaintext fallback 状態 (キーチェーン利用不可) のとき `passwordRef` フィールドが生のパスワードを出力していた。現在は non-keychain 値に対して `"plaintext (masked)"` リテラルを返す; `keychain:…` 参照はそのまま通過。
-- **マイグレーション後の HUD ENV ステータス** — `sc4sap-status.mjs::sapEnvPresent / readConfig / activeTransport / systemInfo / sproCacheAge` がすべて `<project>/.sc4sap/…` のみ参照していたため、マルチプロファイルマイグレーション後に機能しなかった。現在はアクティブプロファイルポインター優先解決、レガシーフォールバック維持。
+- **マイグレーション後の HUD ENV ステータス** — `sp4sap-status.mjs::sapEnvPresent / readConfig / activeTransport / systemInfo / sproCacheAge` がすべて `<project>/.sc4sap/…` のみ参照していたため、マルチプロファイルマイグレーション後に機能しなかった。現在はアクティブプロファイルポインター優先解決、レガシーフォールバック維持。
 - **`block-forbidden-tables.mjs` プロファイル不一致** — アクティブプロファイルの `config.json` が別の値でも、フックがデフォルト `standard` を報告していた (レガシープロジェクト `config.json` のみ読んでいたが、マイグレーションで削除済)。現在はアクティブプロファイルの config を読む。
 - **`code-simplifier.mjs`** と **`sap-option-tui.mjs`** — それぞれ Stop フックと standalone TUI がレガシープロジェクトパスのみ読んでいたのを、共有プロファイルヘルパー経由で解決するよう修正。
 
@@ -46,11 +46,11 @@ _未リリース変更なし。_
 
 ## リリース履歴
 
-以前のリリースは [Git タグ履歴](https://github.com/babamba2/superclaude-for-sap/tags) および [GitHub Releases](https://github.com/babamba2/superclaude-for-sap/releases) を参照。
+以前のリリースは [Git タグ履歴](https://github.com/ShaohengXui/superplugin-for-sap/tags) および [GitHub Releases](https://github.com/ShaohengXui/superplugin-for-sap/releases) を参照。
 
 ### バージョン体系
 
-sc4sap は `v{MAJOR}.{MINOR}.{PATCH}` 形式:
+sp4sap は `v{MAJOR}.{MINOR}.{PATCH}` 形式:
 - **MAJOR** — スキル API、設定スキーマ、最小 SAP/Claude Code バージョンへの破壊的変更
 - **MINOR** — 新しいスキル、新しいエージェント、新しい common 規則、後方互換の機能追加
 - **PATCH** — バグ修正、ドキュメントのみの変更、非破壊的リファクタリング
@@ -60,7 +60,7 @@ sc4sap は `v{MAJOR}.{MINOR}.{PATCH}` 形式:
 - **Claude Code**: >= 2.x
 - **Node.js**: >= 20.0.0
 - **SAP**: ECC 6.0 / S/4HANA On-Premise / S/4HANA Cloud (Public & Private)
-- **MCP サーバー**: バンドルされた `abap-mcp-adt-powerup` (`/sc4sap:setup` が自動インストール、リリースごとにバージョン固定)
+- **MCP サーバー**: バンドルされた `abap-mcp-adt-powerup` (`/sp4sap:setup` が自動インストール、リリースごとにバージョン固定)
 
 ---
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sc4sap PreToolUse hook — Block Forbidden Tables (profile-aware)
+ * sp4sap PreToolUse hook — Block Forbidden Tables (profile-aware)
  *
  * Intercepts MCP tool calls that would read row data from SAP and checks the
  * target table(s) against `exceptions/table_exception.md`, filtered by the
@@ -279,7 +279,7 @@ async function main() {
   let builtin;
   try { builtin = loadBuiltinBlocklist(); }
   catch (err) {
-    process.stderr.write(`[sc4sap hook] Unable to load blocklist: ${err.message}\n`);
+    process.stderr.write(`[sp4sap hook] Unable to load blocklist: ${err.message}\n`);
     process.exit(0);
   }
 
@@ -306,10 +306,10 @@ async function main() {
   if (denyHits.length > 0) {
     const lines = denyHits.map((h) => `  - ${h.table} — ${h.category}: ${h.why || 'protected'}`).join('\n');
     const reason =
-      `sc4sap blocklist (profile: ${profile}) — row extraction denied:\n${lines}\n\n` +
+      `sp4sap blocklist (profile: ${profile}) — row extraction denied:\n${lines}\n\n` +
       `See exceptions/table_exception.md and common/data-extraction-policy.md for allowed alternatives ` +
       `(released CDS views, anonymized test data, COUNT/SUM aggregates, or documented one-off approval).\n` +
-      `To change scope, run \`/sc4sap:setup\` and reselect the blocklist profile.`;
+      `To change scope, run \`/sp4sap:setup\` and reselect the blocklist profile.`;
     process.stdout.write(JSON.stringify({
       hookSpecificOutput: {
         hookEventName: 'PreToolUse',
@@ -323,7 +323,7 @@ async function main() {
   // warn category: require explicit user confirmation via permissionDecision="ask".
   const lines = warnHits.map((h) => `  - ${h.table} — ${h.category}: ${h.why || 'sensitive'}`).join('\n');
   const reason =
-    `sc4sap blocklist (profile: ${profile}) — sensitive table access requires confirmation:\n${lines}\n\n` +
+    `sp4sap blocklist (profile: ${profile}) — sensitive table access requires confirmation:\n${lines}\n\n` +
     `These are "Protected Business Data" tables. Default posture is blocked until the user authorizes the request ` +
     `(scope, anonymization, intended use). Approve only if the user has confirmed scope and party-ID handling. ` +
     `Safer alternatives: released CDS views, anonymized test data, COUNT/SUM aggregates.`;

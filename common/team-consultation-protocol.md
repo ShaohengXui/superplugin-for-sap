@@ -1,6 +1,6 @@
 # Team Consultation Protocol
 
-Shared protocol for sc4sap multi-specialist agent teams. Loaded as Tier 3 (triggered) when an agent spawn indicates `teamMode=true`. Full architecture: [`../docs/team-consultation-architecture.md`](../docs/team-consultation-architecture.md).
+Shared protocol for sp4sap multi-specialist agent teams. Loaded as Tier 3 (triggered) when an agent spawn indicates `teamMode=true`. Full architecture: [`../docs/team-consultation-architecture.md`](../docs/team-consultation-architecture.md).
 
 ## Message types
 

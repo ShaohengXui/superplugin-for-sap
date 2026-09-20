@@ -24,7 +24,7 @@ When not satisfied → skip teamMode, proceed to Step 3 legacy report.
 
 1. Generate `team_name` = `analyze-code-<OBJECT>-<YYYYMMDD-HHMMSS>`.
 2. `TeamCreate`; write `00-charter.md` with:
-   - invoked_by: `/sc4sap:analyze-code`
+   - invoked_by: `/sp4sap:analyze-code`
    - members: `sap-code-reviewer`, `sap-<module>-consultant` × N
    - environment (omit null fields)
    - object: `<type>/<name>`

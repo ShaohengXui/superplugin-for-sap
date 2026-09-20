@@ -1,0 +1,34 @@
+{
+  "name": "sp4sap",
+  "version": "0.7.0",
+  "description": "SuperPlugin for SAP — SAP ABAP development for Codex. Connects to SAP On-Premise S/4HANA over the abap-mcp-adt MCP server (150+ ADT tools) with Dev/QA/Prod write protection, 25 SAP-specialized agents, and 14 workflow skills.",
+  "author": {
+    "name": "paek seunghyun"
+  },
+  "homepage": "https://github.com/ShaohengXui/superplugin-for-sap",
+  "repository": "https://github.com/ShaohengXui/superplugin-for-sap",
+  "license": "MIT",
+  "keywords": [
+    "sap",
+    "abap",
+    "s4hana",
+    "erp",
+    "abap-development",
+    "mcp",
+    "on-premise"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SuperPlugin for SAP",
+    "shortDescription": "SAP ABAP development with live S/4HANA connectivity",
+    "longDescription": "Create, read, change and activate ABAP objects — classes, programs, function modules, CDS views, RAP business objects — directly on an SAP On-Premise S/4HANA system through the abap-mcp-adt MCP server. Includes Dev/QA/Prod tier write protection, transport management, ATC/unit-test runs, SPRO configuration reference for 14 modules, and 25 SAP-specialized agent roles.",
+    "developerName": "paek seunghyun",
+    "category": "Development",
+    "websiteURL": "https://github.com/ShaohengXui/superplugin-for-sap",
+    "defaultPrompt": [
+      "Read ABAP class ZCL_EXAMPLE and summarize what it does.",
+      "Create an ALV report for open purchase orders by vendor.",
+      "Run ATC on package ZSD_ORDER and list the findings."
+    ]
+  }
+}

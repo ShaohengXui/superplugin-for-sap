@@ -1,6 +1,6 @@
 # ALV Rules
 
-Shared ALV display rules for sc4sap programs.
+Shared ALV display rules for sp4sap programs.
 
 ## Display Mode Selection
 
@@ -16,7 +16,7 @@ Shared ALV display rules for sc4sap programs.
 
 ## Field Catalog Construction Standard
 
-Reference: `sc4sap/common/alv-sample/field-catalog-guide.abap`.
+Reference: `sp4sap/common/alv-sample/field-catalog-guide.abap`.
 
 ### Step 1 — Auto-Extract via SALV Factory
 

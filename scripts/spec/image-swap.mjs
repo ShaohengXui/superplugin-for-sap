@@ -1,4 +1,4 @@
-// sc4sap:program-to-spec — Image swap helper for cloned spec xlsx files.
+// sp4sap:program-to-spec — Image swap helper for cloned spec xlsx files.
 //
 // SLOTS (Sheet, anchor, drawing file)
 //   selection   → xl/media/image2.png  (Sheet 3, C4,  drawing3.xml block 1)

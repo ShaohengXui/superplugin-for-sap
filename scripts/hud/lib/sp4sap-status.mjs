@@ -1,4 +1,4 @@
-// Lightweight sc4sap-specific status: SAP version, ABAP release, MCP build, sap.env presence.
+// Lightweight sp4sap-specific status: SAP version, ABAP release, MCP build, sap.env presence.
 import { existsSync, readFileSync, statSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
@@ -129,7 +129,7 @@ export function activeTransport(workspaceDir) {
   } catch { return null; }
 }
 
-// Resolve the active sc4sap profile for HUD line 2. Walks up from
+// Resolve the active sp4sap profile for HUD line 2. Walks up from
 // `workspaceDir` (via the shared resolver) looking for the nearest
 // `.sc4sap/active-profile.txt`; locates the user-level env file at
 // `$SC4SAP_HOME_DIR/profiles/<alias>/sap.env` (or `~/.sc4sap/profiles/...`),
@@ -139,12 +139,12 @@ export function activeTransport(workspaceDir) {
 // Returns { alias, tier, readonly, legacy } or null if no profile data at all.
 export function activeProfile(workspaceDir) {
   const alias = readActiveAlias(workspaceDir);
-  const sc4sapHome = process.env.SC4SAP_HOME_DIR || join(homedir(), '.sc4sap');
+  const sp4sapHome = process.env.SC4SAP_HOME_DIR || join(homedir(), '.sc4sap');
 
   let envPath;
   let legacy;
   if (alias) {
-    envPath = join(sc4sapHome, 'profiles', alias, 'sap.env');
+    envPath = join(sp4sapHome, 'profiles', alias, 'sap.env');
     legacy = false;
   } else {
     envPath = join(resolveWorkspaceRoot(workspaceDir), '.sc4sap', 'sap.env');
@@ -178,7 +178,7 @@ function normalizeTier(value) {
 
 // Resolve system info (SID / client / user) for HUD line 2. Priority:
 //   1. Active profile's config.json → systemInfo.{sid,client,user}
-//      (set by /sc4sap:setup after a successful GetSession)
+//      (set by /sp4sap:setup after a successful GetSession)
 //   2. Active profile's sap.env → SAP_SID / SAP_CLIENT / SAP_USERNAME
 //   3. Legacy project config.json → systemInfo
 //   4. Legacy project sap.env → SAP_SID / SAP_CLIENT / SAP_USERNAME

@@ -41,7 +41,7 @@ Lead:
    ```
    TEAM CHARTER
    team_name: <team_name>
-   invoked_by: /sc4sap:create-program · Phase <1A|2>
+   invoked_by: /sp4sap:create-program · Phase <1A|2>
    members: <sap-<module>-consultant × N for each module in module_set>
    round_cap: 3
    environment:

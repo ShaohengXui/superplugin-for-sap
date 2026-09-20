@@ -1,7 +1,7 @@
 {
-  "name": "@babamba2/superclaude-for-sap",
-  "version": "0.6.18",
-  "description": "SuperClaude for SAP — Claude Code plugin for SAP On-Premise S/4HANA development",
+  "name": "@shaohengxui/superplugin-for-sap",
+  "version": "0.7.0",
+  "description": "SuperPlugin for SAP — Claude Code plugin for SAP On-Premise S/4HANA development",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     }
   },
   "bin": {
-    "sc4sap": "bridge/cli.cjs"
+    "sp4sap": "bridge/cli.cjs"
   },
   "files": [
     "dist",
@@ -22,7 +22,11 @@
     "scripts",
     "skills",
     "configs",
+    "mcp",
     ".claude-plugin",
+    ".zcode-plugin",
+    ".codex-plugin",
+    ".agents",
     ".mcp.json",
     "CLAUDE.md",
     "README.md",

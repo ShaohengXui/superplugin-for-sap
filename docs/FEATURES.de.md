@@ -40,34 +40,34 @@
 
 | Skill | Beschreibung |
 |-------|--------------|
-| `sc4sap:setup` | Plugin-Setup — Auto-Installation des MCP-Servers, SPRO-Konfig generieren, Blocklist-Hook installieren |
-| `sc4sap:mcp-setup` | Eigenständiger MCP ABAP ADT Server Install-/Rekonfig-Guide |
-| `sc4sap:sap-option` | `.sc4sap/sap.env` anzeigen/bearbeiten (Credentials, RFC-Backend, Blocklist, aktive Module) |
-| `sc4sap:sap-doctor` | Plugin + MCP + SAP Diagnose (6 Schichten) |
-| `sc4sap:create-object` | ABAP-Objekterstellung (Hybrid-Mode — Transport + Paket bestätigen, erstellen, aktivieren) |
-| `sc4sap:create-program` | Volle ABAP-Programm-Pipeline — Main+Include, OOP/Prozedural, ALV, Dynpro, Text Elements, ABAP Unit |
-| `sc4sap:program-to-spec` | ABAP-Programm zu Fach-/Technikspezifikation reverse-engineeren (Markdown / Excel) |
-| `sc4sap:compare-programs` | Business-orientierter Seite-an-Seite-Vergleich von 2–5 ABAP-Programmen nach Modul / Land / Persona — berater-gerechter Markdown-Bericht |
-| `sc4sap:analyze-code` | ABAP-Codeanalyse (Clean ABAP / Performance / Security) |
-| `sc4sap:analyze-cbo-obj` | CBO-Inventarscanner + Cross-Module-Gap-Analyse |
-| `sc4sap:analyze-symptom` | Schritt-für-Schritt-Analyse von SAP-Betriebsfehlern/-symptomen (Dumps, Logs, SAP-Note-Kandidaten) |
-| `sc4sap:ask-consultant` | Direkte Q&A mit einem Modulberater-Agent (SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC). Nur-Lese — Antwortet gegen die konfigurierte SAP-Umgebung. |
-| `sc4sap:trust-session` | INTERNAL-ONLY — sessionweiter MCP-Berechtigungs-Bootstrap |
+| `sp4sap:setup` | Plugin-Setup — Auto-Installation des MCP-Servers, SPRO-Konfig generieren, Blocklist-Hook installieren |
+| `sp4sap:mcp-setup` | Eigenständiger MCP ABAP ADT Server Install-/Rekonfig-Guide |
+| `sp4sap:sap-option` | `.sc4sap/sap.env` anzeigen/bearbeiten (Credentials, RFC-Backend, Blocklist, aktive Module) |
+| `sp4sap:sap-doctor` | Plugin + MCP + SAP Diagnose (6 Schichten) |
+| `sp4sap:create-object` | ABAP-Objekterstellung (Hybrid-Mode — Transport + Paket bestätigen, erstellen, aktivieren) |
+| `sp4sap:create-program` | Volle ABAP-Programm-Pipeline — Main+Include, OOP/Prozedural, ALV, Dynpro, Text Elements, ABAP Unit |
+| `sp4sap:program-to-spec` | ABAP-Programm zu Fach-/Technikspezifikation reverse-engineeren (Markdown / Excel) |
+| `sp4sap:compare-programs` | Business-orientierter Seite-an-Seite-Vergleich von 2–5 ABAP-Programmen nach Modul / Land / Persona — berater-gerechter Markdown-Bericht |
+| `sp4sap:analyze-code` | ABAP-Codeanalyse (Clean ABAP / Performance / Security) |
+| `sp4sap:analyze-cbo-obj` | CBO-Inventarscanner + Cross-Module-Gap-Analyse |
+| `sp4sap:analyze-symptom` | Schritt-für-Schritt-Analyse von SAP-Betriebsfehlern/-symptomen (Dumps, Logs, SAP-Note-Kandidaten) |
+| `sp4sap:ask-consultant` | Direkte Q&A mit einem Modulberater-Agent (SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC). Nur-Lese — Antwortet gegen die konfigurierte SAP-Umgebung. |
+| `sp4sap:trust-session` | INTERNAL-ONLY — sessionweiter MCP-Berechtigungs-Bootstrap |
 
 ## Skills — Beispiele & Workflow
 
-### `/sc4sap:create-object`
+### `/sp4sap:create-object`
 Hybrid-Mode Single-Object-Erstellung: Transport + Paket interaktiv bestätigen, dann erstellen, scaffolden und aktivieren.
 ```
-/sc4sap:create-object
+/sp4sap:create-object
 → "Klasse ZCL_SD_ORDER_VALIDATOR im Paket ZSD_ORDER erstellen"
 ```
 Flow: Typinferenz → Paket + Transport bestätigen → MCP `Create*` → Initialimplementierung → `GetAbapSemanticAnalysis` → aktivieren.
 
-### `/sc4sap:create-program`
+### `/sp4sap:create-program`
 Flagship-Programm-Erstellungs-Pipeline — Main + Include Wrapping, OOP oder Prozedural, volles ALV + Dynpro-Support.
 ```
-/sc4sap:create-program
+/sp4sap:create-program
 → "ALV-Report für offene Kundenaufträge, Selektionsbildschirm nach Vertriebsorg + Datumsbereich"
 ```
 Flow (Phase 0–8):
@@ -83,39 +83,39 @@ Flow (Phase 0–8):
 - Phase 7 — Debug-Eskalation
 - Phase 8 — Abschlussbericht mit Timing-Tabelle
 
-### `/sc4sap:analyze-code`
+### `/sp4sap:analyze-code`
 ```
-/sc4sap:analyze-code
+/sp4sap:analyze-code
 → "ZCL_SD_ORDER_VALIDATOR auf Clean-ABAP-Verstöße und SELECT * Nutzung prüfen"
 ```
 
-### `/sc4sap:analyze-cbo-obj`
+### `/sp4sap:analyze-cbo-obj`
 Walkt ein Z-Paket, katalogisiert wiederverwendbare Assets, führt Cross-Module-Gap-Analyse durch.
 ```
-/sc4sap:analyze-cbo-obj
+/sp4sap:analyze-cbo-obj
 → "ZSD_ORDER-Paket auf MM-Modul-Wiederverwendungskandidaten scannen"
 ```
 Flow: `GetPackageTree` → Kategorie-Walk → Häufigkeitsheuristik → Cross-Module-Gap-Check → `.sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json`.
 
-### `/sc4sap:analyze-symptom`
+### `/sp4sap:analyze-symptom`
 ```
-/sc4sap:analyze-symptom
+/sp4sap:analyze-symptom
 → "Dump MESSAGE_TYPE_X in ZFI_POSTING Zeile 234 während F110"
 ```
 Flow: `RuntimeListDumps` → `RuntimeAnalyzeDump` → Stacktrace → SAP-Note-Kandidaten → Remediation-Optionen.
 
-### `/sc4sap:program-to-spec`
+### `/sp4sap:program-to-spec`
 Reverse-Engineering eines ABAP-Programms zu einer Spezifikation (Markdown/Excel) mit sokratischer Scope-Verengung.
 
-### `/sc4sap:sap-doctor`
+### `/sp4sap:sap-doctor`
 Plugin + MCP + SAP Konnektivitätsdiagnose. Das erste, was man ausführt, wenn etwas nicht stimmt.
 
-### `/sc4sap:sap-option`
+### `/sp4sap:sap-option`
 `.sc4sap/sap.env` anzeigen und bearbeiten — Credentials, RFC-Backend, Blocklist-Policy, aktive Module. Secrets maskiert.
 
 ## MCP ABAP ADT Server — Alleinstellungsmerkmale
 
-sc4sap wird durch **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)** (150+ Tools) angetrieben. Über das übliche Class / Program / Table / CDS / FM CRUD hinaus bietet es **volle R/U/C-Abdeckung für klassische Dynpro-Artefakte**, die die meisten MCP-Server nicht anfassen:
+sp4sap wird durch **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)** (150+ Tools) angetrieben. Über das übliche Class / Program / Table / CDS / FM CRUD hinaus bietet es **volle R/U/C-Abdeckung für klassische Dynpro-Artefakte**, die die meisten MCP-Server nicht anfassen:
 
 | Artefakt | Abdeckung |
 |----------|-----------|
@@ -164,7 +164,7 @@ Cross-Skill-Authoring-Regeln leben in `common/`. `CLAUDE.md` ist ein dünner Ind
 
 ## Context-Loading-Architektur (v0.5.2+)
 
-Die Regel-Korpus von sc4sap ist umfangreich — 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30+ Industry/Country-Dateien. Jede Agent-Dispatch die ganze Korpus zu laden verschwendet Tokens und verdünnt die Modell-Aufmerksamkeit. Das **4-Tier Context-Loading-Modell** (definiert in [`common/context-loading-protocol.md`](../common/context-loading-protocol.md)) trennt "immer-geladene Safety-Railings" von "rollen-spezifischer Baseline" von "bedingungs-getriggert" von "per-task Kit".
+Die Regel-Korpus von sp4sap ist umfangreich — 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30+ Industry/Country-Dateien. Jede Agent-Dispatch die ganze Korpus zu laden verschwendet Tokens und verdünnt die Modell-Aufmerksamkeit. Das **4-Tier Context-Loading-Modell** (definiert in [`common/context-loading-protocol.md`](../common/context-loading-protocol.md)) trennt "immer-geladene Safety-Railings" von "rollen-spezifischer Baseline" von "bedingungs-getriggert" von "per-task Kit".
 
 | Tier | Geladen wann | Dateien |
 |------|--------------|---------|
@@ -192,12 +192,12 @@ Jede `agents/*.md` deklariert ihre Rollen-Gruppe in einem `<Mandatory_Baseline>`
 ### Gemessene Effekte
 
 - Per-Dispatch Tokens: −40 bis −60% gegenüber pre-v0.5.0 implizitem Load-All-Muster.
-- Opus-Nutzungsanteil in `/sc4sap:create-program`: −50% (Routing-Matrix in `model-routing-rule.md`).
+- Opus-Nutzungsanteil in `/sp4sap:create-program`: −50% (Routing-Matrix in `model-routing-rule.md`).
 - Reviewer MAJOR-Finding-Erkennung: verbessert — jedes §1-§12 läuft nur mit seiner relevanten Regel im Kontext.
 
 ## Response-Prefix-Konvention (v0.5.2+)
 
-Jede `/sc4sap:*`-Skill-getriggerte Antwort beginnt mit einer einzeiligen Prefix-Zeile, damit der Benutzer auf einen Blick sieht, welches Modell die Arbeit erledigt und welche Sub-Agents dispatched wurden:
+Jede `/sp4sap:*`-Skill-getriggerte Antwort beginnt mit einer einzeiligen Prefix-Zeile, damit der Benutzer auf einen Blick sieht, welches Modell die Arbeit erledigt und welche Sub-Agents dispatched wurden:
 
 ```
 [Model: <main-model> · Dispatched: <sub-summary>]
@@ -219,7 +219,7 @@ Beispiele:
 — Multi-Executor-Split nach multi-executor-split.md Strategie A
 ```
 
-Die Konvention wird durch einen `<Response_Prefix>`-Block in jeder `/sc4sap:*` SKILL.md durchgesetzt, der auf [`common/model-routing-rule.md`](../common/model-routing-rule.md) § *Response Prefix Convention* verweist. Das Prefix gilt nur für skill-getriggerte Turns und wird bei einem thematischen Wechsel durch den Benutzer in diesem Turn entfernt.
+Die Konvention wird durch einen `<Response_Prefix>`-Block in jeder `/sp4sap:*` SKILL.md durchgesetzt, der auf [`common/model-routing-rule.md`](../common/model-routing-rule.md) § *Response Prefix Convention* verweist. Das Prefix gilt nur für skill-getriggerte Turns und wird bei einem thematischen Wechsel durch den Benutzer in diesem Turn entfernt.
 
 ## Branchen-Referenz (`industry/`)
 
@@ -258,11 +258,11 @@ Multi-Country-Rollouts: alle relevanten Dateien werden geladen + länderübergre
 
 Beispiel: MM-PO-Erstellung in einer Landschaft mit **PS aktiv** → Kontierungskategorie `P`/`Q` + `PS_POSID` (PSP-Element) vorschlagen; **CO aktiv** → Kostenstellen-Ableitung vorschlagen; **QM aktiv** → Prüflos-Autoerstellung bei GR.
 
-Konfigurieren via `/sc4sap:setup` (Schritt 4) oder `/sc4sap:sap-option modules`. Konsumiert von `create-program`, `create-object`, `analyze-cbo-obj`, allen Consultant-Agenten.
+Konfigurieren via `/sp4sap:setup` (Schritt 4) oder `/sp4sap:sap-option modules`. Konsumiert von `create-program`, `create-object`, `analyze-cbo-obj`, allen Consultant-Agenten.
 
 ## SAP-Plattform-Erkennung (ECC / S4 On-Prem / Cloud)
 
-`sc4sap:create-program` führt einen obligatorischen SAP-Versions-Preflight durch und liest `.sc4sap/config.json` für `sapVersion` und `abapRelease`:
+`sp4sap:create-program` führt einen obligatorischen SAP-Versions-Preflight durch und liest `.sc4sap/config.json` für `sapVersion` und `abapRelease`:
 
 - **ECC** — kein RAP/ACDOCA/BP; Syntax durch Release gegated
 - **S/4HANA On-Premise** — klassisches Dynpro gewarnt; Extensibility-first, MATDOC + ACDOCA für Finance
@@ -283,7 +283,7 @@ Module: SD, MM, FI, CO, PP, PS, PM, QM, TR, HCM, WM, TM, Ariba, BW.
 
 ### SPRO Lokaler Cache (Token-Einsparung)
 
-`/sc4sap:setup spro` extrahiert kundenspezifisches SPRO-Customizing nach `.sc4sap/spro-config.json`. Consultants folgen `common/spro-lookup.md`:
+`/sp4sap:setup spro` extrahiert kundenspezifisches SPRO-Customizing nach `.sc4sap/spro-config.json`. Consultants folgen `common/spro-lookup.md`:
 1. Lokaler Cache → 2. Statische Referenzen → 3. Live-MCP-Query (mit Bestätigung).
 
 ## SAP-spezifische Hooks
@@ -310,9 +310,9 @@ Defense-in-Depth-Layer, der Row-Daten aus sensiblen Tabellen (PII, Credentials, 
 
 **Aktionen**: `deny` (blockiert) vs `warn` (läuft mit Warnungsblock weiter). Wenn eine Tabelle in einem Call `deny` ist → ganzer Call blockiert.
 
-**Profile** (bei `/sc4sap:setup` gewählt): `strict` / `standard` / `minimal` / `custom`. Standortspezifische Ergänzungen via `.sc4sap/blocklist-extend.txt`.
+**Profile** (bei `/sp4sap:setup` gewählt): `strict` / `standard` / `minimal` / `custom`. Standortspezifische Ergänzungen via `.sc4sap/blocklist-extend.txt`.
 
-**Installation** (automatisiert durch `/sc4sap:setup`; manuell):
+**Installation** (automatisiert durch `/sp4sap:setup`; manuell):
 ```bash
 node scripts/install-hooks.mjs            # user-level
 node scripts/install-hooks.mjs --project  # project-level
@@ -329,7 +329,7 @@ echo '{"tool_name":"mcp__abap__GetTableContents","tool_input":{"table":"BNKA"}}'
 ```bash
 export SC4SAP_POLICY=on
 export SC4SAP_POLICY_PROFILE=strict
-export SC4SAP_BLOCKLIST_PATH=/path/to/sc4sap/exceptions/table_exception.md
+export SC4SAP_BLOCKLIST_PATH=/path/to/sp4sap/exceptions/table_exception.md
 export SC4SAP_ALLOW_TABLE=TAB1,TAB2  # Session-Notfallausnahme (geloggt)
 ```
 
@@ -360,14 +360,14 @@ Screen / GUI Status / Text Element Operationen dispatchen über RFC-fähige FMs 
 | `odata` (Standard) | HTTPS OData v2 `ZMCP_ADT_SRV` | Funktioniert auf gehärteten Gateway-Installationen; läuft über Standard-Gateway-Autorisierung (S_SERVICE). [docs/odata-backend.md](odata-backend.md) |
 | `soap` | HTTPS `/sap/bc/soap/rfc` | Klassischer Pfad, wenn `/sap/bc/soap/rfc` ICF-Node aktiv ist (wird in Produktion zunehmend deaktiviert) |
 | `native` | `node-rfc` + NW RFC SDK | Niedrigste Latenz; erfordert bezahltes SDK. _Veraltet — `zrfc` verwenden_ |
-| `gateway` | HTTPS zu sc4sap-rfc-gateway Middleware | 10+ Teams, zentralisiert |
+| `gateway` | HTTPS zu sp4sap-rfc-gateway Middleware | 10+ Teams, zentralisiert |
 | 🆕 `zrfc` | HTTPS ICF-Handler `/sap/bc/rest/zmcp_rfc` | SOAP zu, OData Gateway schwierig (typisches ECC). Kein SDK, kein Gateway — eine Klasse + ein SICF-Node |
 
-Jederzeit wechseln via `/sc4sap:sap-option`, MCP neu verbinden, mit `/sc4sap:sap-doctor` verifizieren.
+Jederzeit wechseln via `/sp4sap:sap-option`, MCP neu verbinden, mit `/sp4sap:sap-doctor` verifizieren.
 
 ## 🏢 RFC-Gateway (Enterprise Deployment)
 
-Für große SAP-Entwicklungsteams (Dutzende Entwickler) unterstützt sc4sap ein **zentrales RFC-Gateway**-Middleware, so dass Entwickler-Laptops nie das SAP NW RFC SDK / MSVC brauchen. Ein Linux-Host betreibt `node-rfc` + SDK; alle MCP-Clients sprechen HTTPS/JSON mit ihm.
+Für große SAP-Entwicklungsteams (Dutzende Entwickler) unterstützt sp4sap ein **zentrales RFC-Gateway**-Middleware, so dass Entwickler-Laptops nie das SAP NW RFC SDK / MSVC brauchen. Ein Linux-Host betreibt `node-rfc` + SDK; alle MCP-Clients sprechen HTTPS/JSON mit ihm.
 
 **Wann wichtig**:
 - IT-Richtlinie verbietet SAP NW RFC SDK auf Entwicklermaschinen
@@ -376,7 +376,7 @@ Für große SAP-Entwicklungsteams (Dutzende Entwickler) unterstützt sc4sap ein 
 
 **Konfiguration**:
 ```
-/sc4sap:sap-option
+/sp4sap:sap-option
 # SAP_RFC_BACKEND=gateway
 #     SAP_RFC_GATEWAY_URL=https://rfc-gw.company.com
 #     SAP_RFC_GATEWAY_TOKEN=<team-or-per-user-bearer>

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Script runner for sc4sap hook scripts.
+ * Script runner for sp4sap hook scripts.
  * Executes the specified ESM script, forwarding the hook payload (stdin)
  * to the child and streaming its stdout/stderr straight through so
  * Claude Code receives the hook output.
@@ -45,7 +45,7 @@ child.on('exit', () => {
 child.on('error', (error) => {
   clearTimeout(killer);
   if (process.env.SC4SAP_DEBUG) {
-    console.error(`[sc4sap] Script error: ${error.message}`);
+    console.error(`[sp4sap] Script error: ${error.message}`);
   }
   process.exit(0);
 });

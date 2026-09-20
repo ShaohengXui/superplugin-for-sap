@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Syntax Checker Hook (PostToolUseFailure) — SAP-SPECIFIC
+ * sp4sap Syntax Checker Hook (PostToolUseFailure) — SAP-SPECIFIC
  *
  * When an MCP ABAP tool fails (Create/Update operations), this hook
  * automatically suggests running GetAbapSemanticAnalysis to diagnose

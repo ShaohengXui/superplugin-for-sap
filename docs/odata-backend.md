@@ -1,6 +1,6 @@
 # OData RFC Backend (default since 2026-04-22)
 
-Guide for operating the `SAP_RFC_BACKEND=odata` transport in sc4sap. Since 2026-04-22 this is the **default** backend for new profiles — hardened SAP installs increasingly disable `/sap/bc/soap/rfc`, and OData routes through standard Gateway authorization (S_SERVICE) instead of S_RFC.
+Guide for operating the `SAP_RFC_BACKEND=odata` transport in sp4sap. Since 2026-04-22 this is the **default** backend for new profiles — hardened SAP installs increasingly disable `/sap/bc/soap/rfc`, and OData routes through standard Gateway authorization (S_SERVICE) instead of S_RFC.
 
 ## What this is
 
@@ -21,7 +21,7 @@ The default RFC transport for the Screen / GUI Status / Text Element operations 
 ## Architecture
 
 ```
-  sc4sap MCP client                    SAP (same system)
+  sp4sap MCP client                    SAP (same system)
   ┌──────────────────────┐             ┌──────────────────────────────┐
   │ handlers/*/*         │             │                              │
   │  screen / gui_status │             │  ICF: /sap/opu/odata/sap/... │
@@ -40,7 +40,7 @@ The default RFC transport for the Screen / GUI Status / Text Element operations 
   └──────────────────────┘             └──────────────────────────────┘
 ```
 
-## ABAP components installed by `/sc4sap:setup` Step 9c
+## ABAP components installed by `/sp4sap:setup` Step 9c
 
 | Object | Type | Purpose |
 |---|---|---|
@@ -84,7 +84,7 @@ The default RFC transport for the Screen / GUI Status / Text Element operations 
 
 ## Client-side env variables
 
-Edit via `/sc4sap:sap-option`:
+Edit via `/sp4sap:sap-option`:
 
 ```bash
 SAP_RFC_BACKEND=odata
@@ -120,11 +120,11 @@ Both step 1 and the full "Register Service" flow in SEGW require authorization o
 Copy to email / ticket for your Basis team:
 
 ```
-Subject: sc4sap — Register OData service ZMCP_ADT_SRV on <SID> (5-min task)
+Subject: sp4sap — Register OData service ZMCP_ADT_SRV on <SID> (5-min task)
 
 Hello,
 
-Our development team uses the sc4sap plugin (SuperClaude for SAP) with the
+Our development team uses the sp4sap plugin (SuperPlugin for SAP) with the
 OData RFC backend. Please register the following custom OData v2 service
 on system <SID>, client <CLIENT>:
 
@@ -149,7 +149,7 @@ Steps:
 
 Technical background:
   - The MPC/DPC classes wrap existing RFC function modules
-    ZMCP_ADT_DISPATCH and ZMCP_ADT_TEXTPOOL (created by /sc4sap:setup
+    ZMCP_ADT_DISPATCH and ZMCP_ADT_TEXTPOOL (created by /sp4sap:setup
     Step 9a, used by SOAP RFC today)
   - No schema changes, no table access, no authorization impact beyond
     S_RFC for the existing FMs
@@ -183,7 +183,7 @@ The generic OData v2 error wrapping masks the real exception. Steps to diagnose:
 
 ### HTTP 404 "Invalid Function Import Parameter"
 
-Request URL is missing a required parameter. Check that all 2 (Dispatch) or 4 (Textpool) input params are present with OData string-literal formatting (`IV_ACTION='READ'` — note the single quotes). The sc4sap client does this automatically.
+Request URL is missing a required parameter. Check that all 2 (Dispatch) or 4 (Textpool) input params are present with OData string-literal formatting (`IV_ACTION='READ'` — note the single quotes). The sp4sap client does this automatically.
 
 ### HTTP 403 "CSRF Token Required"
 
@@ -191,7 +191,7 @@ Client's cached token expired. `odataRfc.ts` auto-retries once with a fresh toke
 
 ### HTTP 401 Unauthorized
 
-Basic auth failed. Verify `SAP_USERNAME` + `SAP_PASSWORD` in sap.env. Note: OData reuses the HTTPS ADT credentials — same ones sc4sap already uses for `GetClass` / `SearchObject`.
+Basic auth failed. Verify `SAP_USERNAME` + `SAP_PASSWORD` in sap.env. Note: OData reuses the HTTPS ADT credentials — same ones sp4sap already uses for `GetClass` / `SearchObject`.
 
 ### SSL handshake error in Gateway Client (SAPGUI)
 
@@ -233,8 +233,8 @@ If your organisation has BOTH SOAP blocked AND is unwilling to install `node-rfc
 
 ## Links
 
-- [sc4sap plugin repo](https://github.com/babamba2/superclaude-for-sap)
+- [sp4sap plugin repo](https://github.com/ShaohengXui/superplugin-for-sap)
 - [abap-mcp-adt-powerup (MCP server)](https://github.com/babamba2/abap-mcp-adt-powerup) — contains `src/lib/odataRfc.ts`
 - SAP Note 1797736 — Gateway error log analysis
-- `/sc4sap:sap-doctor` → Layer 6.odata — automated checks
-- `/sc4sap:sap-option` → "rfc" group — edit the OData env vars
+- `/sp4sap:sap-doctor` → Layer 6.odata — automated checks
+- `/sp4sap:sap-option` → "rfc" group — edit the OData env vars

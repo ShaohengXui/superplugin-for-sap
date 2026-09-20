@@ -2,7 +2,7 @@
 
 ← [Back to README](../README.md) · [Installation](INSTALLATION.md) · [Features](FEATURES.md)
 
-All notable changes to sc4sap are documented here. For full release notes, see [GitHub Releases](https://github.com/babamba2/superclaude-for-sap/releases).
+All notable changes to sp4sap are documented here. For full release notes, see [GitHub Releases](https://github.com/ShaohengXui/superplugin-for-sap/releases).
 
 The project adheres to [Semantic Versioning](https://semver.org/) and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
@@ -41,7 +41,7 @@ Follow-up to 0.6.1 — cross-profile integrity + MCP-server legacy detection fix
 ## [0.6.1] - 2026-04-21
 
 ### Added
-- **`/sc4sap:setup` multi-profile awareness** — setup wizard now has Step 0 (legacy detection + profile bootstrap) and a dedicated profile-creation flow (`skills/setup/wizard-step-04-profile-creation.md`). Migrates pre-0.6.0 `<project>/.sc4sap/sap.env` users automatically via `sap-profile-cli.mjs migrate`; fresh installs create their first profile under `~/.sc4sap/profiles/<alias>/` with OS-keychain-backed password storage.
+- **`/sp4sap:setup` multi-profile awareness** — setup wizard now has Step 0 (legacy detection + profile bootstrap) and a dedicated profile-creation flow (`skills/setup/wizard-step-04-profile-creation.md`). Migrates pre-0.6.0 `<project>/.sc4sap/sap.env` users automatically via `sap-profile-cli.mjs migrate`; fresh installs create their first profile under `~/.sc4sap/profiles/<alias>/` with OS-keychain-backed password storage.
 - **Tier-gated Step 9** — ABAP utility installation (`ZMCP_ADT_UTILS`, `ZCL_S4SAP_CM_*`, OData/ZRFC classes) now only runs on `SAP_TIER=DEV`. QA/PRD profiles refuse installation and print CTS import guidance; DEV installs are deduped across sibling profiles on the same `SAP_URL+SAP_CLIENT` via `~/.sc4sap/profiles/<alias>/.abap-utils-installed` sentinel.
 - **Step 12 dual PreToolUse hooks** — setup now installs BOTH `block-forbidden-tables.mjs` AND `tier-readonly-guard.mjs` into `.claude/settings.json` (project-level), with smoke tests for each.
 - **Shared profile resolver** (`scripts/lib/profile-resolve.mjs`) — `resolveSapEnvPath`, `resolveConfigJsonPath`, `resolveArtifactBase`, `readActiveSapEnv`, `readActiveConfigJson`, `readDotenv`, `normalizeTier`. Centralizes the active-profile → `~/.sc4sap/profiles/<alias>/` resolution pattern used by HUD, hooks, and scripts.
@@ -58,7 +58,7 @@ Follow-up to 0.6.1 — cross-profile integrity + MCP-server legacy detection fix
 
 ### Fixed
 - **Password leak in `sap-profile-cli.mjs list`/`show`** — `passwordRef` field output the raw plaintext password when a profile's env used plaintext-fallback (keychain unavailable). Now returns the literal `"plaintext (masked)"` for non-keychain values; `keychain:…` refs pass through unchanged.
-- **HUD ENV status after migration** — `sc4sap-status.mjs::sapEnvPresent / readConfig / activeTransport / systemInfo / sproCacheAge` all only looked at `<project>/.sc4sap/…`, which doesn't exist after multi-profile migration. Now resolve via the active-profile pointer first, with legacy fallback.
+- **HUD ENV status after migration** — `sp4sap-status.mjs::sapEnvPresent / readConfig / activeTransport / systemInfo / sproCacheAge` all only looked at `<project>/.sc4sap/…`, which doesn't exist after multi-profile migration. Now resolve via the active-profile pointer first, with legacy fallback.
 - **`block-forbidden-tables.mjs` profile mismatch** — hook reported the default `standard` blocklist even when the active profile's `config.json` said otherwise, because it read only the legacy project `config.json` (now deleted by migration). Now reads the active profile's config.
 - **`code-simplifier.mjs`** and **`sap-option-tui.mjs`** — stop-hook and standalone TUI respectively read legacy project paths only; now resolve through the shared profile helper.
 
@@ -70,11 +70,11 @@ Follow-up to 0.6.1 — cross-profile integrity + MCP-server legacy detection fix
 
 ## Release history
 
-For older releases, see the [Git tag history](https://github.com/babamba2/superclaude-for-sap/tags) and [GitHub Releases](https://github.com/babamba2/superclaude-for-sap/releases).
+For older releases, see the [Git tag history](https://github.com/ShaohengXui/superplugin-for-sap/tags) and [GitHub Releases](https://github.com/ShaohengXui/superplugin-for-sap/releases).
 
 ### Version scheme
 
-sc4sap follows `v{MAJOR}.{MINOR}.{PATCH}`:
+sp4sap follows `v{MAJOR}.{MINOR}.{PATCH}`:
 - **MAJOR** — breaking changes to skill API, config schema, or minimum SAP/Claude Code version
 - **MINOR** — new skills, new agents, new common rules, backward-compatible feature additions
 - **PATCH** — bug fixes, documentation-only changes, non-breaking refactors
@@ -84,7 +84,7 @@ sc4sap follows `v{MAJOR}.{MINOR}.{PATCH}`:
 - **Claude Code**: >= 2.x
 - **Node.js**: >= 20.0.0
 - **SAP**: ECC 6.0 / S/4HANA On-Premise / S/4HANA Cloud (Public & Private)
-- **MCP server**: bundled `abap-mcp-adt-powerup` (auto-installed by `/sc4sap:setup`; version pinned by release)
+- **MCP server**: bundled `abap-mcp-adt-powerup` (auto-installed by `/sp4sap:setup`; version pinned by release)
 
 ---
 

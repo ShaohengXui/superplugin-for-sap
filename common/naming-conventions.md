@@ -1,6 +1,6 @@
 # Naming Conventions
 
-Shared naming rules for sc4sap ABAP programs and related objects.
+Shared naming rules for sp4sap ABAP programs and related objects.
 
 ## Main Program
 

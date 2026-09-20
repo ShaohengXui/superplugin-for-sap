@@ -1,12 +1,12 @@
-# sc4sap — Skill Model Architecture
+# sp4sap — Skill Model Architecture
 
-Per-skill / per-phase model allocation across the sc4sap plugin. This document is the single source of truth for *which Claude model runs each step of each skill*, why that choice was made, and how the overrides work in practice.
+Per-skill / per-phase model allocation across the sp4sap plugin. This document is the single source of truth for *which Claude model runs each step of each skill*, why that choice was made, and how the overrides work in practice.
 
 > **Scope**: all 13 user-facing skills + 16 agents. Companion planning docs, spec files, and per-phase rule files are not repeated here — see [`../skills/<name>/SKILL.md`](../skills) and [`../agents/`](../agents) for the primary sources. This doc summarizes the runtime model decisions they encode.
 
 ## 1. Three-Tier Model Strategy
 
-sc4sap runs on Claude's 4.x family:
+sp4sap runs on Claude's 4.x family:
 
 | Tier | Model | Use cases |
 |---|---|---|
@@ -147,7 +147,7 @@ When the work is pure data extraction with no judgment (hundreds of MCP calls pr
 
 ## 5. Response Transparency
 
-Every `/sc4sap:*` skill response starts with a **model prefix** indicating what ran where:
+Every `/sp4sap:*` skill response starts with a **model prefix** indicating what ran where:
 
 ```
 [Model: Sonnet 4.6 · Dispatched: Opus×1 (sap-code-reviewer), Haiku×1 (sap-writer)]

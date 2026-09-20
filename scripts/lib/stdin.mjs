@@ -1,5 +1,5 @@
 /**
- * Shared stdin utilities for sc4sap hook scripts.
+ * Shared stdin utilities for sp4sap hook scripts.
  * Provides timeout-protected stdin reading to prevent hangs on Linux and Windows.
  * Ported from OMC.
  */

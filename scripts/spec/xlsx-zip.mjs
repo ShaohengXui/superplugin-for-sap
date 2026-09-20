@@ -1,4 +1,4 @@
-// sc4sap:program-to-spec — Shared zero-dep ZIP read/write for xlsx files.
+// sp4sap:program-to-spec — Shared zero-dep ZIP read/write for xlsx files.
 //
 // Extracted from template-clone.mjs so both template-clone.mjs (sharedStrings
 // translation) and image-swap.mjs (media swap) operate on the same code path.

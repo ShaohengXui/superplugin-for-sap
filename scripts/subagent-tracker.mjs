@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Subagent Tracker Hook (SubagentStart/SubagentStop)
+ * sp4sap Subagent Tracker Hook (SubagentStart/SubagentStop)
  * Tracks agent lifecycle for monitoring and debugging.
  * Adapted from OMC subagent-tracker.mjs.
  *
@@ -59,7 +59,7 @@ function processSubagentStart(data) {
     continue: true,
     hookSpecificOutput: {
       hookEventName: 'SubagentStart',
-      additionalContext: `sc4sap SubagentStart hook additional context: Agent ${agentType} started (${agentId})`
+      additionalContext: `sp4sap SubagentStart hook additional context: Agent ${agentType} started (${agentId})`
     }
   };
 }

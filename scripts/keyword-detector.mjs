@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Keyword Detector Hook (UserPromptSubmit)
- * Detects sc4sap: skill keywords and invokes skill tools.
+ * sp4sap Keyword Detector Hook (UserPromptSubmit)
+ * Detects sp4sap: skill keywords and invokes skill tools.
  * Adapted from OMC keyword-detector.mjs for SAP-specific keywords.
  *
  * Supported keywords:
- * 1. cancelsc4sap: Stop active modes
+ * 1. cancelsp4sap: Stop active modes
  * 2. ralph: Persistence mode until task completion
  * 3. autopilot: Full autonomous SAP execution
  * 4. release: CTS transport release workflow
@@ -76,7 +76,7 @@ function createSkillInvocation(skillName, originalPrompt) {
 
 You MUST invoke the skill using the Skill tool:
 
-Skill: sc4sap:${skillName}
+Skill: sp4sap:${skillName}
 
 User request:
 ${originalPrompt}
@@ -119,35 +119,35 @@ async function main() {
 
     const cleanPrompt = sanitizeForKeywordDetection(prompt).toLowerCase();
 
-    // Detect sc4sap-specific keywords
+    // Detect sp4sap-specific keywords
     let detectedSkill = null;
 
     // Cancel keywords
-    if (hasActionableKeyword(cleanPrompt, /\b(cancelsc4sap|stopsc4sap)\b/i)) {
+    if (hasActionableKeyword(cleanPrompt, /\b(cancelsp4sap|stopsp4sap)\b/i)) {
       detectedSkill = 'cancel';
     }
     // Autopilot — full autonomous SAP execution
-    else if (hasActionableKeyword(cleanPrompt, /\bsc4sap[\s:]+autopilot\b/i) ||
+    else if (hasActionableKeyword(cleanPrompt, /\bsp4sap[\s:]+autopilot\b/i) ||
              hasActionableKeyword(cleanPrompt, /\bsap\s+autopilot\b/i)) {
       detectedSkill = 'autopilot';
     }
     // Ralph — persistent loop with SAP verification
-    else if (hasActionableKeyword(cleanPrompt, /\bsc4sap[\s:]+ralph\b/i) ||
+    else if (hasActionableKeyword(cleanPrompt, /\bsp4sap[\s:]+ralph\b/i) ||
              hasActionableKeyword(cleanPrompt, /\bsap\s+ralph\b/i)) {
       detectedSkill = 'ralph';
     }
     // Release — CTS transport release workflow
-    else if (hasActionableKeyword(cleanPrompt, /\bsc4sap[\s:]+release\b/i) ||
+    else if (hasActionableKeyword(cleanPrompt, /\bsp4sap[\s:]+release\b/i) ||
              hasActionableKeyword(cleanPrompt, /\b(release\s+transport|transport\s+release)\b/i)) {
       detectedSkill = 'release';
     }
     // MCP Setup — MCP ABAP ADT configuration
-    else if (hasActionableKeyword(cleanPrompt, /\bsc4sap[\s:]+mcp[\s-]?setup\b/i) ||
+    else if (hasActionableKeyword(cleanPrompt, /\bsp4sap[\s:]+mcp[\s-]?setup\b/i) ||
              hasActionableKeyword(cleanPrompt, /\b(setup|configure)\s+mcp[\s-]?abap\b/i)) {
       detectedSkill = 'mcp-setup';
     }
     // Setup — initial plugin setup
-    else if (hasActionableKeyword(cleanPrompt, /\bsc4sap[\s:]+setup\b/i)) {
+    else if (hasActionableKeyword(cleanPrompt, /\bsp4sap[\s:]+setup\b/i)) {
       detectedSkill = 'setup';
     }
 

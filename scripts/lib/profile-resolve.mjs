@@ -1,4 +1,4 @@
-// sc4sap multi-profile resolver — shared helper for HUD, hooks, scripts.
+// sp4sap multi-profile resolver — shared helper for HUD, hooks, scripts.
 //
 // Resolves the active SAP profile's env file, config JSON, and work-artifact
 // base directory. Legacy fallback (pre-0.6.0 single-profile) is preserved so
@@ -17,12 +17,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 
-export function sc4sapHome() {
+export function sp4sapHome() {
   return process.env.SC4SAP_HOME_DIR || join(homedir(), '.sc4sap');
 }
 
 export function profilesDir() {
-  return join(sc4sapHome(), 'profiles');
+  return join(sp4sapHome(), 'profiles');
 }
 
 // Walk up from `startDir` looking for the effective `.sc4sap/` directory.

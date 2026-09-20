@@ -1,4 +1,4 @@
-# Customization Extraction (`/sc4sap:setup customizations`)
+# Customization Extraction (`/sp4sap:setup customizations`)
 
 Referenced by `SKILL.md` — this file holds the full enhancement/extension
 extraction workflow. Runs **after** SPRO extraction (step 11) and **before**
@@ -11,7 +11,7 @@ Reads each module's `configs/{MODULE}/enhancements.md`, identifies the
 Append Structures), then queries the live SAP system through the MCP server
 to find which of them the customer has actually customized with `Z*` / `Y*`
 objects. Results are written to `.sc4sap/work/<activeAlias>/customizations/{MODULE}/…` so later
-skills (`/sc4sap:create-program`, `/sc4sap:analyze-symptom`) can prefer
+skills (`/sp4sap:create-program`, `/sp4sap:analyze-symptom`) can prefer
 **reusing** the existing customization over creating a new one.
 
 > **Token Usage Notice**
@@ -126,11 +126,11 @@ node scripts/extract-customizations.mjs FI   # background
 - Print per-module counts: `SMOD: n · BAdI: n · FormExit: n · TableExt: n`
 - If a module wrote zero rows, say so explicitly (legitimate greenfield state)
 - Point the user at the two consumer skills that benefit most:
-  - `/sc4sap:create-program` — will reuse discovered BAdI impl / extension fields
-  - `/sc4sap:analyze-symptom` — can reverse-lookup dump sources to their standard-exit origin
+  - `/sp4sap:create-program` — will reuse discovered BAdI impl / extension fields
+  - `/sp4sap:analyze-symptom` — can reverse-lookup dump sources to their standard-exit origin
 
 ## Re-running
 
-Safe to re-run at any time (`/sc4sap:setup customizations` or directly
+Safe to re-run at any time (`/sp4sap:setup customizations` or directly
 `node scripts/extract-customizations.mjs all`). Output files are fully
 overwritten, so a re-run picks up any Z-objects added since the last run.

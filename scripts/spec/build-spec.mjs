@@ -1,4 +1,4 @@
-// sc4sap:program-to-spec — Single entry point that builds a complete spec xlsx.
+// sp4sap:program-to-spec — Single entry point that builds a complete spec xlsx.
 //
 // PIPELINE (always-on — no trigger keywords required)
 //   1. cloneTemplate(tr) → out.xlsx with sharedStrings translated

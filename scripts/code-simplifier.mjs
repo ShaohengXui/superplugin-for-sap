@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Code Simplifier Stop Hook
+ * sp4sap Code Simplifier Stop Hook
  * Intercepts Stop events to suggest code review for recently modified files.
  * Adapted from OMC code-simplifier.mjs.
  *

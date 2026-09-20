@@ -8,7 +8,7 @@ Every call to `CreateTransport` MUST pass the `client` parameter, resolved in th
 
 1. **`.sc4sap/sap.env`** → `SAP_CLIENT` (the value the MCP server is actually connected with).
 2. **`.sc4sap/config.json`** → `client` (alternative project-level override).
-3. If both are missing → **fail fast**; do not proceed with a CreateTransport call. Ask the user to run `/sc4sap:setup` or manually specify the client.
+3. If both are missing → **fail fast**; do not proceed with a CreateTransport call. Ask the user to run `/sp4sap:setup` or manually specify the client.
 
 Never rely on the tool's default — there is no guaranteed default, and behavior varies by SAP backend release and RFC/SOAP flavor.
 
@@ -27,7 +27,7 @@ def resolve_transport_client():
     if not client:
         client = read_json(".sc4sap/config.json", "client")
     if not client:
-        raise "Refuse to CreateTransport — no client resolved. Run /sc4sap:setup or set SAP_CLIENT manually."
+        raise "Refuse to CreateTransport — no client resolved. Run /sp4sap:setup or set SAP_CLIENT manually."
     return client
 
 client = resolve_transport_client()
@@ -48,4 +48,4 @@ CreateTransport(
 
 ## Setup contract
 
-`/sc4sap:setup` writes `SAP_CLIENT` to `.sc4sap/sap.env` during Step 4 (SAP connection info). As long as setup completes without skipping that step, the value required by this rule is always present for every subsequent transport-creating call. If a user hand-edits `sap.env` to remove the client, they break this rule and `CreateTransport` must fail fast.
+`/sp4sap:setup` writes `SAP_CLIENT` to `.sc4sap/sap.env` during Step 4 (SAP connection info). As long as setup completes without skipping that step, the value required by this rule is always present for every subsequent transport-creating call. If a user hand-edits `sap.env` to remove the client, they break this rule and `CreateTransport` must fail fast.

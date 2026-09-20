@@ -1,5 +1,5 @@
 ---
-name: sc4sap:analyze-cbo-obj
+name: sp4sap:analyze-cbo-obj
 description: Analyze a CBO (Customer Business Object) package — discover frequently-used Z tables / function modules / data elements / classes / structures / table types — and save a per-module / per-package reference file so later `program` / `program-to-spec` runs prefer existing CBO elements over new ones.
 level: 2
 model: sonnet
@@ -11,7 +11,7 @@ Walks a CBO (Customer Business Object) package, inventories every project-built 
 
 
 <Purpose>
-Projects accumulate Z tables, Z data elements, Z function modules, and ZCL_ classes that encode domain logic. New development too often recreates near-duplicates because nobody has a compact inventory of what already exists. `analyze-cbo-obj` produces that inventory — once per package — and writes it to a file that later `sc4sap:` skills read automatically, so the next spec / program / object creation defaults to reusing proven CBO assets.
+Projects accumulate Z tables, Z data elements, Z function modules, and ZCL_ classes that encode domain logic. New development too often recreates near-duplicates because nobody has a compact inventory of what already exists. `analyze-cbo-obj` produces that inventory — once per package — and writes it to a file that later `sp4sap:` skills read automatically, so the next spec / program / object creation defaults to reusing proven CBO assets.
 </Purpose>
 
 <Response_Prefix>
@@ -25,21 +25,21 @@ Multi-phase skill. Before each `Agent(...)` dispatch, emit `▶ phase=<id> (<lab
 <Use_When>
 - Starting development on a module that already has a sizeable Z-package
 - Onboarding onto an AMS / support engagement (need a map of custom assets)
-- Before `/sc4sap:create-program` or `/sc4sap:create-object` on a new spec — so reuse is evaluated
+- Before `/sp4sap:create-program` or `/sp4sap:create-object` on a new spec — so reuse is evaluated
 - User says "analyze CBO", "analyze custom objects", "map Z package", "list frequently used customs", "CBO inventory"
 </Use_When>
 
 <Do_Not_Use_When>
-- User wants a code quality review of one object → `/sc4sap:analyze-code`
-- User wants to reverse-engineer ONE program into a spec → `/sc4sap:program-to-spec`
-- User wants to create an object → `/sc4sap:create-object`
+- User wants a code quality review of one object → `/sp4sap:analyze-code`
+- User wants to reverse-engineer ONE program into a spec → `/sp4sap:program-to-spec`
+- User wants to create an object → `/sp4sap:create-object`
 - Package does not yet contain custom objects (CBO discovery is not meaningful)
 </Do_Not_Use_When>
 
 <Session_Trust_Bootstrap>
 **MANDATORY — runs as Step 0 before any MCP call or user interaction.**
 
-Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:analyze-cbo-obj` to pre-grant all MCP tool + file-op permissions for this session (eliminates per-tool "Allow this tool?" prompts during the 8-step walk).
+Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:analyze-cbo-obj` to pre-grant all MCP tool + file-op permissions for this session (eliminates per-tool "Allow this tool?" prompts during the 8-step walk).
 
 - If `.sc4sap/session-trust.log` already has a line within the last 24h, skip silently.
 - Otherwise run it and surface the one-line confirmation.
@@ -78,10 +78,10 @@ Main thread NEVER calls `GetPackageContents` / `GetWhereUsed` itself for the inv
 </MCP_Tools_Used>
 
 <Related_Skills>
-- `/sc4sap:create-program` — reads `.sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json` during spec drafting to prefer existing CBO elements
-- `/sc4sap:program-to-spec` — same, for reverse-engineering
-- `/sc4sap:create-object` — same, to suggest reuse before creation
-- `/sc4sap:analyze-code` — quality review of ONE object (complementary, not overlapping)
+- `/sp4sap:create-program` — reads `.sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json` during spec drafting to prefer existing CBO elements
+- `/sp4sap:program-to-spec` — same, for reverse-engineering
+- `/sp4sap:create-object` — same, to suggest reuse before creation
+- `/sp4sap:analyze-code` — quality review of ONE object (complementary, not overlapping)
 </Related_Skills>
 
 <Data_Extraction_Safety>

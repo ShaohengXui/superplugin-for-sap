@@ -2,15 +2,15 @@
 
 Clean ABAP rules specific to the **OOP paradigm** — local classes (`LCL_DATA` / `LCL_ALV`) inside a REPORT, global classes, interfaces, exception classes, ABAP Unit with test doubles. Load this file when the Phase 1B interview picks `paradigm = OOP` (and NOT when it picks `Procedural`). Companion to [`clean-code.md`](clean-code.md) (paradigm-neutral shared baseline). Everything here is gated by `abap-release-reference.md`.
 
-> Paired with the sc4sap OOP pattern file [`oop-pattern.md`](oop-pattern.md) — that file defines the two-class split (LCL_DATA + LCL_ALV / LCL_SCREEN); this file defines the coding style rules that fill the class bodies.
+> Paired with the sp4sap OOP pattern file [`oop-pattern.md`](oop-pattern.md) — that file defines the two-class split (LCL_DATA + LCL_ALV / LCL_SCREEN); this file defines the coding style rules that fill the class bodies.
 
 ## Mandatory Main Program Template (MUST match)
 
 When generating an OOP program's main `REPORT` source, the executor MUST start from and conform to the canonical sample:
 
-**Source of truth**: [`oop-sample/zrsc4sap_oop_ex.prog.abap`](oop-sample/zrsc4sap_oop_ex.prog.abap) (companion includes: `zrsc4sap_oop_exa/exc/exe/exf/exi/exo/exs/ext.prog.abap`, screens `zrsc4sap_oop_ex.prog.screen_0100.abap` / `_0200.abap`).
+**Source of truth**: [`oop-sample/zrsp4sap_oop_ex.prog.abap`](oop-sample/zrsp4sap_oop_ex.prog.abap) (companion includes: `zrsp4sap_oop_exa/exc/exe/exf/exi/exo/exs/ext.prog.abap`, screens `zrsp4sap_oop_ex.prog.screen_0100.abap` / `_0200.abap`).
 
-- **Do**: copy the skeleton (REPORT statement, INCLUDE order, INITIALIZATION / AT SELECTION-SCREEN / START-OF-SELECTION / END-OF-SELECTION blocks, class bootstrap pattern `DATA(go_data) = NEW lcl_data( )` / `DATA(go_alv) = NEW lcl_alv( go_data )`), then adapt identifiers (`zrsc4sap_oop_ex` → actual program name, include suffix letters preserved).
+- **Do**: copy the skeleton (REPORT statement, INCLUDE order, INITIALIZATION / AT SELECTION-SCREEN / START-OF-SELECTION / END-OF-SELECTION blocks, class bootstrap pattern `DATA(go_data) = NEW lcl_data( )` / `DATA(go_alv) = NEW lcl_alv( go_data )`), then adapt identifiers (`zrsp4sap_oop_ex` → actual program name, include suffix letters preserved).
 - **Do not**: rearrange the event blocks, skip the two-class bootstrap, inline logic into events (all logic lives in class methods), replace Docking + Full ALV with Custom Control, or substitute a different include-suffix convention.
 - **Deviation requires written justification in `spec.md`** before the executor runs Phase 4. Undocumented structural drift from the template is a MAJOR finding in Phase 6 review.
 
@@ -32,7 +32,7 @@ When generating an OOP program's main `REPORT` source, the executor MUST start f
 - **Parameter count** ≤ 3 IMPORTING; beyond that, pass a DDIC structure or split the method.
 - **No output parameters masquerading as input** — use `CHANGING` deliberately; prefer `RETURNING` for functional methods, `EXPORTING` only when multi-value return is unavoidable.
 - **Functional methods return one value, no side effects.** Side-effecting methods return nothing.
-- **OOP two-class split** (sc4sap convention) — `LCL_DATA` for business logic / BAPI I/O, `LCL_ALV` or `LCL_SCREEN` for presentation. See [`oop-pattern.md`](oop-pattern.md).
+- **OOP two-class split** (sp4sap convention) — `LCL_DATA` for business logic / BAPI I/O, `LCL_ALV` or `LCL_SCREEN` for presentation. See [`oop-pattern.md`](oop-pattern.md).
 
 ## Object Orientation — Scope and Design
 

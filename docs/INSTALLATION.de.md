@@ -17,33 +17,33 @@
 | **Claude Code** | CLI installiert (Max/Pro-Abo oder API-Key) |
 | **SAP-System** | **SAP ECC 6.0** / **S/4HANA On-Premise** / **S/4HANA Cloud (Public & Private)** — ADT aktiviert |
 
-> **MCP Server** ([abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)) wird während `/sc4sap:setup` **automatisch installiert und konfiguriert** — keine manuelle Vorabinstallation erforderlich.
+> **MCP Server** ([abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)) wird während `/sp4sap:setup` **automatisch installiert und konfiguriert** — keine manuelle Vorabinstallation erforderlich.
 
 ## Installation
 
-> **Hinweis** — sc4sap ist **noch nicht im offiziellen Claude Code Plugin-Marketplace**. Fügen Sie dieses Repository vorerst als Custom Marketplace in Claude Code hinzu und installieren Sie das Plugin daraus.
+> **Hinweis** — sp4sap ist **noch nicht im offiziellen Claude Code Plugin-Marketplace**. Fügen Sie dieses Repository vorerst als Custom Marketplace in Claude Code hinzu und installieren Sie das Plugin daraus.
 
 ### Option A — Als Custom Marketplace hinzufügen (empfohlen)
 
 Innerhalb einer Claude-Code-Sitzung:
 
 ```
-/plugin marketplace add https://github.com/babamba2/superclaude-for-sap.git
-/plugin install sc4sap
+/plugin marketplace add https://github.com/ShaohengXui/superplugin-for-sap.git
+/plugin install sp4sap
 ```
 
 Für spätere Updates:
 
 ```
-/plugin marketplace update babamba2/superclaude-for-sap
-/plugin install sc4sap
+/plugin marketplace update ShaohengXui/superplugin-for-sap
+/plugin install sp4sap
 ```
 
 ### Option B — Aus dem Quellcode installieren
 
 ```bash
-git clone https://github.com/babamba2/superclaude-for-sap.git
-cd superclaude-for-sap
+git clone https://github.com/ShaohengXui/superplugin-for-sap.git
+cd superplugin-for-sap
 npm install && npm run build
 ```
 
@@ -53,22 +53,22 @@ Dann in Claude Code `/plugin marketplace add <lokaler-pfad>` auf das lokale Plug
 
 ```bash
 # Setup-Skill ausführen — Wizard führt eine Frage nach der anderen
-/sc4sap:setup
+/sp4sap:setup
 ```
 
 ### Unterbefehle
 
 ```bash
-/sc4sap:setup                # Voller Wizard (Standard)
-/sc4sap:setup doctor         # Routet zu /sc4sap:sap-doctor
-/sc4sap:setup mcp            # Routet zu /sc4sap:mcp-setup
-/sc4sap:setup spro           # Nur SPRO-Konfig-Autoextraktion
-/sc4sap:setup customizations # Nur Z*/Y* Enhancement- + Extension-Inventar
+/sp4sap:setup                # Voller Wizard (Standard)
+/sp4sap:setup doctor         # Routet zu /sp4sap:sap-doctor
+/sp4sap:setup mcp            # Routet zu /sp4sap:mcp-setup
+/sp4sap:setup spro           # Nur SPRO-Konfig-Autoextraktion
+/sp4sap:setup customizations # Nur Z*/Y* Enhancement- + Extension-Inventar
 ```
 
 ### Multi-Profile-Architektur (0.6.0+)
 
-sc4sap unterstützt mehrere SAP-Verbindungen (Dev / QA / Prod × N Mandanten) in derselben Claude-Code-Session.
+sp4sap unterstützt mehrere SAP-Verbindungen (Dev / QA / Prod × N Mandanten) in derselben Claude-Code-Session.
 
 ```
 ~/.sc4sap/                                    ← Home-Verzeichnis (geteilt über Repos)
@@ -86,7 +86,7 @@ sc4sap unterstützt mehrere SAP-Verbindungen (Dev / QA / Prod × N Mandanten) in
 
 Das Tier-Enum (`DEV` / `QA` / `PRD`) steuert die Readonly-Durchsetzung: QA/PRD-Profile blockieren `Create*` / `Update*` / `Delete*` in zwei Schichten — einem PreToolUse-Hook (L1, vor der Wire-Request) und dem internen MCP-Server-Guard (L2, nicht umgehbar). QA/PRD-Profile lehnen auch die Installation der ABAP-Utilities in Schritt 9 **ab** — transportieren Sie die Utilities stattdessen per CTS vom passenden DEV-Profil.
 
-Passwörter werden im OS-Keychain gespeichert (Windows Credential Manager / macOS Keychain / Linux libsecret) via `@napi-rs/keyring`. Wenn der Keychain nicht verfügbar ist (headless / Docker / fehlendes Optional-Dep), fällt sc4sap transparent auf Klartext in der Profil-Env zurück und warnt.
+Passwörter werden im OS-Keychain gespeichert (Windows Credential Manager / macOS Keychain / Linux libsecret) via `@napi-rs/keyring`. Wenn der Keychain nicht verfügbar ist (headless / Docker / fehlendes Optional-Dep), fällt sp4sap transparent auf Klartext in der Profil-Env zurück und warnt.
 
 Volles Design: [`multi-profile-design.md`](multi-profile-design.md). Artefakt-Auflösungsregeln: [`../common/multi-profile-artifact-resolution.md`](../common/multi-profile-artifact-resolution.md).
 
@@ -111,7 +111,7 @@ Der Wizard stellt **eine Frage nach der anderen** — kein kompletter Fragenkata
 | 11 | **SPRO-Extraktion (optional)** | `y/N` — tokenintensiv; cached nach `<project>/.sc4sap/work/<alias>/spro-config.json`. Spätere Skills nutzen den Cache wieder |
 | 11b | **Customizing-Inventar (optional)** | `y/N` — scant `Z*`/`Y*`-Enhancements + Append-Strukturen; schreibt `<project>/.sc4sap/work/<alias>/customizations/{MODULE}/{enhancements,extensions}.json` |
 | **12** | **🔒 PreToolUse-Hooks (PFLICHT)** | Installiert **beide** Hooks `block-forbidden-tables.mjs` (Row-Extraction-Guard) UND `tier-readonly-guard.mjs` (Tier-basierter Mutations-Guard) in `.claude/settings.json` via `node scripts/install-hooks.mjs --project`. Smoke-Tests beider. Setup abgeschlossen erst, wenn beide erfolgreich sind |
-| 13 | **HUD-Statuszeile** | sc4sap-Statuszeile in `~/.claude/settings.json` registrieren. Nach Neustart zeigt das HUD `{alias} [{tier}] {🔒 if readonly}` + Tokenverbrauch |
+| 13 | **HUD-Statuszeile** | sp4sap-Statuszeile in `~/.claude/settings.json` registrieren. Nach Neustart zeigt das HUD `{alias} [{tier}] {🔒 if readonly}` + Tokenverbrauch |
 
 > **Defense-in-Depth — drei Enforcement-Schichten**
 > - **L1a (Schritt 12, Row-Extraction)** — Claude Code `PreToolUse`-Hook. Profil in `~/.sc4sap/profiles/<alias>/config.json → blocklistProfile`. Lehnt `GetTableContents` / `GetSqlQuery` auf sensiblen Tabellen ab
@@ -124,18 +124,18 @@ Der Wizard stellt **eine Frage nach der anderen** — kein kompletter Fragenkata
 
 ### Profilverwaltung
 
-- Aktives System umschalten: `/sc4sap:sap-option switch <alias>` (oder interaktiver Picker — via `AskUserQuestion` mit Tier + Tools-Matrix-Preview)
-- Weiteren Mandanten / Tier hinzufügen: `/sc4sap:sap-option add` (Wizard: Alias → Tier → optional Same-Company-Meta-Copy → Verbindung + Keychain-Passwort)
-- Profilliste: `/sc4sap:sap-option list` — Alias, Tier-Badge, Host, `●`-Marker für aktives Profil
-- Entfernen / rotieren / purgen: `/sc4sap:sap-option remove|edit|purge` — Soft-Delete nach `~/.sc4sap/profiles/.trash/<alias>-<ts>/`, 7-Tage-Auto-Purge
+- Aktives System umschalten: `/sp4sap:sap-option switch <alias>` (oder interaktiver Picker — via `AskUserQuestion` mit Tier + Tools-Matrix-Preview)
+- Weiteren Mandanten / Tier hinzufügen: `/sp4sap:sap-option add` (Wizard: Alias → Tier → optional Same-Company-Meta-Copy → Verbindung + Keychain-Passwort)
+- Profilliste: `/sp4sap:sap-option list` — Alias, Tier-Badge, Host, `●`-Marker für aktives Profil
+- Entfernen / rotieren / purgen: `/sp4sap:sap-option remove|edit|purge` — Soft-Delete nach `~/.sc4sap/profiles/.trash/<alias>-<ts>/`, 7-Tage-Auto-Purge
 - Tier ist an einem bestehenden Profil unveränderlich — Ändern via remove + add
 
 ### Health & Wartung
 
-- Health-Check: `/sc4sap:sap-doctor`
-- Credentials rotieren / Branche ändern / L2-MCP-Blocklist anpassen: `/sc4sap:sap-option`
-- SPRO neu extrahieren: `/sc4sap:setup spro` (aktives Profil erforderlich)
-- Customizing-Inventar erneut ausführen: `/sc4sap:setup customizations` (aktives Profil erforderlich)
+- Health-Check: `/sp4sap:sap-doctor`
+- Credentials rotieren / Branche ändern / L2-MCP-Blocklist anpassen: `/sp4sap:sap-option`
+- SPRO neu extrahieren: `/sp4sap:setup spro` (aktives Profil erforderlich)
+- Customizing-Inventar erneut ausführen: `/sp4sap:setup customizations` (aktives Profil erforderlich)
 
 ### Migrations-Rollback (0.6.0-Upgrade rückgängig)
 
@@ -144,7 +144,7 @@ mv .sc4sap/sap.env.legacy .sc4sap/sap.env
 rm .sc4sap/active-profile.txt
 rm -rf ~/.sc4sap/profiles/<alias>
 # Falls das Passwort im Keychain gespeichert wurde (kein Plaintext-Fallback):
-echo '{"service":"sc4sap","account":"<alias>/<user>"}' \
+echo '{"service":"sp4sap","account":"<alias>/<user>"}' \
   | node "$CLAUDE_PLUGIN_ROOT/scripts/sap-profile-cli.mjs" keychain-delete
 ```
 

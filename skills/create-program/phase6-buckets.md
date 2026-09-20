@@ -8,7 +8,7 @@ Cut Phase 6 wall-clock time by ~50% and Opus token cost by ~70% without losing r
 
 ## Bucket Definition
 
-The 12 convention items in `phase6-review.md` are split into 4 buckets. Each bucket is reviewed by a separate `Agent({subagent_type: "sc4sap:sap-code-reviewer", model: "sonnet", ...})` dispatched in parallel.
+The 12 convention items in `phase6-review.md` are split into 4 buckets. Each bucket is reviewed by a separate `Agent({subagent_type: "sp4sap:sap-code-reviewer", model: "sonnet", ...})` dispatched in parallel.
 
 | Bucket | Items (from phase6-review.md) | Scope |
 |--------|-------------------------------|-------|
@@ -23,25 +23,25 @@ Parallel (single message, 4 tool-use blocks). Each call uses full JSON form:
 
 ```
 Agent({
-  subagent_type: "sc4sap:sap-code-reviewer",
+  subagent_type: "sp4sap:sap-code-reviewer",
   model: "sonnet",
   description: "Phase 6 review — bucket B1 (ALV + UI)",
   prompt: "Review bucket B1 covering items [1,2] (alv-rules, text-element-rule). See phase6-review.md for item specs and phase6-buckets.md for bucket scope."
 })
 Agent({
-  subagent_type: "sc4sap:sap-code-reviewer",
+  subagent_type: "sp4sap:sap-code-reviewer",
   model: "sonnet",
   description: "Phase 6 review — bucket B2 (Logic Hygiene)",
   prompt: "Review bucket B2 covering items [3,8] (constant-rule, clean-code). Read interview.md Paradigm dimension first; then load clean-code.md + one of clean-code-oop.md / clean-code-procedural.md accordingly."
 })
 Agent({
-  subagent_type: "sc4sap:sap-code-reviewer",
+  subagent_type: "sp4sap:sap-code-reviewer",
   model: "sonnet",
   description: "Phase 6 review — bucket B3 (Structure + Naming)",
   prompt: "Review bucket B3 covering items [4,5,6,7] (procedural-form-naming, oop-pattern, include-structure, naming-conventions)."
 })
 Agent({
-  subagent_type: "sc4sap:sap-code-reviewer",
+  subagent_type: "sp4sap:sap-code-reviewer",
   model: "sonnet",
   description: "Phase 6 review — bucket B4 (Platform + Config)",
   prompt: "Review bucket B4 covering items [9,10,11,12] (abap-release-reference, sap-version-reference, spro-lookup, activation-state)."
@@ -69,7 +69,7 @@ After all 4 buckets finish, count MAJOR findings:
 | MAJOR count | Action |
 |-------------|--------|
 | **0** | Skip Opus. Merge bucket outputs into `review.md`, final verdict `✅ ALL PASS`. Proceed to Phase 8. |
-| **1–2** | Dispatch `Agent({subagent_type: "sc4sap:sap-code-reviewer", model: "opus", ...})` **scoped only to the MAJOR findings** — pass finding list + affected object names. Opus re-reviews, attempts fix via `Update*` (up to 3 iterations per finding), writes final verdict to `review.md`. |
+| **1–2** | Dispatch `Agent({subagent_type: "sp4sap:sap-code-reviewer", model: "opus", ...})` **scoped only to the MAJOR findings** — pass finding list + affected object names. Opus re-reviews, attempts fix via `Update*` (up to 3 iterations per finding), writes final verdict to `review.md`. |
 | **3+** | Dispatch Opus with full context (all 4 bucket reports + source). Opus decides whether to auto-fix or BLOCK. If BLOCK, write `review.md` with `❌ BLOCKED` and surface to user. |
 
 Rationale: Sonnet is accurate enough to *detect* convention violations; Opus is reserved for *synthesizing fixes across multiple related findings* where reasoning depth matters.

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Persistent Mode Hook (Stop)
- * Minimal continuation enforcer for sc4sap modes.
+ * sp4sap Persistent Mode Hook (Stop)
+ * Minimal continuation enforcer for sp4sap modes.
  * Adapted from OMC persistent-mode.cjs.
  *
  * Supported modes: ralph, autopilot
@@ -149,7 +149,7 @@ async function main() {
       decision: 'block',
       reason: `[SC4SAP] ${activeMode} mode is active. The boulder never stops. ` +
         `Continue until all tasks complete. ` +
-        `Use "cancelsc4sap" or "stopsc4sap" to end the mode.`
+        `Use "cancelsp4sap" or "stopsp4sap" to end the mode.`
     }));
   } catch (error) {
     console.log(JSON.stringify({ continue: true, suppressOutput: true }));

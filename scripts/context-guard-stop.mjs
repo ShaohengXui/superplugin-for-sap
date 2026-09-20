@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Context Guard Hook (Stop)
+ * sp4sap Context Guard Hook (Stop)
  * Suggests session refresh when context usage exceeds a warning threshold.
  * Adapted from OMC context-guard-stop.mjs.
  *

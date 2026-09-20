@@ -1,8 +1,8 @@
 # Customization Lookup Protocol
 
-**MANDATORY for all sc4sap consultant agents, `sap-critic`, and any skill that analyses, critiques, or extends an existing SAP installation.**
+**MANDATORY for all sp4sap consultant agents, `sap-critic`, and any skill that analyses, critiques, or extends an existing SAP installation.**
 
-The customer's live Z*/Y* customizations — BAdI implementations, CMOD projects, customized form-based user-exit includes, Append Structures, and custom fields — are inventoried into per-module JSON files by `/sc4sap:setup customizations` (or `node scripts/extract-customizations.mjs`). **Consulting this inventory before recommending, critiquing, or designing is not optional**: proposing a new BAdI when a working Z implementation already exists wastes effort, splits logic, and is the single most common cause of rework in brownfield SAP projects.
+The customer's live Z*/Y* customizations — BAdI implementations, CMOD projects, customized form-based user-exit includes, Append Structures, and custom fields — are inventoried into per-module JSON files by `/sp4sap:setup customizations` (or `node scripts/extract-customizations.mjs`). **Consulting this inventory before recommending, critiquing, or designing is not optional**: proposing a new BAdI when a working Z implementation already exists wastes effort, splits logic, and is the single most common cause of rework in brownfield SAP projects.
 
 ## Files You MUST Check
 
@@ -34,7 +34,7 @@ For every module involved in the question:
 If the cache file is missing, the static doc still tells you the *names* of the standard exits/BAdIs to recommend. It does **not** tell you which the customer has already implemented. In this case:
 
 - Recommend the standard name
-- **Add a callout** telling the user their choice: "No customization inventory is present. Run `/sc4sap:setup customizations {MODULE}` to check whether this BAdI already has a Z implementation before I create a new one."
+- **Add a callout** telling the user their choice: "No customization inventory is present. Run `/sp4sap:setup customizations {MODULE}` to check whether this BAdI already has a Z implementation before I create a new one."
 - Do NOT block the current task on the extraction — proceed, but make the assumption ("no prior Z impl") explicit so it can be corrected.
 
 ### 3. Live MCP Fallback (last resort)
@@ -50,7 +50,7 @@ If the task is high-stakes (e.g., sap-critic about to REJECT a plan, sap-planner
 Every live call must:
 1. Name the target (BAdI name / SMOD name / table name)
 2. Declare why the cache miss prevents answering otherwise
-3. Warn about token cost and offer the alternative of running `/sc4sap:setup customizations`
+3. Warn about token cost and offer the alternative of running `/sp4sap:setup customizations`
 
 ### Decision flow summary
 
@@ -99,8 +99,8 @@ When FI-AP cache shows `bteImplementations: [{ kind: "P/S", event: "00001025", a
 
 ## Setup Awareness
 
-- The cache is populated by `/sc4sap:setup customizations` (optional wizard step 11b)
-- If missing, you MAY recommend `/sc4sap:setup customizations` after the current task — but do not block on it
+- The cache is populated by `/sp4sap:setup customizations` (optional wizard step 11b)
+- If missing, you MAY recommend `/sp4sap:setup customizations` after the current task — but do not block on it
 - Treat a stale cache (> 30 days) as prompting a refresh suggestion, but still prefer it over live query
 
 ## Agent Integration Checklist

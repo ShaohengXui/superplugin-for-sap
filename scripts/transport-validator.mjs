@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Transport Validator Hook (PreToolUse) — SAP-SPECIFIC
+ * sp4sap Transport Validator Hook (PreToolUse) — SAP-SPECIFIC
  *
  * Validates that a transport request exists before allowing MCP ABAP
  * Create/Update tools to execute. This enforces the SAP transport policy:

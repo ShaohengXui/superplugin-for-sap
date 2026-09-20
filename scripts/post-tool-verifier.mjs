@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap PostToolUse Hook: Verification Reminder System
+ * sp4sap PostToolUse Hook: Verification Reminder System
  * Monitors tool execution and provides contextual guidance.
  * Adapted from OMC post-tool-verifier.mjs with SAP-specific awareness.
  */

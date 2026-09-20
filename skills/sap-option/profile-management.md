@@ -65,7 +65,7 @@ Multi-step. Use `AskUserQuestion` where the answer is a small enum; otherwise us
    - `SAP_URL`: `^https?://`, no trailing slash.
    - `SAP_CLIENT`: exactly 3 digits.
    - `SAP_USERNAME`: non-empty.
-5. **password** — free-form, NEVER display. After capture, invoke the bundled node helper to store in OS keychain under service `sc4sap` and account `<alias>/<username>`. Write `SAP_PASSWORD=keychain:sc4sap/<alias>/<username>` in the env file. If keychain is unavailable (headless / Docker), offer plaintext fallback with an explicit warning and write the plaintext value.
+5. **password** — free-form, NEVER display. After capture, invoke the bundled node helper to store in OS keychain under service `sp4sap` and account `<alias>/<username>`. Write `SAP_PASSWORD=keychain:sp4sap/<alias>/<username>` in the env file. If keychain is unavailable (headless / Docker), offer plaintext fallback with an explicit warning and write the plaintext value.
 6. **description** (optional) — free-form short label, stored as `SAP_DESCRIPTION`.
 7. Write files:
    - `~/.sc4sap/profiles/<alias>/sap.env` (0600 if platform supports)

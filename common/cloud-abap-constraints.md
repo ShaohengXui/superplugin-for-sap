@@ -1,6 +1,6 @@
 # Cloud ABAP Constraints Reference
 
-Reference for `sc4sap:create-program` skill — Phase 0 preflight uses this table when `sapVersion = S/4HANA Cloud Public`. Classic ABAP features on the left are **prohibited**; use the Cloud ABAP equivalent on the right.
+Reference for `sp4sap:create-program` skill — Phase 0 preflight uses this table when `sapVersion = S/4HANA Cloud Public`. Classic ABAP features on the left are **prohibited**; use the Cloud ABAP equivalent on the right.
 
 ## Prohibited Statements / Features
 
@@ -74,7 +74,7 @@ CLASS ztest_class IMPLEMENTATION.
 ENDCLASS.
 ```
 
-## Impact on `sc4sap:create-program`
+## Impact on `sp4sap:create-program`
 
 On Cloud Public, the default Main+Include + Dynpro + CL_GUI_ALV_GRID pipeline **cannot execute**. The skill must redirect:
 

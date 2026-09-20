@@ -1,5 +1,5 @@
 ---
-name: sc4sap:sap-doctor
+name: sp4sap:sap-doctor
 description: Diagnose SC4SAP plugin health, MCP server connectivity, and SAP system connection (renamed from `doctor` to avoid conflict with Claude Code's built-in `/doctor`)
 level: 2
 model: haiku
@@ -11,7 +11,7 @@ Diagnoses the full SC4SAP stack: plugin installation, MCP server status, and liv
 
 
 <Purpose>
-sc4sap:sap-doctor runs a structured health check across three layers: the SC4SAP plugin itself, the mcp-abap-adt MCP server registration, and the live SAP system connection. It surfaces problems with clear remediation steps so you can get back to development quickly.
+sp4sap:sap-doctor runs a structured health check across three layers: the SC4SAP plugin itself, the mcp-abap-adt MCP server registration, and the live SAP system connection. It surfaces problems with clear remediation steps so you can get back to development quickly.
 </Purpose>
 
 <Response_Prefix>
@@ -31,7 +31,7 @@ Every response triggered by this skill MUST begin with `[Model: <main-model> · 
 </Diagnostic_Checks>
 
 <Cache_Management>
-`/sc4sap:sap-doctor` accepts two cache flags passed via `{{ARGUMENTS}}`:
+`/sp4sap:sap-doctor` accepts two cache flags passed via `{{ARGUMENTS}}`:
 
 - `--prune` — after running the normal diagnostic report, invoke `node "<plugin>/scripts/prune-cache.mjs"` (dry-run) and render its output directly. No files are deleted.
 - `--prune --yes` — after the normal report, invoke the script with `--yes` to actually delete every stale version directory.
@@ -44,7 +44,7 @@ Always show the ACTIVE version first and explicitly exclude it from deletion. If
 SC4SAP Doctor Report
 ====================
 Plugin Health       [PASS]  v0.2.2 (cache matches marketplace)
-MCP Server          [PASS]  plugin:sc4sap:sap responding, bridge preflight OK
+MCP Server          [PASS]  plugin:sp4sap:sap responding, bridge preflight OK
 SAP Connection      [PASS]  SID=S4H · Client=100 · User=PAEK
 Required Objects    [WARN]  9a: 3/3 · 9b: 7/7 (ZCL_S4SAP_CM_ALV inactive)
 Configuration       [PASS]
@@ -52,8 +52,8 @@ Cache Hygiene       [WARN]  3 stale versions consuming 1.7 GB (0.5.4, 0.6.0, 0.6
 
 Issues Found: 0 errors, 2 warnings
 
-Fix: Activate ZCL_S4SAP_CM_ALV, or re-run /sc4sap:setup wizard step 9b
-     /sc4sap:sap-doctor --prune --yes   (reclaim 1.7 GB)
+Fix: Activate ZCL_S4SAP_CM_ALV, or re-run /sp4sap:setup wizard step 9b
+     /sp4sap:sap-doctor --prune --yes   (reclaim 1.7 GB)
 ```
 
 Second example — connectivity failure gating Layer 4:
@@ -62,7 +62,7 @@ Second example — connectivity failure gating Layer 4:
 SC4SAP Doctor Report
 ====================
 Plugin Health       [PASS]  v0.2.2
-MCP Server          [FAIL]  plugin:sc4sap:sap not responding
+MCP Server          [FAIL]  plugin:sp4sap:sap not responding
 SAP Connection      [SKIP]  Cannot test without MCP server
 Required Objects    [SKIP]  SAP connection not ready
 Configuration       [WARN]  No .sc4sap/config.json found
@@ -70,20 +70,20 @@ Cache Hygiene       [PASS]  0 stale versions
 
 Issues Found: 1 error, 1 warning
 
-Fix: Run /sc4sap:mcp-setup to install and register plugin:sc4sap:sap
+Fix: Run /sp4sap:mcp-setup to install and register plugin:sp4sap:sap
 ```
 </Output_Format>
 
 <Remediation_Routing>
 - Plugin version drift (cache ≠ marketplace) -> run `/reload-plugins`, then restart Claude Code
-- MCP server missing -> `/sc4sap:mcp-setup`
-- SAP connection error -> display connection troubleshooting from `/sc4sap:mcp-setup` Troubleshooting section
-- Missing ZMCP_ADT_UTILS / ZMCP_ADT_DISPATCH / ZMCP_ADT_TEXTPOOL -> re-run `/sc4sap:setup` (wizard step 9a)
-- Missing ZIF_S4SAP_CM / ZCX_S4SAP_EXCP / ZCL_S4SAP_CM_* -> re-run `/sc4sap:setup` (wizard step 9b)
+- MCP server missing -> `/sp4sap:mcp-setup`
+- SAP connection error -> display connection troubleshooting from `/sp4sap:mcp-setup` Troubleshooting section
+- Missing ZMCP_ADT_UTILS / ZMCP_ADT_DISPATCH / ZMCP_ADT_TEXTPOOL -> re-run `/sp4sap:setup` (wizard step 9a)
+- Missing ZIF_S4SAP_CM / ZCX_S4SAP_EXCP / ZCL_S4SAP_CM_* -> re-run `/sp4sap:setup` (wizard step 9b)
 - Any 9a/9b object inactive -> activate via ADT, or re-run the matching wizard step to reinstall source and activate
-- Missing config -> run `/sc4sap:setup` wizard
+- Missing config -> run `/sp4sap:setup` wizard
 - Authorization errors -> display required authorization objects (S_DEVELOP, S_TRANSPRT)
-- Stale cache ≥ 500 MB -> `/sc4sap:sap-doctor --prune` to preview, then `/sc4sap:sap-doctor --prune --yes` to delete
+- Stale cache ≥ 500 MB -> `/sp4sap:sap-doctor --prune` to preview, then `/sp4sap:sap-doctor --prune --yes` to delete
 - All pass -> "SC4SAP is healthy. System: {SID} Client: {client} User: {user}"
 </Remediation_Routing>
 

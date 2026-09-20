@@ -1,8 +1,8 @@
-# Multi-Profile Setup Gap — `/sc4sap:setup` ↔ 0.6.0 Profile Architecture
+# Multi-Profile Setup Gap — `/sp4sap:setup` ↔ 0.6.0 Profile Architecture
 
 **Status**: gap analysis, 2026-04-21. Companion to [`multi-profile-design.md`](multi-profile-design.md) and [`multi-profile-implementation-plan.md`](multi-profile-implementation-plan.md).
 
-**Scope**: realign `/sc4sap:setup` with the multi-profile architecture. `/sc4sap:sap-option` already drives profile `switch/add/edit/remove/migrate`; `setup` still writes directly to `<project>/.sc4sap/{sap.env, config.json}` as if single-profile. This document enumerates the gaps, the open decisions, and the proposed execution plan. **No code is edited here** — only analysis.
+**Scope**: realign `/sp4sap:setup` with the multi-profile architecture. `/sp4sap:sap-option` already drives profile `switch/add/edit/remove/migrate`; `setup` still writes directly to `<project>/.sc4sap/{sap.env, config.json}` as if single-profile. This document enumerates the gaps, the open decisions, and the proposed execution plan. **No code is edited here** — only analysis.
 
 ## 1. Baseline — infrastructure already in place (reuse, do not rebuild)
 
@@ -22,7 +22,7 @@
 |---|---|---|---|
 | **0 (new)** | — | Call `sap-profile-cli.mjs detect-legacy`. If `needsMigration:true` → route to `sap-option/migration.md` and STOP. Else if no `~/.sc4sap/profiles/` exists → require `alias` + `SAP_TIER` up front (before Step 4). | L |
 | **2 (System ID)** | Collects `SAP_VERSION / ABAP_RELEASE / SAP_INDUSTRY` for Step 4 | Unchanged; values land inside the profile env at Step 4. | XS |
-| **4 (SAP Connection)** | Writes `<project>/.sc4sap/sap.env` | (a) collect `alias` + `SAP_TIER` + `SAP_DESCRIPTION` first; (b) stdin-pipe to `sap-profile-cli.mjs add` (writes `~/.sc4sap/profiles/<alias>/sap.env`, stores password in OS keychain via `keychain:sc4sap/<alias>/<user>`); (c) write `<project>/.sc4sap/active-profile.txt=<alias>`; (d) DO NOT write `<project>/.sc4sap/sap.env` | L |
+| **4 (SAP Connection)** | Writes `<project>/.sc4sap/sap.env` | (a) collect `alias` + `SAP_TIER` + `SAP_DESCRIPTION` first; (b) stdin-pipe to `sap-profile-cli.mjs add` (writes `~/.sc4sap/profiles/<alias>/sap.env`, stores password in OS keychain via `keychain:sp4sap/<alias>/<user>`); (c) write `<project>/.sc4sap/active-profile.txt=<alias>`; (d) DO NOT write `<project>/.sc4sap/sap.env` | L |
 | **4bis (RFC backend)** | `SAP_RFC_*` written to `<project>/.sc4sap/sap.env` | Write to `~/.sc4sap/profiles/<alias>/sap.env` | S |
 | **5 (Reconnect MCP)** | `/mcp` reconnect | Unchanged — `ReloadProfile` picks up new env via `active-profile.txt` | XS |
 | **6 (Connection Test)** | `GetSession` | Unchanged | — |
@@ -52,7 +52,7 @@ All edits ride on existing `sap-profile-cli.mjs` contracts — no CLI changes re
 2. **Step 9 system-dedup key** → `SAP_URL + SAP_CLIENT` (cheap, pre-connect). **Hard constraint**: Step 9 runs ONLY when `SAP_TIER=DEV`. QA/PRD profiles MUST NOT install ABAP objects; the wizard prints a CTS import recommendation instead (transport the utility FG from a DEV system to QA/PRD via the standard TMS route).
 3. **Project-local `.sc4sap/config.json`** → **delete entirely** after successful migration. All profile-scoped state lives under `~/.sc4sap/profiles/<alias>/config.json`; engagement state (`activeTransport`, naming convention) migrates into the profile config too. Project folder keeps only `active-profile.txt` + `work/<alias>/` artifacts.
 4. **Step 12 hook install target** → `.claude/settings.json` (project-level). User-level migration is a separate follow-up, not part of this work.
-5. **`setup {mcp,spro,customizations}` with no active profile** → **error out** with a direct pointer to `/sc4sap:setup` (full wizard) or `/sc4sap:sap-option` (if profiles already exist).
+5. **`setup {mcp,spro,customizations}` with no active profile** → **error out** with a direct pointer to `/sp4sap:setup` (full wizard) or `/sp4sap:sap-option` (if profiles already exist).
 
 ## 5. Proposed execution order
 

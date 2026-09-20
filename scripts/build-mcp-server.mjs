@@ -8,9 +8,9 @@
  *   node scripts/build-mcp-server.mjs --check  # verify installation only
  *
  * Supply-chain notes:
- *   - DEFAULT_PINNED_SHA below is the only vendor revision sc4sap installs. Bump
+ *   - DEFAULT_PINNED_SHA below is the only vendor revision sp4sap installs. Bump
  *     it (and document the change in release notes) when shipping a vetted vendor
- *     upgrade; end users pick up the new vendor on the next sc4sap update.
+ *     upgrade; end users pick up the new vendor on the next sp4sap update.
  *   - Override with env SC4SAP_MCP_ADT_PIN=<40-hex SHA> for maintainer testing.
  *   - npm is invoked with --ignore-scripts so a compromised transitive dep cannot
  *     run arbitrary code at install time. `npm run build` is still invoked
@@ -28,9 +28,9 @@ const VENDOR_DIR = resolve(ROOT, 'vendor', 'abap-mcp-adt');
 const REPO_URL = 'https://github.com/babamba2/abap-mcp-adt-powerup.git';
 const LAUNCHER = resolve(VENDOR_DIR, 'dist', 'server', 'launcher.js');
 
-// Pinned upstream commit of abap-mcp-adt-powerup. Every sc4sap installation
+// Pinned upstream commit of abap-mcp-adt-powerup. Every sp4sap installation
 // checks out exactly this SHA so a compromised upstream main cannot push code
-// into user machines. Bump this on a vetted vendor upgrade, cut a new sc4sap
+// into user machines. Bump this on a vetted vendor upgrade, cut a new sp4sap
 // release, document the old → new SHA in release notes.
 const DEFAULT_PINNED_SHA = 'dfc96de9201d8450cbc59062a8ab67de88788ddc';
 // Env override for maintainers / CI testing an unreleased vendor commit. Must
@@ -41,10 +41,10 @@ const PINNED_SHA = (() => {
   const override = process.env.SC4SAP_MCP_ADT_PIN;
   if (!override) return DEFAULT_PINNED_SHA;
   if (!SHA_RE.test(override)) {
-    console.error(`[sc4sap] SC4SAP_MCP_ADT_PIN must be a 40-hex commit SHA (got ${JSON.stringify(override)}).`);
+    console.error(`[sp4sap] SC4SAP_MCP_ADT_PIN must be a 40-hex commit SHA (got ${JSON.stringify(override)}).`);
     process.exit(1);
   }
-  console.warn(`[sc4sap] WARNING: using override pin ${override} (default is ${DEFAULT_PINNED_SHA}).`);
+  console.warn(`[sp4sap] WARNING: using override pin ${override} (default is ${DEFAULT_PINNED_SHA}).`);
   return override;
 })();
 
@@ -53,7 +53,7 @@ const isUpdate = args.includes('--update');
 const isCheck = args.includes('--check');
 
 function run(cmd, cwd) {
-  console.log(`[sc4sap] $ ${cmd}`);
+  console.log(`[sp4sap] $ ${cmd}`);
   execSync(cmd, { cwd, stdio: 'inherit' });
 }
 
@@ -69,10 +69,10 @@ function checkoutPinnedSha() {
   run(`git -c advice.detachedHead=false checkout --detach ${PINNED_SHA}`, VENDOR_DIR);
   const head = capture('git rev-parse HEAD', VENDOR_DIR);
   if (head !== PINNED_SHA) {
-    console.error(`[sc4sap] Vendor HEAD mismatch after checkout. expected=${PINNED_SHA} got=${head}`);
+    console.error(`[sp4sap] Vendor HEAD mismatch after checkout. expected=${PINNED_SHA} got=${head}`);
     process.exit(1);
   }
-  console.log(`[sc4sap] Vendor pinned to ${PINNED_SHA}.`);
+  console.log(`[sp4sap] Vendor pinned to ${PINNED_SHA}.`);
 }
 
 // Install dependencies without running lifecycle scripts (preinstall / install /
@@ -83,7 +83,7 @@ function installVendorDeps() {
   if (hasLock) {
     run('npm ci --ignore-scripts --no-audit --no-fund', VENDOR_DIR);
   } else {
-    console.warn('[sc4sap] No package-lock.json in vendor — falling back to npm install --ignore-scripts.');
+    console.warn('[sp4sap] No package-lock.json in vendor — falling back to npm install --ignore-scripts.');
     run('npm install --ignore-scripts --no-audit --no-fund', VENDOR_DIR);
   }
 }
@@ -97,17 +97,17 @@ function installVendorDeps() {
 //   'not_installed' — launcher missing
 function checkInstallation() {
   if (!existsSync(LAUNCHER)) {
-    console.error('[sc4sap] abap-mcp-adt is NOT installed.');
-    console.error('[sc4sap] Fix: node scripts/build-mcp-server.mjs');
+    console.error('[sp4sap] abap-mcp-adt is NOT installed.');
+    console.error('[sp4sap] Fix: node scripts/build-mcp-server.mjs');
     return 'not_installed';
   }
 
   const gitDir = resolve(VENDOR_DIR, '.git');
   if (!existsSync(gitDir)) {
-    console.warn('[sc4sap] abap-mcp-adt launcher present, but vendor has no .git — pin cannot be verified.');
-    console.warn(`[sc4sap]   This is normal for packaged cache installs that strip .git.`);
-    console.warn(`[sc4sap]   Expected pin: ${PINNED_SHA}`);
-    console.warn(`[sc4sap]   To force a verified reinstall: node scripts/build-mcp-server.mjs --update`);
+    console.warn('[sp4sap] abap-mcp-adt launcher present, but vendor has no .git — pin cannot be verified.');
+    console.warn(`[sp4sap]   This is normal for packaged cache installs that strip .git.`);
+    console.warn(`[sp4sap]   Expected pin: ${PINNED_SHA}`);
+    console.warn(`[sp4sap]   To force a verified reinstall: node scripts/build-mcp-server.mjs --update`);
     return 'unverified';
   }
 
@@ -115,19 +115,19 @@ function checkInstallation() {
   try {
     head = capture('git rev-parse HEAD', VENDOR_DIR);
   } catch (e) {
-    console.warn(`[sc4sap] abap-mcp-adt launcher present, but git HEAD read failed (${e.message}).`);
+    console.warn(`[sp4sap] abap-mcp-adt launcher present, but git HEAD read failed (${e.message}).`);
     return 'unverified';
   }
 
   if (head !== PINNED_SHA) {
-    console.error('[sc4sap] abap-mcp-adt vendor drift detected.');
-    console.error(`[sc4sap]   expected: ${PINNED_SHA}`);
-    console.error(`[sc4sap]   current:  ${head}`);
-    console.error('[sc4sap] Fix: node scripts/build-mcp-server.mjs --update');
+    console.error('[sp4sap] abap-mcp-adt vendor drift detected.');
+    console.error(`[sp4sap]   expected: ${PINNED_SHA}`);
+    console.error(`[sp4sap]   current:  ${head}`);
+    console.error('[sp4sap] Fix: node scripts/build-mcp-server.mjs --update');
     return 'drift';
   }
 
-  console.log(`[sc4sap] abap-mcp-adt is installed and pinned to ${PINNED_SHA} ✓`);
+  console.log(`[sp4sap] abap-mcp-adt is installed and pinned to ${PINNED_SHA} ✓`);
   return 'ok';
 }
 
@@ -145,19 +145,19 @@ function ensureVendorPackageJson() {
       {
         type: 'commonjs',
         _comment:
-          'sc4sap sentinel — overrides parent plugin-root "type": "module" so the CommonJS vendor launcher at dist/server/launcher.js loads correctly under Node 20+.',
+          'sp4sap sentinel — overrides parent plugin-root "type": "module" so the CommonJS vendor launcher at dist/server/launcher.js loads correctly under Node 20+.',
       },
       null,
       2,
     ) + '\n',
   );
-  console.log('[sc4sap] Wrote vendor/abap-mcp-adt/package.json CommonJS sentinel.');
+  console.log('[sp4sap] Wrote vendor/abap-mcp-adt/package.json CommonJS sentinel.');
 }
 
 async function main() {
   if (isCheck) {
     const status = checkInstallation();
-    // Exit codes consumed by /sc4sap:sap-doctor and /sc4sap:mcp-setup:
+    // Exit codes consumed by /sp4sap:sap-doctor and /sp4sap:mcp-setup:
     //   0 — ok or unverified (non-fatal; `unverified` surfaces as WARN upstream)
     //   1 — vendor not installed at all
     //   2 — vendor installed but pinned SHA drift
@@ -167,34 +167,34 @@ async function main() {
 
   if (isUpdate) {
     if (!existsSync(resolve(VENDOR_DIR, '.git'))) {
-      console.error('[sc4sap] vendor/abap-mcp-adt is not a git repo. Run without --update first.');
+      console.error('[sp4sap] vendor/abap-mcp-adt is not a git repo. Run without --update first.');
       process.exit(1);
     }
-    console.log(`[sc4sap] Updating abap-mcp-adt to pinned SHA ${PINNED_SHA}...`);
+    console.log(`[sp4sap] Updating abap-mcp-adt to pinned SHA ${PINNED_SHA}...`);
     const currentHead = capture('git rev-parse HEAD', VENDOR_DIR);
     if (currentHead === PINNED_SHA && existsSync(LAUNCHER)) {
-      console.log('[sc4sap] Already at pinned SHA with build artifacts present. Nothing to do.');
+      console.log('[sp4sap] Already at pinned SHA with build artifacts present. Nothing to do.');
       return;
     }
     checkoutPinnedSha();
     installVendorDeps();
     run('npm run build', VENDOR_DIR);
     ensureVendorPackageJson();
-    console.log('[sc4sap] Update complete.');
+    console.log('[sp4sap] Update complete.');
     return;
   }
 
   // Fresh install
   if (existsSync(LAUNCHER)) {
-    console.log('[sc4sap] abap-mcp-adt already installed. Use --update to refresh.');
+    console.log('[sp4sap] abap-mcp-adt already installed. Use --update to refresh.');
     return;
   }
 
-  console.log(`[sc4sap] Installing abap-mcp-adt from GitHub (pinned ${PINNED_SHA})...`);
+  console.log(`[sp4sap] Installing abap-mcp-adt from GitHub (pinned ${PINNED_SHA})...`);
   mkdirSync(resolve(ROOT, 'vendor'), { recursive: true });
 
   if (existsSync(resolve(VENDOR_DIR, '.git'))) {
-    console.log('[sc4sap] Repo exists but not built. Running checkout + install + build...');
+    console.log('[sp4sap] Repo exists but not built. Running checkout + install + build...');
   } else {
     // --no-checkout so we never have upstream HEAD on disk; checkoutPinnedSha
     // below fetches and checks out exactly the pinned SHA.
@@ -206,16 +206,16 @@ async function main() {
   run('npm run build', VENDOR_DIR);
 
   if (!existsSync(LAUNCHER)) {
-    console.error('[sc4sap] Build completed but launcher not found at expected path.');
-    console.error(`[sc4sap] Expected: ${LAUNCHER}`);
+    console.error('[sp4sap] Build completed but launcher not found at expected path.');
+    console.error(`[sp4sap] Expected: ${LAUNCHER}`);
     process.exit(1);
   }
 
   ensureVendorPackageJson();
-  console.log('[sc4sap] abap-mcp-adt installed successfully.');
+  console.log('[sp4sap] abap-mcp-adt installed successfully.');
 }
 
 main().catch((e) => {
-  console.error('[sc4sap] Build failed:', e.message);
+  console.error('[sp4sap] Build failed:', e.message);
   process.exit(1);
 });

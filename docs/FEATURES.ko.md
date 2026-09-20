@@ -40,34 +40,34 @@
 
 | 스킬 | 설명 |
 |------|------|
-| `sc4sap:setup` | 플러그인 설정 — MCP 서버 자동 설치, SPRO 구성 생성, 블록리스트 훅 설치 |
-| `sc4sap:mcp-setup` | 독립적인 MCP ABAP ADT 서버 설치/재설정 가이드 |
-| `sc4sap:sap-option` | `.sc4sap/sap.env` 보기/편집 (자격증명, RFC 백엔드, 블록리스트, 활성 모듈) |
-| `sc4sap:sap-doctor` | 플러그인 + MCP + SAP 진단 (6 레이어) |
-| `sc4sap:create-object` | ABAP 객체 생성 (하이브리드 모드 — 전송+패키지 확인, 생성, 활성화) |
-| `sc4sap:create-program` | 풀 ABAP 프로그램 파이프라인 — Main+Include, OOP/Procedural, ALV, Dynpro, Text Elements, ABAP Unit |
-| `sc4sap:program-to-spec` | ABAP 프로그램을 Functional/Technical Spec으로 역공학 (Markdown / Excel) |
-| `sc4sap:compare-programs` | 동일 시나리오를 모듈/국가/페르소나로 분화한 2~5개 ABAP 프로그램을 비교 → 컨설턴트용 Markdown 리포트 |
-| `sc4sap:analyze-code` | ABAP 코드 분석 (Clean ABAP / 성능 / 보안) |
-| `sc4sap:analyze-cbo-obj` | CBO 인벤토리 스캐너 + 교차 모듈 갭 분석 |
-| `sc4sap:analyze-symptom` | SAP 운영 에러/증상 단계별 분석 (덤프, 로그, SAP Note 후보) |
-| `sc4sap:ask-consultant` | 모듈 컨설턴트 에이전트(SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC)에 직접 질의. 읽기 전용 — 설정된 SAP 환경에 맞추어 답변. |
-| `sc4sap:trust-session` | INTERNAL-ONLY — 세션 전체 MCP 권한 부트스트랩 |
+| `sp4sap:setup` | 플러그인 설정 — MCP 서버 자동 설치, SPRO 구성 생성, 블록리스트 훅 설치 |
+| `sp4sap:mcp-setup` | 독립적인 MCP ABAP ADT 서버 설치/재설정 가이드 |
+| `sp4sap:sap-option` | `.sc4sap/sap.env` 보기/편집 (자격증명, RFC 백엔드, 블록리스트, 활성 모듈) |
+| `sp4sap:sap-doctor` | 플러그인 + MCP + SAP 진단 (6 레이어) |
+| `sp4sap:create-object` | ABAP 객체 생성 (하이브리드 모드 — 전송+패키지 확인, 생성, 활성화) |
+| `sp4sap:create-program` | 풀 ABAP 프로그램 파이프라인 — Main+Include, OOP/Procedural, ALV, Dynpro, Text Elements, ABAP Unit |
+| `sp4sap:program-to-spec` | ABAP 프로그램을 Functional/Technical Spec으로 역공학 (Markdown / Excel) |
+| `sp4sap:compare-programs` | 동일 시나리오를 모듈/국가/페르소나로 분화한 2~5개 ABAP 프로그램을 비교 → 컨설턴트용 Markdown 리포트 |
+| `sp4sap:analyze-code` | ABAP 코드 분석 (Clean ABAP / 성능 / 보안) |
+| `sp4sap:analyze-cbo-obj` | CBO 인벤토리 스캐너 + 교차 모듈 갭 분석 |
+| `sp4sap:analyze-symptom` | SAP 운영 에러/증상 단계별 분석 (덤프, 로그, SAP Note 후보) |
+| `sp4sap:ask-consultant` | 모듈 컨설턴트 에이전트(SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC)에 직접 질의. 읽기 전용 — 설정된 SAP 환경에 맞추어 답변. |
+| `sp4sap:trust-session` | INTERNAL-ONLY — 세션 전체 MCP 권한 부트스트랩 |
 
 ## 스킬 — 예시 & 워크플로우
 
-### `/sc4sap:create-object`
+### `/sp4sap:create-object`
 하이브리드 모드 단일 객체 생성: 전송+패키지 대화식 확인 후 생성/스캐폴드/활성화.
 ```
-/sc4sap:create-object
+/sp4sap:create-object
 → "패키지 ZSD_ORDER에 클래스 ZCL_SD_ORDER_VALIDATOR 생성"
 ```
 흐름: 타입 추론 → 패키지+전송 확인 → MCP `Create*` → 초기 구현 → `GetAbapSemanticAnalysis` → 활성화.
 
-### `/sc4sap:create-program`
+### `/sp4sap:create-program`
 플래그십 프로그램 생성 파이프라인 — Main+Include 래핑, OOP/Procedural, 풀 ALV+Dynpro 지원.
 ```
-/sc4sap:create-program
+/sp4sap:create-program
 → "미결 판매주문용 ALV 리포트 작성, 영업조직+날짜 범위 선택화면"
 ```
 흐름 (Phase 0–8):
@@ -83,39 +83,39 @@
 - Phase 7 — 디버그 에스컬레이션
 - Phase 8 — 타이밍 테이블 포함 완료 보고
 
-### `/sc4sap:analyze-code`
+### `/sp4sap:analyze-code`
 ```
-/sc4sap:analyze-code
+/sp4sap:analyze-code
 → "ZCL_SD_ORDER_VALIDATOR의 Clean ABAP 위반과 SELECT * 사용 리뷰"
 ```
 
-### `/sc4sap:analyze-cbo-obj`
+### `/sp4sap:analyze-cbo-obj`
 Z 패키지 탐색, 재사용 자산 카탈로그, 교차 모듈 갭 분석.
 ```
-/sc4sap:analyze-cbo-obj
+/sp4sap:analyze-cbo-obj
 → "ZSD_ORDER 패키지에서 MM 모듈 재사용 후보 스캔"
 ```
 흐름: `GetPackageTree` → 카테고리별 walk → 빈도 휴리스틱 → 교차 모듈 갭 체크 → `.sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json`.
 
-### `/sc4sap:analyze-symptom`
+### `/sp4sap:analyze-symptom`
 ```
-/sc4sap:analyze-symptom
+/sp4sap:analyze-symptom
 → "F110 중 ZFI_POSTING 234라인의 MESSAGE_TYPE_X 덤프"
 ```
 흐름: `RuntimeListDumps` → `RuntimeAnalyzeDump` → 스택 트레이스 → SAP Note 후보 → 치료 옵션.
 
-### `/sc4sap:program-to-spec`
+### `/sp4sap:program-to-spec`
 Socratic scope narrowing으로 ABAP 프로그램을 스펙으로 역공학 (Markdown/Excel).
 
-### `/sc4sap:sap-doctor`
+### `/sp4sap:sap-doctor`
 플러그인 + MCP + SAP 연결 진단. 뭔가 이상할 때 가장 먼저 실행.
 
-### `/sc4sap:sap-option`
+### `/sp4sap:sap-option`
 `.sc4sap/sap.env` 보기/편집 — 자격증명, RFC 백엔드, 블록리스트 정책, 활성 모듈. 시크릿 마스킹.
 
 ## MCP ABAP ADT 서버 — 고유 기능
 
-sc4sap은 **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)** (150+ 툴)로 구동됩니다. 일반적인 Class / Program / Table / CDS / FM CRUD 외에도, 대부분의 MCP 서버가 다루지 않는 **classic Dynpro 아티팩트에 대한 완전 R/U/C 커버리지**를 추가:
+sp4sap은 **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)** (150+ 툴)로 구동됩니다. 일반적인 Class / Program / Table / CDS / FM CRUD 외에도, 대부분의 MCP 서버가 다루지 않는 **classic Dynpro 아티팩트에 대한 완전 R/U/C 커버리지**를 추가:
 
 | 아티팩트 | 커버리지 |
 |---------|---------|
@@ -164,7 +164,7 @@ sc4sap은 **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powe
 
 ## 컨텍스트 로딩 아키텍처 (v0.5.2+)
 
-sc4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30+ 산업/국가 파일. 모든 agent dispatch마다 전체 파일을 로드하는 건 토큰 낭비 + 모델 주의력 희석. **4-tier 컨텍스트 로딩 모델**([`common/context-loading-protocol.md`](../common/context-loading-protocol.md) 정의)은 "항상 로드해야 하는 안전 가드레일"과 "역할별 기본 세트"와 "조건 트리거"와 "per-task 킷"을 분리합니다.
+sp4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30+ 산업/국가 파일. 모든 agent dispatch마다 전체 파일을 로드하는 건 토큰 낭비 + 모델 주의력 희석. **4-tier 컨텍스트 로딩 모델**([`common/context-loading-protocol.md`](../common/context-loading-protocol.md) 정의)은 "항상 로드해야 하는 안전 가드레일"과 "역할별 기본 세트"와 "조건 트리거"와 "per-task 킷"을 분리합니다.
 
 | Tier | 로드 시점 | 파일 |
 |------|-----------|------|
@@ -192,12 +192,12 @@ sc4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MOD
 ### 측정 효과
 
 - Per-dispatch 토큰: pre-v0.5.0 암묵적 load-all 대비 −40 ~ −60%.
-- `/sc4sap:create-program`의 Opus 사용 비중: −50% (`model-routing-rule.md` 라우팅 매트릭스 기준).
+- `/sp4sap:create-program`의 Opus 사용 비중: −50% (`model-routing-rule.md` 라우팅 매트릭스 기준).
 - Reviewer MAJOR 발견 정확도: 향상 — §1-§12 각 버킷이 12개 규칙 동시 훑기 대신 해당 규칙만 컨텍스트에 둠.
 
 ## 응답 프리픽스 규약 (v0.5.2+)
 
-모든 `/sc4sap:*` skill 트리거 응답은 다음 한 줄 프리픽스로 시작하여, 사용자가 어느 모델이 작업 중이고 어떤 sub-agent가 디스패치됐는지 한눈에 파악할 수 있도록 함:
+모든 `/sp4sap:*` skill 트리거 응답은 다음 한 줄 프리픽스로 시작하여, 사용자가 어느 모델이 작업 중이고 어떤 sub-agent가 디스패치됐는지 한눈에 파악할 수 있도록 함:
 
 ```
 [Model: <main-model> · Dispatched: <sub-summary>]
@@ -219,7 +219,7 @@ sc4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MOD
 — multi-executor-split.md Strategy A 기반 Multi-Executor Split
 ```
 
-규약은 모든 `/sc4sap:*` SKILL.md의 `<Response_Prefix>` 블록이 [`common/model-routing-rule.md`](../common/model-routing-rule.md) § *Response Prefix Convention*를 참조하여 강제. 프리픽스는 skill 트리거된 턴에만 적용되며, 무관한 주제로 전환하는 사용자 메시지는 해당 턴부터 프리픽스가 제거됨.
+규약은 모든 `/sp4sap:*` SKILL.md의 `<Response_Prefix>` 블록이 [`common/model-routing-rule.md`](../common/model-routing-rule.md) § *Response Prefix Convention*를 참조하여 강제. 프리픽스는 skill 트리거된 턴에만 적용되며, 무관한 주제로 전환하는 사용자 메시지는 해당 턴부터 프리픽스가 제거됨.
 
 ## 산업 레퍼런스 (`industry/`)
 
@@ -258,11 +258,11 @@ sc4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MOD
 
 예: MM PO 생성 시 **PS 활성** 상황 → 계정지정 `P`/`Q` + `PS_POSID` (WBS) 제안; **CO 활성** → 비용센터 파생 제안; **QM 활성** → GR 시 inspection lot 자동 생성.
 
-`/sc4sap:setup` (Step 4) 또는 `/sc4sap:sap-option modules`로 설정. `create-program`, `create-object`, `analyze-cbo-obj`, 모든 컨설턴트 에이전트가 소비.
+`/sp4sap:setup` (Step 4) 또는 `/sp4sap:sap-option modules`로 설정. `create-program`, `create-object`, `analyze-cbo-obj`, 모든 컨설턴트 에이전트가 소비.
 
 ## SAP 플랫폼 인식 (ECC / S4 On-Prem / Cloud)
 
-`sc4sap:create-program`은 필수 SAP 버전 Preflight 실행. `.sc4sap/config.json`의 `sapVersion`과 `abapRelease` 읽기:
+`sp4sap:create-program`은 필수 SAP 버전 Preflight 실행. `.sc4sap/config.json`의 `sapVersion`과 `abapRelease` 읽기:
 
 - **ECC** — RAP/ACDOCA/BP 없음, 릴리즈별 문법 게이팅
 - **S/4HANA On-Premise** — classical Dynpro 경고, extensibility-first, 재무에 MATDOC + ACDOCA
@@ -283,7 +283,7 @@ sc4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MOD
 
 ### SPRO 로컬 캐시 (토큰 절약)
 
-`/sc4sap:setup spro`는 고객별 SPRO 커스터마이징을 `.sc4sap/spro-config.json`으로 추출. 컨설턴트는 `common/spro-lookup.md` 우선순위 따름:
+`/sp4sap:setup spro`는 고객별 SPRO 커스터마이징을 `.sc4sap/spro-config.json`으로 추출. 컨설턴트는 `common/spro-lookup.md` 우선순위 따름:
 1. 로컬 캐시 → 2. 정적 레퍼런스 → 3. 라이브 MCP 질의 (확인 필요).
 
 ## SAP 특화 훅
@@ -310,9 +310,9 @@ sc4sap의 규칙 코퍼스는 방대함 — 25+ `common/*.md` + 14 `configs/{MOD
 
 **액션**: `deny` (차단) vs `warn` (경고 프리픽스로 진행). 호출 내 어떤 테이블이라도 `deny`면 전체 차단.
 
-**프로필** (`/sc4sap:setup`에서 선택): `strict` / `standard` / `minimal` / `custom`. 사이트별 추가는 `.sc4sap/blocklist-extend.txt`.
+**프로필** (`/sp4sap:setup`에서 선택): `strict` / `standard` / `minimal` / `custom`. 사이트별 추가는 `.sc4sap/blocklist-extend.txt`.
 
-**설치** (`/sc4sap:setup`이 자동, 수동):
+**설치** (`/sp4sap:setup`이 자동, 수동):
 ```bash
 node scripts/install-hooks.mjs            # user-level
 node scripts/install-hooks.mjs --project  # project-level
@@ -329,7 +329,7 @@ echo '{"tool_name":"mcp__abap__GetTableContents","tool_input":{"table":"BNKA"}}'
 ```bash
 export SC4SAP_POLICY=on
 export SC4SAP_POLICY_PROFILE=strict
-export SC4SAP_BLOCKLIST_PATH=/path/to/sc4sap/exceptions/table_exception.md
+export SC4SAP_BLOCKLIST_PATH=/path/to/sp4sap/exceptions/table_exception.md
 export SC4SAP_ALLOW_TABLE=TAB1,TAB2  # 세션 긴급 면제 (로그됨)
 ```
 
@@ -360,10 +360,10 @@ Screen / GUI Status / Text Element 연산은 SAP의 RFC-enabled FM으로 디스�
 | `odata` (기본) | HTTPS OData v2 `ZMCP_ADT_SRV` | 하드닝된 Gateway 설치 환경에서 동작; 표준 Gateway 권한(S_SERVICE)으로 라우팅. [docs/odata-backend.md](odata-backend.md) |
 | `soap` | HTTPS `/sap/bc/soap/rfc` | `/sap/bc/soap/rfc` ICF 노드가 활성인 클래식 경로 (운영 환경에서 점점 비활성화 추세) |
 | `native` | `node-rfc` + NW RFC SDK | 최저 레이턴시; 유료 SDK 필요. _Deprecated — `zrfc` 사용_ |
-| `gateway` | sc4sap-rfc-gateway 미들웨어로 HTTPS | 10+ 팀, 중앙 배포 |
+| `gateway` | sp4sap-rfc-gateway 미들웨어로 HTTPS | 10+ 팀, 중앙 배포 |
 | 🆕 `zrfc` | HTTPS ICF 핸들러 `/sap/bc/rest/zmcp_rfc` | SOAP 차단 + OData Gateway 어려움 (전형적 ECC). SDK·Gateway 불필요 — 클래스 + SICF 노드 하나 |
 
-`/sc4sap:sap-option`으로 언제든 전환, MCP 재연결, `/sc4sap:sap-doctor`로 검증.
+`/sp4sap:sap-option`으로 언제든 전환, MCP 재연결, `/sp4sap:sap-doctor`로 검증.
 
 ## 🏢 RFC 게이트웨이 (Enterprise 배포)
 
@@ -376,7 +376,7 @@ Screen / GUI Status / Text Element 연산은 SAP의 RFC-enabled FM으로 디스�
 
 **설정**:
 ```
-/sc4sap:sap-option
+/sp4sap:sap-option
 # SAP_RFC_BACKEND=gateway
 #     SAP_RFC_GATEWAY_URL=https://rfc-gw.company.com
 #     SAP_RFC_GATEWAY_TOKEN=<team-or-per-user-bearer>

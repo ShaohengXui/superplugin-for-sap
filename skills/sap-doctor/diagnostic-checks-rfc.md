@@ -48,7 +48,7 @@ Report: `Layer 6 (native): 6/6 PASS` or `Layer 6 (native): 3/6 FAIL — native S
 - [ ] `POST /rfc/dispatch` with action `PING` (or benign no-op) returns `{subrc: 0}` — proves gateway → SAP RFC works with the forwarded SAP credentials
 - [ ] `POST /rfc/textpool` `READ` for `RSPARAM` returns non-empty `result[]` — proves full pipeline including `S_RFC` on ZMCP_ADT_TEXTPOOL
 
-Report: `Layer 6 (gateway): 5/5 PASS` or `Layer 6 (gateway): 2/5 FAIL — gateway unreachable`. If 6.gateway.1 fails, direct user to `/sc4sap:sap-option` to fill the gateway block. If 6.gateway.2 fails, direct them to verify VPN / firewall / DNS / gateway process. If only 6.gateway.3 fails, credentials are being forwarded but SAP-side authorization is wrong.
+Report: `Layer 6 (gateway): 5/5 PASS` or `Layer 6 (gateway): 2/5 FAIL — gateway unreachable`. If 6.gateway.1 fails, direct user to `/sp4sap:sap-option` to fill the gateway block. If 6.gateway.2 fails, direct them to verify VPN / firewall / DNS / gateway process. If only 6.gateway.3 fails, credentials are being forwarded but SAP-side authorization is wrong.
 
 ## 6.odata — OData mode (active when `SAP_RFC_BACKEND=odata`)
 
@@ -74,8 +74,8 @@ Report: `Layer 6 (odata): 8/8 PASS` or `Layer 6 (odata): 3/8 FAIL — service no
 
 | Failure | Action |
 |---|---|
-| 6.odata.1 env missing | `/sc4sap:sap-option` → set `SAP_RFC_ODATA_SERVICE_URL` |
-| 6.odata.2 HTTP 404 | Run `/sc4sap:setup` (which triggers Step 9c) then register in `/IWFND/MAINT_SERVICE` |
+| 6.odata.1 env missing | `/sp4sap:sap-option` → set `SAP_RFC_ODATA_SERVICE_URL` |
+| 6.odata.2 HTTP 404 | Run `/sp4sap:setup` (which triggers Step 9c) then register in `/IWFND/MAINT_SERVICE` |
 | 6.odata.2 HTTP 401 | Basic auth rejected — verify `SAP_USERNAME` / `SAP_PASSWORD` |
 | 6.odata.3 no CSRF token | ICF node for `/sap/opu/odata/` inactive — ask Basis to activate |
 | 6.odata.4 HTTP 500 | `/IWBEP` backend registration missing (known gotcha) — see `docs/odata-backend.md` Troubleshooting; first try `SE38 → ZMCP_ADT_FLUSH_CACHE` then Basis `/IWBEP/REG_SERVICE` |

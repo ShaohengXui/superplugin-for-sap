@@ -1,6 +1,6 @@
 # sap-doctor Diagnostic Checks
 
-Detailed diagnostic checklist for `sc4sap:sap-doctor`. Referenced from `SKILL.md` → `<Diagnostic_Checks>`.
+Detailed diagnostic checklist for `sp4sap:sap-doctor`. Referenced from `SKILL.md` → `<Diagnostic_Checks>`.
 
 Run all checks in order. Report PASS / FAIL / WARN for each.
 
@@ -12,7 +12,7 @@ Run all checks in order. Report PASS / FAIL / WARN for each.
 - [ ] Config file exists at `.sc4sap/config.json` with `sapVersion`, `abapRelease`, `industry` keys
 
 **Layer 2 - MCP Server**
-- [ ] `plugin:sc4sap:sap` appears in Claude Code MCP server list
+- [ ] `plugin:sp4sap:sap` appears in Claude Code MCP server list
 - [ ] MCP server process is running (check via tool availability)
 - [ ] At least one MCP tool (`GetSession`) responds without error
 - [ ] **Vendor launcher exists** at `<cache>/vendor/abap-mcp-adt/dist/server/launcher.js`
@@ -20,7 +20,7 @@ Run all checks in order. Report PASS / FAIL / WARN for each.
 - [ ] **Vendor pin matches expected SHA**: run `node "<plugin>/scripts/build-mcp-server.mjs" --check`
       and interpret its exit code:
       - **exit 0** + stdout "pinned to <SHA> ✓" → PASS
-      - **exit 0** + stderr "pin cannot be verified" (`.git` stripped during packaging) → WARN — note that vendor cryptographic verification is unavailable for this cache install; suggest `/sc4sap:setup mcp` after the next sc4sap update to replace cache vendor with a verifiable clone
+      - **exit 0** + stderr "pin cannot be verified" (`.git` stripped during packaging) → WARN — note that vendor cryptographic verification is unavailable for this cache install; suggest `/sp4sap:setup mcp` after the next sp4sap update to replace cache vendor with a verifiable clone
       - **exit 1** → FAIL — vendor not installed; advise `node scripts/build-mcp-server.mjs`
       - **exit 2** → FAIL — pin drift (current HEAD ≠ pinned SHA); advise `node scripts/build-mcp-server.mjs --update`
 - [ ] **No plugin version drift**: cache `.claude-plugin/plugin.json` version matches
@@ -42,14 +42,14 @@ Run all checks in order. Report PASS / FAIL / WARN for each.
 
 > **Gate — strict dependency**: Run this layer ONLY when **Layer 2 (MCP Server) AND Layer 3 (SAP System Connection)** both end in PASS. If either is FAIL, mark Layer 4 as **[SKIP — SAP connection not ready]** and do **not** issue any `SearchObject` / `GetInactiveObjects` call. Rationale: every check here depends on a live MCP + SAP session; an MCP or connectivity failure makes every object appear "missing" and would mislead the user toward re-installing objects that actually exist. Fix connectivity first (Layer 2/3 remediation), then re-run.
 
-These objects are installed by `/sc4sap:setup` wizard steps 9a and 9b. Missing them breaks MCP Screen/GUI/TextPool ops (9a) or prevents generated programs from compiling (9b).
+These objects are installed by `/sp4sap:setup` wizard steps 9a and 9b. Missing them breaks MCP Screen/GUI/TextPool ops (9a) or prevents generated programs from compiling (9b).
 
 *9a — MCP ADT utilities (required for Screen/GUI Status/Text Element ops):*
 - [ ] `SearchObject(ZMCP_ADT_UTILS, FUGR)` — function group exists
 - [ ] `SearchObject(ZMCP_ADT_DISPATCH, FUNC)` — dispatcher function module exists and is RFC-enabled
 - [ ] `SearchObject(ZMCP_ADT_TEXTPOOL, FUNC)` — text pool function module exists and is RFC-enabled
 
-*9b — ALV OOP reuse handlers (consumed by `/sc4sap:create-program` generated code):*
+*9b — ALV OOP reuse handlers (consumed by `/sp4sap:create-program` generated code):*
 - [ ] `SearchObject(ZIF_S4SAP_CM, INTF)` — interface exists
 - [ ] `SearchObject(ZCX_S4SAP_EXCP, CLAS)` — exception class exists
 - [ ] `SearchObject(ZCL_S4SAP_CM_OALV, CLAS)` — ALV Grid wrapper exists
@@ -72,7 +72,7 @@ Per-backend check lists for `soap` / `native` / `gateway` / `odata` live in **[`
 
 **Layer 7 - Cache Hygiene**
 
-Each plugin update leaves its previous `~/.claude/plugins/cache/<marketplace>/sc4sap/<version>/` directory behind — Claude Code does not auto-clean them. Because each version carries its own `vendor/abap-mcp-adt/node_modules/` (500–800 MB), stale cache grows monotonically.
+Each plugin update leaves its previous `~/.claude/plugins/cache/<marketplace>/sp4sap/<version>/` directory behind — Claude Code does not auto-clean them. Because each version carries its own `vendor/abap-mcp-adt/node_modules/` (500–800 MB), stale cache grows monotonically.
 
 Run `node "<plugin>/scripts/prune-cache.mjs"` (dry-run — no side effects) and parse its output. Interpret:
 

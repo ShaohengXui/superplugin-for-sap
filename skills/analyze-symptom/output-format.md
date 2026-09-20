@@ -1,6 +1,6 @@
 # Output Format — analyze-symptom
 
-Report template for each analysis round of `/sc4sap:analyze-symptom`. Referenced from `SKILL.md`.
+Report template for each analysis round of `/sp4sap:analyze-symptom`. Referenced from `SKILL.md`.
 
 ## Per-Round Structure
 
@@ -68,4 +68,4 @@ In the final round (no open questions), produce a consolidated report with final
 
 ## Round Counter
 
-Track round number in memory across the conversation. Do not persist to file — each `/sc4sap:analyze-symptom` invocation starts at Round 1.
+Track round number in memory across the conversation. Do not persist to file — each `/sp4sap:analyze-symptom` invocation starts at Round 1.

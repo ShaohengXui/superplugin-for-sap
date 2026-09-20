@@ -1,4 +1,4 @@
-# SPRO Config Auto-Generation (`/sc4sap:setup spro`)
+# SPRO Config Auto-Generation (`/sp4sap:setup spro`)
 
 Referenced by `SKILL.md` — this file holds the full SPRO extraction workflow.
 

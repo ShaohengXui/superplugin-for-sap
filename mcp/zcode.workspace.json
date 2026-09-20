@@ -1,0 +1,16 @@
+{
+  "mcp": {
+    "servers": {
+      "sap": {
+        "type": "stdio",
+        "command": "node",
+        "args": ["<SC4SAP_ROOT>/bridge/mcp-server.cjs"],
+        "cwd": "<PROJECT_ROOT>",
+        "env": {
+          "SC4SAP_TIER_GUARD": "proxy"
+        },
+        "timeoutMs": 60000
+      }
+    }
+  }
+}

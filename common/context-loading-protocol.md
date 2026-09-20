@@ -4,7 +4,7 @@ Rule for how agents and skills read rule files. Replaces the implicit "load CLAU
 
 ## Why
 
-sc4sap has 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30 `industry/*.md` + 16 `country/*.md`. Loading everything wastes tokens and dilutes enforcement. But unconditional per-task loading also breaks — some files are load-bearing safety rails that every dispatch must honor regardless of task. The 4 tiers separate "must always read" from "read when needed" from "read only for this phase".
+sp4sap has 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30 `industry/*.md` + 16 `country/*.md`. Loading everything wastes tokens and dilutes enforcement. But unconditional per-task loading also breaks — some files are load-bearing safety rails that every dispatch must honor regardless of task. The 4 tiers separate "must always read" from "read when needed" from "read only for this phase".
 
 ## The 4 tiers
 
@@ -75,7 +75,7 @@ Declared in:
 
 ## Enforcement — agent side
 
-Every sc4sap agent prompt begins with a `<Mandatory_Baseline>` block declaring its role group. The agent, at session start, MUST:
+Every sp4sap agent prompt begins with a `<Mandatory_Baseline>` block declaring its role group. The agent, at session start, MUST:
 
 1. Load Tier 1 (5 files) — unconditional.
 2. Load Tier 2 for its declared role group.

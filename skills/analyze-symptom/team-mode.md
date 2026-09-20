@@ -78,7 +78,7 @@ Replaces the Step 3 legacy "present hypotheses" flow.
 
 ## Cleanup
 
-1. Shutdown all team members via `SendMessage({type:"shutdown_request", reason:"triage complete"})` (structured JSON object per protocol). Agents with `<Team_Shutdown_Handler>` (all 26 sc4sap agents, added 2026-04-24) auto-terminate.
+1. Shutdown all team members via `SendMessage({type:"shutdown_request", reason:"triage complete"})` (structured JSON object per protocol). Agents with `<Team_Shutdown_Handler>` (all 26 sp4sap agents, added 2026-04-24) auto-terminate.
 2. Keep task directory — incident triage records are valuable for Phase-6-like retrospective and future dump pattern matching.
 
 ## Prototype notes (Phase 6 scaffolding)

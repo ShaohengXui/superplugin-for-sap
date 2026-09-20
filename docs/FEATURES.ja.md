@@ -40,34 +40,34 @@
 
 | スキル | 説明 |
 |--------|------|
-| `sc4sap:setup` | プラグインセットアップ — MCP サーバー自動インストール、SPRO 構成生成、ブロックリストフックインストール |
-| `sc4sap:mcp-setup` | スタンドアロン MCP ABAP ADT サーバーインストール/再構成ガイド |
-| `sc4sap:sap-option` | `.sc4sap/sap.env` の表示/編集 (認証、RFC バックエンド、ブロックリスト、アクティブモジュール) |
-| `sc4sap:sap-doctor` | プラグイン + MCP + SAP 診断 (6 レイヤー) |
-| `sc4sap:create-object` | ABAP オブジェクト作成 (ハイブリッドモード — トランスポート + パッケージ確認、作成、アクティブ化) |
-| `sc4sap:create-program` | フル ABAP プログラムパイプライン — Main+Include、OOP/Procedural、ALV、Dynpro、Text Elements、ABAP Unit |
-| `sc4sap:program-to-spec` | ABAP プログラムを機能/技術仕様にリバースエンジニアリング (Markdown / Excel) |
-| `sc4sap:compare-programs` | 同一シナリオをモジュール / 国 / ペルソナで分岐した 2〜5 本の ABAP プログラムを比較 → コンサルタント向け Markdown レポート |
-| `sc4sap:analyze-code` | ABAP コード解析 (Clean ABAP / パフォーマンス / セキュリティ) |
-| `sc4sap:analyze-cbo-obj` | CBO インベントリスキャナー + クロスモジュールギャップ解析 |
-| `sc4sap:analyze-symptom` | SAP 運用エラー/症状のステップバイステップ解析 (ダンプ、ログ、SAP Note 候補) |
-| `sc4sap:ask-consultant` | モジュールコンサルタントエージェント (SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC) に直接質問。読み取り専用 — 設定された SAP 環境に沿って回答。 |
-| `sc4sap:trust-session` | INTERNAL-ONLY — セッション全体 MCP パーミッションブートストラップ |
+| `sp4sap:setup` | プラグインセットアップ — MCP サーバー自動インストール、SPRO 構成生成、ブロックリストフックインストール |
+| `sp4sap:mcp-setup` | スタンドアロン MCP ABAP ADT サーバーインストール/再構成ガイド |
+| `sp4sap:sap-option` | `.sc4sap/sap.env` の表示/編集 (認証、RFC バックエンド、ブロックリスト、アクティブモジュール) |
+| `sp4sap:sap-doctor` | プラグイン + MCP + SAP 診断 (6 レイヤー) |
+| `sp4sap:create-object` | ABAP オブジェクト作成 (ハイブリッドモード — トランスポート + パッケージ確認、作成、アクティブ化) |
+| `sp4sap:create-program` | フル ABAP プログラムパイプライン — Main+Include、OOP/Procedural、ALV、Dynpro、Text Elements、ABAP Unit |
+| `sp4sap:program-to-spec` | ABAP プログラムを機能/技術仕様にリバースエンジニアリング (Markdown / Excel) |
+| `sp4sap:compare-programs` | 同一シナリオをモジュール / 国 / ペルソナで分岐した 2〜5 本の ABAP プログラムを比較 → コンサルタント向け Markdown レポート |
+| `sp4sap:analyze-code` | ABAP コード解析 (Clean ABAP / パフォーマンス / セキュリティ) |
+| `sp4sap:analyze-cbo-obj` | CBO インベントリスキャナー + クロスモジュールギャップ解析 |
+| `sp4sap:analyze-symptom` | SAP 運用エラー/症状のステップバイステップ解析 (ダンプ、ログ、SAP Note 候補) |
+| `sp4sap:ask-consultant` | モジュールコンサルタントエージェント (SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC) に直接質問。読み取り専用 — 設定された SAP 環境に沿って回答。 |
+| `sp4sap:trust-session` | INTERNAL-ONLY — セッション全体 MCP パーミッションブートストラップ |
 
 ## スキル — 例 & ワークフロー
 
-### `/sc4sap:create-object`
+### `/sp4sap:create-object`
 ハイブリッドモード単一オブジェクト作成: トランスポート + パッケージを対話的に確認後、作成・スキャフォールド・アクティブ化。
 ```
-/sc4sap:create-object
+/sp4sap:create-object
 → "パッケージ ZSD_ORDER にクラス ZCL_SD_ORDER_VALIDATOR を作成"
 ```
 フロー: 型推論 → パッケージ + トランスポート確認 → MCP `Create*` → 初期実装 → `GetAbapSemanticAnalysis` → アクティブ化。
 
-### `/sc4sap:create-program`
+### `/sp4sap:create-program`
 フラグシッププログラム作成パイプライン — Main + Include ラッピング、OOP または Procedural、フル ALV + Dynpro サポート。
 ```
-/sc4sap:create-program
+/sp4sap:create-program
 → "未清算販売注文用 ALV レポート作成、販売組織 + 日付範囲の選択画面"
 ```
 フロー (Phase 0–8):
@@ -83,39 +83,39 @@
 - Phase 7 — デバッグエスカレーション
 - Phase 8 — タイミングテーブル付き完了レポート
 
-### `/sc4sap:analyze-code`
+### `/sp4sap:analyze-code`
 ```
-/sc4sap:analyze-code
+/sp4sap:analyze-code
 → "ZCL_SD_ORDER_VALIDATOR の Clean ABAP 違反と SELECT * 使用をレビュー"
 ```
 
-### `/sc4sap:analyze-cbo-obj`
+### `/sp4sap:analyze-cbo-obj`
 Z パッケージを走査、再利用可能資産をカタログ化、クロスモジュールギャップ解析。
 ```
-/sc4sap:analyze-cbo-obj
+/sp4sap:analyze-cbo-obj
 → "ZSD_ORDER パッケージから MM モジュール再利用候補をスキャン"
 ```
 フロー: `GetPackageTree` → カテゴリ別 walk → 頻度ヒューリスティクス → クロスモジュールギャップチェック → `.sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json`。
 
-### `/sc4sap:analyze-symptom`
+### `/sp4sap:analyze-symptom`
 ```
-/sc4sap:analyze-symptom
+/sp4sap:analyze-symptom
 → "F110 中の ZFI_POSTING 234 行目 MESSAGE_TYPE_X ダンプ"
 ```
 フロー: `RuntimeListDumps` → `RuntimeAnalyzeDump` → スタックトレース → SAP Note 候補 → 修復オプション。
 
-### `/sc4sap:program-to-spec`
+### `/sp4sap:program-to-spec`
 Socratic scope narrowing で ABAP プログラムを仕様書にリバースエンジニアリング (Markdown/Excel)。
 
-### `/sc4sap:sap-doctor`
+### `/sp4sap:sap-doctor`
 プラグイン + MCP + SAP 接続診断。問題発生時に最初に実行。
 
-### `/sc4sap:sap-option`
+### `/sp4sap:sap-option`
 `.sc4sap/sap.env` の表示/編集 — 認証、RFC バックエンド、ブロックリストポリシー、アクティブモジュール。シークレットはマスク。
 
 ## MCP ABAP ADT サーバー — 固有機能
 
-sc4sap は **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)** (150+ ツール) で駆動。通常の Class / Program / Table / CDS / FM CRUD を超えて、ほとんどの MCP サーバーが扱わない **classic Dynpro アーティファクトの完全 R/U/C カバレッジ**を追加:
+sp4sap は **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup)** (150+ ツール) で駆動。通常の Class / Program / Table / CDS / FM CRUD を超えて、ほとんどの MCP サーバーが扱わない **classic Dynpro アーティファクトの完全 R/U/C カバレッジ**を追加:
 
 | アーティファクト | カバレッジ |
 |--------------|-----------|
@@ -164,7 +164,7 @@ sc4sap は **[abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-pow
 
 ## コンテキストローディングアーキテクチャ (v0.5.2+)
 
-sc4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30+ 業界/国別ファイル。エージェントディスパッチごとに全ファイルをロードするとトークン浪費 + モデル注意力の希薄化が発生。**4-tier コンテキストローディングモデル** ([`common/context-loading-protocol.md`](../common/context-loading-protocol.md) で定義) は「常にロードする安全ガードレール」「役割別ベースライン」「条件トリガー」「per-task キット」を分離。
+sp4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MODULE}/*.md` + 30+ 業界/国別ファイル。エージェントディスパッチごとに全ファイルをロードするとトークン浪費 + モデル注意力の希薄化が発生。**4-tier コンテキストローディングモデル** ([`common/context-loading-protocol.md`](../common/context-loading-protocol.md) で定義) は「常にロードする安全ガードレール」「役割別ベースライン」「条件トリガー」「per-task キット」を分離。
 
 | Tier | ロードタイミング | ファイル |
 |------|-----------------|----------|
@@ -192,12 +192,12 @@ sc4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MO
 ### 測定効果
 
 - Per-dispatch トークン: pre-v0.5.0 の暗黙的 load-all パターン比 −40 ~ −60%。
-- `/sc4sap:create-program` での Opus 使用比率: −50% (`model-routing-rule.md` ルーティングマトリックス)。
+- `/sp4sap:create-program` での Opus 使用比率: −50% (`model-routing-rule.md` ルーティングマトリックス)。
 - Reviewer MAJOR 発見検出精度: 向上 — §1-§12 の各バケットが 12 ルール同時スキャンではなく該当ルールのみをコンテキストに保持。
 
 ## レスポンスプリフィックス規約 (v0.5.2+)
 
-すべての `/sc4sap:*` スキルトリガーレスポンスは、ユーザーがどのモデルが作業中でどの sub-agent がディスパッチされたかを一目で確認できるよう、以下の一行プリフィックスで開始:
+すべての `/sp4sap:*` スキルトリガーレスポンスは、ユーザーがどのモデルが作業中でどの sub-agent がディスパッチされたかを一目で確認できるよう、以下の一行プリフィックスで開始:
 
 ```
 [Model: <main-model> · Dispatched: <sub-summary>]
@@ -219,7 +219,7 @@ sc4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MO
 — multi-executor-split.md Strategy A による Multi-Executor Split
 ```
 
-規約は、すべての `/sc4sap:*` SKILL.md の `<Response_Prefix>` ブロックが [`common/model-routing-rule.md`](../common/model-routing-rule.md) § *Response Prefix Convention* を参照して強制。プリフィックスはスキルトリガーされたターンのみに適用され、無関係な話題転換のユーザーメッセージは当該ターンからプリフィックスが除去される。
+規約は、すべての `/sp4sap:*` SKILL.md の `<Response_Prefix>` ブロックが [`common/model-routing-rule.md`](../common/model-routing-rule.md) § *Response Prefix Convention* を参照して強制。プリフィックスはスキルトリガーされたターンのみに適用され、無関係な話題転換のユーザーメッセージは当該ターンからプリフィックスが除去される。
 
 ## 業界リファレンス (`industry/`)
 
@@ -258,11 +258,11 @@ sc4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MO
 
 例: MM PO 作成時 **PS 有効** → 勘定指定カテゴリ `P`/`Q` + `PS_POSID` (WBS) を提案;**CO 有効** → コストセンター派生を提案;**QM 有効** → GR 時のインスペクションロット自動作成。
 
-`/sc4sap:setup` (Step 4) または `/sc4sap:sap-option modules` で設定。`create-program`, `create-object`, `analyze-cbo-obj`, すべてのコンサルタントエージェントが消費。
+`/sp4sap:setup` (Step 4) または `/sp4sap:sap-option modules` で設定。`create-program`, `create-object`, `analyze-cbo-obj`, すべてのコンサルタントエージェントが消費。
 
 ## SAP プラットフォーム認識 (ECC / S4 On-Prem / Cloud)
 
-`sc4sap:create-program` は必須の SAP バージョン Preflight を実行。`.sc4sap/config.json` の `sapVersion` と `abapRelease` を読み取り:
+`sp4sap:create-program` は必須の SAP バージョン Preflight を実行。`.sc4sap/config.json` の `sapVersion` と `abapRelease` を読み取り:
 
 - **ECC** — RAP/ACDOCA/BP なし、リリース別構文ゲーティング
 - **S/4HANA On-Premise** — classical Dynpro 警告、extensibility-first、財務用に MATDOC + ACDOCA
@@ -283,7 +283,7 @@ sc4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MO
 
 ### SPRO ローカルキャッシュ (トークン節約)
 
-`/sc4sap:setup spro` は顧客固有の SPRO カスタマイジングを `.sc4sap/spro-config.json` に抽出。コンサルタントは `common/spro-lookup.md` の優先順位に従う:
+`/sp4sap:setup spro` は顧客固有の SPRO カスタマイジングを `.sc4sap/spro-config.json` に抽出。コンサルタントは `common/spro-lookup.md` の優先順位に従う:
 1. ローカルキャッシュ → 2. 静的リファレンス → 3. ライブ MCP 照会 (確認必要)。
 
 ## SAP 固有フック
@@ -310,9 +310,9 @@ sc4sap のルールコーパスは膨大 — 25+ `common/*.md` + 14 `configs/{MO
 
 **アクション**: `deny` (ブロック) vs `warn` (警告プレフィックスで続行)。呼び出し内のいずれかのテーブルが `deny` なら全体ブロック。
 
-**プロファイル** (`/sc4sap:setup` で選択): `strict` / `standard` / `minimal` / `custom`。サイト固有追加は `.sc4sap/blocklist-extend.txt`。
+**プロファイル** (`/sp4sap:setup` で選択): `strict` / `standard` / `minimal` / `custom`。サイト固有追加は `.sc4sap/blocklist-extend.txt`。
 
-**インストール** (`/sc4sap:setup` が自動、手動):
+**インストール** (`/sp4sap:setup` が自動、手動):
 ```bash
 node scripts/install-hooks.mjs            # user-level
 node scripts/install-hooks.mjs --project  # project-level
@@ -329,7 +329,7 @@ echo '{"tool_name":"mcp__abap__GetTableContents","tool_input":{"table":"BNKA"}}'
 ```bash
 export SC4SAP_POLICY=on
 export SC4SAP_POLICY_PROFILE=strict
-export SC4SAP_BLOCKLIST_PATH=/path/to/sc4sap/exceptions/table_exception.md
+export SC4SAP_BLOCKLIST_PATH=/path/to/sp4sap/exceptions/table_exception.md
 export SC4SAP_ALLOW_TABLE=TAB1,TAB2  # セッション緊急免除 (ログ記録)
 ```
 
@@ -360,10 +360,10 @@ Screen / GUI Status / Text Element 操作は SAP の RFC 有効 FM にディス�
 | `odata` (デフォルト) | HTTPS OData v2 `ZMCP_ADT_SRV` | ハードニング済み Gateway でも動作。標準 Gateway 認可(S_SERVICE)経由。[docs/odata-backend.md](odata-backend.md) |
 | `soap` | HTTPS `/sap/bc/soap/rfc` | `/sap/bc/soap/rfc` ICF ノードが有効な従来経路 (本番環境では無効化される傾向) |
 | `native` | `node-rfc` + NW RFC SDK | 最低レイテンシ、有料 SDK 必要。_非推奨 — `zrfc` 使用_ |
-| `gateway` | sc4sap-rfc-gateway ミドルウェアへ HTTPS | 10+ チーム、中央集約 |
+| `gateway` | sp4sap-rfc-gateway ミドルウェアへ HTTPS | 10+ チーム、中央集約 |
 | 🆕 `zrfc` | HTTPS ICF ハンドラ `/sap/bc/rest/zmcp_rfc` | SOAP 閉鎖 + OData Gateway 困難 (典型的 ECC)。SDK・Gateway 不要 — クラス + SICF ノード 1 つ |
 
-`/sc4sap:sap-option` でいつでも切替、MCP 再接続、`/sc4sap:sap-doctor` で検証。
+`/sp4sap:sap-option` でいつでも切替、MCP 再接続、`/sp4sap:sap-doctor` で検証。
 
 ## 🏢 RFC ゲートウェイ (Enterprise デプロイ)
 
@@ -376,7 +376,7 @@ Screen / GUI Status / Text Element 操作は SAP の RFC 有効 FM にディス�
 
 **構成**:
 ```
-/sc4sap:sap-option
+/sp4sap:sap-option
 # SAP_RFC_BACKEND=gateway
 #     SAP_RFC_GATEWAY_URL=https://rfc-gw.company.com
 #     SAP_RFC_GATEWAY_TOKEN=<team-or-per-user-bearer>

@@ -17,33 +17,33 @@
 | **Claude Code** | CLI 설치 완료 (Max/Pro 구독 또는 API 키) |
 | **SAP 시스템** | **SAP ECC 6.0** / **S/4HANA On-Premise** / **S/4HANA Cloud (Public & Private)** — ADT 활성화됨 |
 
-> **MCP 서버** ([abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup))는 `/sc4sap:setup` 중 **자동 설치·설정**됩니다 — 수동 사전 설치 불필요.
+> **MCP 서버** ([abap-mcp-adt-powerup](https://github.com/babamba2/abap-mcp-adt-powerup))는 `/sp4sap:setup` 중 **자동 설치·설정**됩니다 — 수동 사전 설치 불필요.
 
 ## 설치
 
-> **Note** — sc4sap은 **아직 공식 Claude Code 플러그인 마켓플레이스에 등록되지 않았습니다**. 당분간은 이 저장소를 커스텀 마켓플레이스로 추가한 뒤 플러그인을 설치하세요.
+> **Note** — sp4sap은 **아직 공식 Claude Code 플러그인 마켓플레이스에 등록되지 않았습니다**. 당분간은 이 저장소를 커스텀 마켓플레이스로 추가한 뒤 플러그인을 설치하세요.
 
 ### 옵션 A — 커스텀 마켓플레이스로 추가 (권장)
 
 Claude Code 세션 안에서:
 
 ```
-/plugin marketplace add https://github.com/babamba2/superclaude-for-sap.git
-/plugin install sc4sap
+/plugin marketplace add https://github.com/ShaohengXui/superplugin-for-sap.git
+/plugin install sp4sap
 ```
 
 업데이트:
 
 ```
-/plugin marketplace update babamba2/superclaude-for-sap
-/plugin install sc4sap
+/plugin marketplace update ShaohengXui/superplugin-for-sap
+/plugin install sp4sap
 ```
 
 ### 옵션 B — 소스에서 설치
 
 ```bash
-git clone https://github.com/babamba2/superclaude-for-sap.git
-cd superclaude-for-sap
+git clone https://github.com/ShaohengXui/superplugin-for-sap.git
+cd superplugin-for-sap
 npm install && npm run build
 ```
 
@@ -53,22 +53,22 @@ npm install && npm run build
 
 ```bash
 # 설정 스킬 실행 — 위저드가 한 번에 한 질문씩 안내
-/sc4sap:setup
+/sp4sap:setup
 ```
 
 ### 서브커맨드
 
 ```bash
-/sc4sap:setup                # 전체 위저드 (기본)
-/sc4sap:setup doctor         # /sc4sap:sap-doctor로 라우팅
-/sc4sap:setup mcp            # /sc4sap:mcp-setup으로 라우팅
-/sc4sap:setup spro           # SPRO 설정 자동 추출만
-/sc4sap:setup customizations # Z*/Y* 확장/증설 인벤토리만
+/sp4sap:setup                # 전체 위저드 (기본)
+/sp4sap:setup doctor         # /sp4sap:sap-doctor로 라우팅
+/sp4sap:setup mcp            # /sp4sap:mcp-setup으로 라우팅
+/sp4sap:setup spro           # SPRO 설정 자동 추출만
+/sp4sap:setup customizations # Z*/Y* 확장/증설 인벤토리만
 ```
 
 ### 멀티 프로필 아키텍처 (0.6.0+)
 
-sc4sap은 같은 Claude Code 세션 안에서 여러 SAP 연결 (Dev / QA / Prod × N 법인) 을 지원합니다.
+sp4sap은 같은 Claude Code 세션 안에서 여러 SAP 연결 (Dev / QA / Prod × N 법인) 을 지원합니다.
 
 ```
 ~/.sc4sap/                                    ← 사용자 홈 (저장소 간 공유)
@@ -111,7 +111,7 @@ Tier enum (`DEV` / `QA` / `PRD`)은 readonly 강제의 기준: QA/PRD는 `Create
 | 11 | **SPRO 추출 (선택)** | `y/N` — 토큰 비용 크지만 `<project>/.sc4sap/work/<alias>/spro-config.json` 캐시가 이후 토큰 사용을 크게 줄임 |
 | 11b | **커스터마이징 인벤토리 (선택)** | `y/N` — `Z*`/`Y*` 확장 + 어펜드 구조 스캔. `<project>/.sc4sap/work/<alias>/customizations/{MODULE}/{enhancements,extensions}.json`에 저장 |
 | **12** | **🔒 PreToolUse 훅 (필수)** | `.claude/settings.json`에 `block-forbidden-tables.mjs` (행추출 가드) **및** `tier-readonly-guard.mjs` (tier 기반 변이 가드) **두 개 모두** 설치 (`node scripts/install-hooks.mjs --project`). 양쪽 스모크 테스트 실행. 이 단계 성공 없이는 setup 미완료 |
-| 13 | **HUD 상태 줄** | `~/.claude/settings.json`에 sc4sap 상태 줄 등록. 재시작 후 HUD가 `{alias} [{tier}] {🔒 if readonly}` + 토큰 사용량 표시 |
+| 13 | **HUD 상태 줄** | `~/.claude/settings.json`에 sp4sap 상태 줄 등록. 재시작 후 HUD가 `{alias} [{tier}] {🔒 if readonly}` + 토큰 사용량 표시 |
 
 > **다계층 방어 — 3개 enforcement 레이어**
 > - **L1a (12단계, 행 추출)** — Claude Code `PreToolUse` 훅. 프로필은 `~/.sc4sap/profiles/<alias>/config.json → blocklistProfile`. 민감 테이블 `GetTableContents` / `GetSqlQuery` 차단
@@ -124,18 +124,18 @@ Tier enum (`DEV` / `QA` / `PRD`)은 readonly 강제의 기준: QA/PRD는 `Create
 
 ### 프로필 작업
 
-- 활성 시스템 전환: `/sc4sap:sap-option switch <alias>` (또는 인터랙티브 피커 — `AskUserQuestion` 사용, tier + 허용 툴 매트릭스 프리뷰)
-- 법인/tier 추가: `/sc4sap:sap-option add` (위저드: alias → tier → 선택적 same-company 메타 복사 → 연결 + 키체인 비밀번호 캡처)
-- 프로필 목록: `/sc4sap:sap-option list` — alias, tier 배지, 호스트, 활성 프로필 `●` 표시
-- 제거 / 로테이션 / 영구삭제: `/sc4sap:sap-option remove|edit|purge` — soft-delete는 `~/.sc4sap/profiles/.trash/<alias>-<ts>/`에 7일 자동 purge
+- 활성 시스템 전환: `/sp4sap:sap-option switch <alias>` (또는 인터랙티브 피커 — `AskUserQuestion` 사용, tier + 허용 툴 매트릭스 프리뷰)
+- 법인/tier 추가: `/sp4sap:sap-option add` (위저드: alias → tier → 선택적 same-company 메타 복사 → 연결 + 키체인 비밀번호 캡처)
+- 프로필 목록: `/sp4sap:sap-option list` — alias, tier 배지, 호스트, 활성 프로필 `●` 표시
+- 제거 / 로테이션 / 영구삭제: `/sp4sap:sap-option remove|edit|purge` — soft-delete는 `~/.sc4sap/profiles/.trash/<alias>-<ts>/`에 7일 자동 purge
 - Tier는 불변 — 변경하려면 remove + add
 
 ### 상태 점검 & 유지보수
 
-- 상태 점검: `/sc4sap:sap-doctor`
-- 자격증명 로테이션 / 산업 변경 / L2 MCP 블록리스트 조정: `/sc4sap:sap-option`
-- SPRO 재추출: `/sc4sap:setup spro` (활성 프로필 필요)
-- 커스터마이징 인벤토리 재실행: `/sc4sap:setup customizations` (활성 프로필 필요)
+- 상태 점검: `/sp4sap:sap-doctor`
+- 자격증명 로테이션 / 산업 변경 / L2 MCP 블록리스트 조정: `/sp4sap:sap-option`
+- SPRO 재추출: `/sp4sap:setup spro` (활성 프로필 필요)
+- 커스터마이징 인벤토리 재실행: `/sp4sap:setup customizations` (활성 프로필 필요)
 
 ### 마이그레이션 롤백 (0.6.0 업그레이드 되돌리기)
 
@@ -144,7 +144,7 @@ mv .sc4sap/sap.env.legacy .sc4sap/sap.env
 rm .sc4sap/active-profile.txt
 rm -rf ~/.sc4sap/profiles/<alias>
 # 비밀번호를 키체인에 저장했다면 (plaintext fallback이 아닌 경우):
-echo '{"service":"sc4sap","account":"<alias>/<user>"}' \
+echo '{"service":"sp4sap","account":"<alias>/<user>"}' \
   | node "$CLAUDE_PLUGIN_ROOT/scripts/sap-profile-cli.mjs" keychain-delete
 ```
 

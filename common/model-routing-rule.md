@@ -32,7 +32,7 @@ Use Haiku (`haiku`) for:
 - Pure text formatting — writing a `report.md` summary from structured state.
 - Documentation stubs (short doc-specialist tasks).
 
-Most sc4sap workflows do NOT reach Haiku — use only when you're confident the task is pure substitution.
+Most sp4sap workflows do NOT reach Haiku — use only when you're confident the task is pure substitution.
 
 ## Dispatch-time decision procedure
 
@@ -44,7 +44,7 @@ Before every `Agent(...)` call, classify the planned MCP tool mix:
 4. Else if the writes require novel code generation OR cross-file reasoning → **Opus**.
 5. Else (mixed, moderate complexity) → **Sonnet**, escalate to Opus on first hard blocker.
 
-## Per-wave pre-routing for `/sc4sap:create-program`
+## Per-wave pre-routing for `/sp4sap:create-program`
 
 | Wave / Phase | Dominant work | Model |
 |---|---|---|
@@ -87,9 +87,9 @@ This gives Opus the cheap agent's inventory + the specific failure point, rather
 - `skills/create-program/agent-pipeline.md` — each Phase bullet states its expected model.
 - `skills/create-program/phase6-buckets.md` — reviewer bucket dispatch + Opus escalation ladder uses this rule.
 
-## Response Prefix Convention — `/sc4sap:*` skills
+## Response Prefix Convention — `/sp4sap:*` skills
 
-Every sc4sap skill (`/sc4sap:*`) MUST cause the main-thread response to begin with a model-routing prefix line, so the user can see at a glance which model is doing the work and which sub-agents were dispatched.
+Every sp4sap skill (`/sp4sap:*`) MUST cause the main-thread response to begin with a model-routing prefix line, so the user can see at a glance which model is doing the work and which sub-agents were dispatched.
 
 **Format (first line of the skill-triggered response):**
 
@@ -121,15 +121,15 @@ Every sc4sap skill (`/sc4sap:*`) MUST cause the main-thread response to begin wi
 
 **When the prefix applies:**
 
-- Every response that resulted from invoking a `/sc4sap:*` skill — not every conversation turn.
+- Every response that resulted from invoking a `/sp4sap:*` skill — not every conversation turn.
 - Continuation turns on the same skill-triggered task (follow-ups, verification, clarifications) keep the prefix.
 - A user message that pivots to unrelated work drops the prefix starting with that turn.
 
-**Each sc4sap SKILL.md MUST include** a `<Response_Prefix>` block near the top pointing at this section, so every skill inherits the convention without restating it.
+**Each sp4sap SKILL.md MUST include** a `<Response_Prefix>` block near the top pointing at this section, so every skill inherits the convention without restating it.
 
 ## Phase Banner Convention — multi-phase skills
 
-Skills that internally orchestrate **two or more phases** (e.g., `/sc4sap:create-program`, `/sc4sap:program-to-spec`, `/sc4sap:compare-programs`, `/sc4sap:analyze-symptom`, `/sc4sap:analyze-cbo-obj`, `/sc4sap:create-object`) MUST emit a **single-line phase banner** immediately before each phase dispatch, so the user can see which model is doing each step without reading skill internals.
+Skills that internally orchestrate **two or more phases** (e.g., `/sp4sap:create-program`, `/sp4sap:program-to-spec`, `/sp4sap:compare-programs`, `/sp4sap:analyze-symptom`, `/sp4sap:analyze-cbo-obj`, `/sp4sap:create-object`) MUST emit a **single-line phase banner** immediately before each phase dispatch, so the user can see which model is doing each step without reading skill internals.
 
 **Format:**
 
@@ -163,7 +163,7 @@ Skills that internally orchestrate **two or more phases** (e.g., `/sc4sap:create
 
 **When NOT to emit:**
 
-- Single-dispatch skills (`/sc4sap:ask-consultant`, `/sc4sap:trust-session`, `/sc4sap:sap-option`, `/sc4sap:sap-doctor`) — the `[Model: ...]` response prefix alone is sufficient.
+- Single-dispatch skills (`/sp4sap:ask-consultant`, `/sp4sap:trust-session`, `/sp4sap:sap-option`, `/sp4sap:sap-doctor`) — the `[Model: ...]` response prefix alone is sufficient.
 - Pure main-thread work inside a phase (no `Agent(...)` call).
 
 **Relationship to Response Prefix:**

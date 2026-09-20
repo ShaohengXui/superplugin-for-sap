@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZRSC4SAP_OOP_EX</NAME>
+    <NAME>ZRSP4SAP_OOP_EX</NAME>
     <SUBC>1</SUBC>
     <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
@@ -12,7 +12,7 @@
    <DYNPROS>
     <item>
      <HEADER>
-      <PROGRAM>ZRSC4SAP_OOP_EX</PROGRAM>
+      <PROGRAM>ZRSP4SAP_OOP_EX</PROGRAM>
       <SCREEN>0100</SCREEN>
       <LANGUAGE>E</LANGUAGE>
       <DESCRIPT>screen 0100</DESCRIPT>
@@ -43,7 +43,7 @@
     </item>
     <item>
      <HEADER>
-      <PROGRAM>ZRSC4SAP_OOP_EX</PROGRAM>
+      <PROGRAM>ZRSP4SAP_OOP_EX</PROGRAM>
       <SCREEN>0200</SCREEN>
       <LANGUAGE>E</LANGUAGE>
       <DESCRIPT>Screen 0200</DESCRIPT>

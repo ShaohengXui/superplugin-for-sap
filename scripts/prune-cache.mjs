@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 /**
- * Cache hygiene for sc4sap plugin installs.
+ * Cache hygiene for sp4sap plugin installs.
  *
  * Claude Code keeps one directory per plugin version under
- *   ~/.claude/plugins/cache/<marketplace>/sc4sap/<version>/
+ *   ~/.claude/plugins/cache/<marketplace>/sp4sap/<version>/
  * and never auto-removes old ones. Each version carries its own
  * vendor/abap-mcp-adt/node_modules/ (~500–800 MB on a full install), so the
  * cache grows unbounded with every plugin update.
  *
  * This script:
  *   1. Resolves the ACTIVE plugin version from the marketplace manifest
- *      (~/.claude/plugins/marketplaces/sc4sap/.claude-plugin/plugin.json).
- *   2. Walks the cache directory for every sc4sap marketplace entry.
+ *      (~/.claude/plugins/marketplaces/sp4sap/.claude-plugin/plugin.json).
+ *   2. Walks the cache directory for every sp4sap marketplace entry.
  *   3. Lists any cache version directories that do NOT match the active
  *      version ("stale") with their size in MB.
  *   4. In dry-run mode (default) reports only. With `--yes` deletes every
@@ -83,7 +83,7 @@ function fmtMB(bytes) {
 }
 
 function findActiveVersion() {
-  const marketplacePlugin = join(MARKETPLACES_ROOT, 'sc4sap');
+  const marketplacePlugin = join(MARKETPLACES_ROOT, 'sp4sap');
   if (!existsSync(marketplacePlugin)) {
     return { error: `marketplace path missing: ${marketplacePlugin}` };
   }
@@ -98,15 +98,15 @@ function findActiveVersion() {
   return { version };
 }
 
-// Cache layout: ~/.claude/plugins/cache/<marketplace-name>/sc4sap/<version>/
-// We match by plugin name "sc4sap" (directory 2) to stay agnostic of how the
+// Cache layout: ~/.claude/plugins/cache/<marketplace-name>/sp4sap/<version>/
+// We match by plugin name "sp4sap" (directory 2) to stay agnostic of how the
 // marketplace was registered.
 function findCacheVersions() {
   if (!existsSync(CACHE_ROOT)) return [];
   const results = [];
   for (const marketplace of readdirSync(CACHE_ROOT, { withFileTypes: true })) {
     if (!marketplace.isDirectory()) continue;
-    const pluginRoot = join(CACHE_ROOT, marketplace.name, 'sc4sap');
+    const pluginRoot = join(CACHE_ROOT, marketplace.name, 'sp4sap');
     if (!existsSync(pluginRoot)) continue;
     for (const ver of readdirSync(pluginRoot, { withFileTypes: true })) {
       if (!ver.isDirectory()) continue;
@@ -191,7 +191,7 @@ function main() {
 function printHuman(summary, { dryRun }) {
   const bar = '─'.repeat(62);
   console.log(bar);
-  console.log(`sc4sap cache hygiene`);
+  console.log(`sp4sap cache hygiene`);
   console.log(bar);
   console.log(`Active version:        ${summary.activeVersion}`);
   console.log(`Cache entries:         ${summary.cacheVersions.length}`);

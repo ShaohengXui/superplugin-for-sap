@@ -99,7 +99,7 @@ function tailLog(text, maxLines, maxBytes) {
 
 const { text: logExcerpt, truncated } = tailLog(rawLog, MAX_LOG_LINES, MAX_LOG_BYTES);
 
-const SYSTEM_PROMPT = `You are a CI failure diagnostician for the sc4sap repo — a Claude Code plugin for SAP On-Premise S/4HANA development.
+const SYSTEM_PROMPT = `You are a CI failure diagnostician for the sp4sap repo — a Claude Code plugin for SAP On-Premise S/4HANA development.
 
 The CI workflow (.github/workflows/ci.yml) runs these steps sequentially on ubuntu-latest:
   1. npm ci --ignore-scripts                 install deps, skip postinstall scripts

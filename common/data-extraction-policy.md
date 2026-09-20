@@ -1,6 +1,6 @@
 # Data Extraction Policy
 
-**MANDATORY for all sc4sap agents, skills, and direct Claude sessions.** Applies whenever row-level data is about to be read from an SAP system.
+**MANDATORY for all sp4sap agents, skills, and direct Claude sessions.** Applies whenever row-level data is about to be read from an SAP system.
 
 ## Core Rule
 
@@ -14,7 +14,7 @@ Before calling any of the following MCP tools:
 You MUST:
 
 1. **Identify every table referenced** in the request (direct table name, tables inside a JOIN, underlying tables of a CDS view / SQL query).
-2. **Check `exceptions/table_exception.md`** at the sc4sap plugin root.
+2. **Check `exceptions/table_exception.md`** at the sp4sap plugin root.
 3. If **any** referenced table matches the blocklist (exact name, family pattern like `PA*`, or customer-specific Z-pattern): **refuse the extraction**.
 
 ## Actions: `deny` vs `warn`
@@ -100,7 +100,7 @@ Approval applies to **one session and one scope** — not a permanent bypass.
 This policy is one of four enforcement layers:
 
 1. **L1 (this file)** — agent/skill instruction level
-2. **L2 (`sc4sap/CLAUDE.md`)** — global directive loaded into every Claude session
+2. **L2 (`sp4sap/CLAUDE.md`)** — global directive loaded into every Claude session
 3. **L3 (`PreToolUse` hook at `scripts/hooks/block-forbidden-tables.mjs`)** — programmatic interception in Claude Code
 4. **L4 (MCP server upstream)** — hardcoded blocklist in `mcp-abap-adt` (roadmap)
 

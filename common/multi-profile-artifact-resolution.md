@@ -54,13 +54,13 @@ function writePath(relativePath):
 
 Skills that read or produce project-local artifacts must adopt this pattern:
 
-- `/sc4sap:create-program` — writes `program/<name>/{platform,interview,spec,plan,report,...}.md`
-- `/sc4sap:program-to-spec` — reads existing programs, writes spec.md / spec.xlsx
-- `/sc4sap:analyze-code` — writes review report
-- `/sc4sap:analyze-cbo-obj` — writes `cbo/<MODULE>/<PACKAGE>/{index,inventory}.md`
-- `/sc4sap:compare-programs` — writes `comparisons/*.md`
-- `/sc4sap:analyze-symptom` — writes audit reports
-- `/sc4sap:create-object` — writes nothing long-term (transient state only)
+- `/sp4sap:create-program` — writes `program/<name>/{platform,interview,spec,plan,report,...}.md`
+- `/sp4sap:program-to-spec` — reads existing programs, writes spec.md / spec.xlsx
+- `/sp4sap:analyze-code` — writes review report
+- `/sp4sap:analyze-cbo-obj` — writes `cbo/<MODULE>/<PACKAGE>/{index,inventory}.md`
+- `/sp4sap:compare-programs` — writes `comparisons/*.md`
+- `/sp4sap:analyze-symptom` — writes audit reports
+- `/sp4sap:create-object` — writes nothing long-term (transient state only)
 - Setup / sap-option — manage profile files themselves; outside this pattern
 
 Each affected skill's SKILL.md should explicitly state "uses multi-profile artifact resolution per `common/multi-profile-artifact-resolution.md`" so the LLM picks up the rule at dispatch time.

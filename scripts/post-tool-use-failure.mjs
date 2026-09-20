@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Post-Tool-Use-Failure Hook
+ * sp4sap Post-Tool-Use-Failure Hook
  * Tracks tool failures for retry guidance.
  * Writes last-tool-error.json with tool name, error, and retry count.
  * Adapted from OMC post-tool-use-failure.mjs.

@@ -11,10 +11,10 @@ Referenced by `workflow.md` § Step 2. Fires **conditionally** only when `<INVEN
 
 ```
 Agent({
-  subagent_type: "sc4sap:sap-stocker",
+  subagent_type: "sp4sap:sap-stocker",
   description: "CBO inventory (auto-chain from package-to-process) — <PACKAGE>",
   prompt: """
-    You are invoked by /sc4sap:package-to-process because <INVENTORY_PATH> is
+    You are invoked by /sp4sap:package-to-process because <INVENTORY_PATH> is
     missing. Stock the CBO package <PACKAGE> (module <MODULE>) following your
     full Investigation_Protocol steps 2–8 (walk → graph → classify → interpret
     → cross-module gap → safety → persist).

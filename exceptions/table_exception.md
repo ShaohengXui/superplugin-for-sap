@@ -19,7 +19,7 @@ Any profile additionally respects `.sc4sap/blocklist-extend.txt` (one table name
 
 ## Enforcement
 
-- All sc4sap agents and skills MUST check this list before calling `GetTableContents` / `GetSqlQuery`.
+- All sp4sap agents and skills MUST check this list before calling `GetTableContents` / `GetSqlQuery`.
 - If a user request requires data from a blocked table: **refuse the extraction, explain which category applies (e.g., "PII — bank master"), and suggest alternatives** (aggregated CDS views, anonymized test data, or a consultant analysis without raw rows).
 - For SELECT on joined views / CDS views that pull from a blocked table, the same rule applies.
 
@@ -70,7 +70,7 @@ Never silently bypass the block. Always surface the reason to the user.
 2. Add the row to the markdown table, using the pattern syntax above.
 3. Re-run the smoke test:
    ```bash
-   echo '{"tool_name":"mcp__plugin_sc4sap_sap__GetTableContents","tool_input":{"table_name":"YOUR_TABLE"}}' \
+   echo '{"tool_name":"mcp__plugin_sp4sap_sap__GetTableContents","tool_input":{"table_name":"YOUR_TABLE"}}' \
      | node scripts/hooks/block-forbidden-tables.mjs
    ```
    Expected `"permissionDecision":"deny"` in the `hookSpecificOutput`.

@@ -15,13 +15,13 @@ The SEGW project must be created via SAPGUI — SEGW is not ADT-MCP-controllable
 >
 > SEGW auto-generates 4 classes:
 > - `ZCL_ZMCP_ADT_MPC` (base, do not modify)
-> - `ZCL_ZMCP_ADT_MPC_EXT` (extension, sc4sap injects code here)
+> - `ZCL_ZMCP_ADT_MPC_EXT` (extension, sp4sap injects code here)
 > - `ZCL_ZMCP_ADT_DPC` (base, do not modify)
-> - `ZCL_ZMCP_ADT_DPC_EXT` (extension, sc4sap injects code here)
+> - `ZCL_ZMCP_ADT_DPC_EXT` (extension, sp4sap injects code here)
 >
-> Confirm "SEGW 프로젝트 생성 완료" back to sc4sap before proceeding.
+> Confirm "SEGW 프로젝트 생성 완료" back to sp4sap before proceeding.
 
-## Automated by sc4sap (MCP)
+## Automated by sp4sap (MCP)
 
 1. **Check existence** — `SearchObject(ZCL_ZMCP_ADT_MPC, CLAS)`. If absent, halt and re-prompt user for SEGW project creation.
 2. **Inject MPC_EXT source** — `UpdateClass ZCL_ZMCP_ADT_MPC_EXT` with source from `abap/zcl_zmcp_adt_mpc.clas.abap`, adapted for:
@@ -65,7 +65,7 @@ If neither A nor B is possible (user lacks both Basis contact and `/IWBEP/SB` au
 
 This is a **partial** workaround — it writes the minimum SRH/OHD/SRG rows but may leave some related tables under-populated (descriptions, SHM cache flags). Full Basis registration remains preferred because it populates all related tables and respects transport discipline.
 
-## Verification — `/sc4sap:sap-doctor` Layer 6.odata
+## Verification — `/sp4sap:sap-doctor` Layer 6.odata
 
 After the user confirms service is registered, verify end-to-end:
 
@@ -88,5 +88,5 @@ Most common:
 |---|---|---|
 | 500 on FunctionImport POST | `/IWFND/MAINT_SERVICE` has the service but `/IWBEP` backend rows are empty | Path A (Basis) or Path C (`P_REG = X`) |
 | 404 on `$metadata` | ICF node inactive or service not registered | SICF activate + `/IWFND/MAINT_SERVICE` Add Service |
-| 403 "CSRF Token Required" on every POST | Client bug (sc4sap handles this automatically) or reverse proxy stripping cookies | Check `odataRfc.ts` behaviour; verify proxy doesn't strip `SAP_SESSIONID_*` |
+| 403 "CSRF Token Required" on every POST | Client bug (sp4sap handles this automatically) or reverse proxy stripping cookies | Check `odataRfc.ts` behaviour; verify proxy doesn't strip `SAP_SESSIONID_*` |
 | 401 Unauthorized | Basic auth wrong | Verify `SAP_USERNAME` + `SAP_PASSWORD` in `sap.env` |

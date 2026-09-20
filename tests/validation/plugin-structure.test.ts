@@ -9,7 +9,7 @@ describe('Plugin Structure Validation', () => {
     const path = join(ROOT, '.claude-plugin', 'plugin.json');
     expect(existsSync(path)).toBe(true);
     const data = JSON.parse(readFileSync(path, 'utf-8'));
-    expect(data.name).toBe('sc4sap');
+    expect(data.name).toBe('sp4sap');
     const pkgVersion = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf-8')).version;
     expect(data.version, 'plugin.json version must match package.json').toBe(pkgVersion);
     expect(data.skills).toBe('./skills/');
@@ -28,7 +28,7 @@ describe('Plugin Structure Validation', () => {
     const path = join(ROOT, '.claude-plugin', 'marketplace.json');
     expect(existsSync(path)).toBe(true);
     const data = JSON.parse(readFileSync(path, 'utf-8'));
-    expect(data.name).toBe('sc4sap');
+    expect(data.name).toBe('sp4sap');
     expect(data.plugins[0].category).toBe('development');
     expect(data.plugins[0].tags).toContain('sap');
     expect(data.plugins[0].tags).toContain('abap');

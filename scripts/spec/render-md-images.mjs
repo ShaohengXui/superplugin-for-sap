@@ -1,4 +1,4 @@
-// sc4sap:program-to-spec — Markdown image renderer.
+// sp4sap:program-to-spec — Markdown image renderer.
 //
 // The xlsx path (build-spec.mjs) clones a template and SWAPS PNGs into it.
 // Markdown has no template — it references images by relative path. This

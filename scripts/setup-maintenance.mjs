@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Setup Maintenance Hook (SessionStart, matcher: "maintenance")
+ * sp4sap Setup Maintenance Hook (SessionStart, matcher: "maintenance")
  * Performs maintenance tasks: cleanup stale state, verify configs.
  */
 

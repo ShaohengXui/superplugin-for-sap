@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Session End Hook
+ * sp4sap Session End Hook
  * Performs cleanup tasks when a session ends.
  * Adapted from OMC session-end.mjs.
  *

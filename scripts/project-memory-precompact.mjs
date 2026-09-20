@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap PreCompact Hook: Project Memory Preservation
+ * sp4sap PreCompact Hook: Project Memory Preservation
  * Ensures user directives and project context survive compaction.
  * Adapted from OMC project-memory-precompact.mjs.
  */

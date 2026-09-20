@@ -27,8 +27,8 @@ SAP_ACTIVE_MODULES=FI,CO,MM,SD,PP,QM,HCM
 }
 ```
 
-Keep `sap.env` and `config.json` in sync (both updated by `/sc4sap:setup` and
-`/sc4sap:sap-option`). If one is missing or empty, fall back to the other.
+Keep `sap.env` and `config.json` in sync (both updated by `/sp4sap:setup` and
+`/sp4sap:sap-option`). If one is missing or empty, fall back to the other.
 
 ## Canonical module codes
 

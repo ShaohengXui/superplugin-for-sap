@@ -9,7 +9,7 @@
 //   node scripts/hud/apply-plan.mjs --unset      # remove the three keys
 //
 // Values are estimates from plan-presets.json. User can override individually
-// via /sc4sap:sap-option HUD flow.
+// via /sp4sap:sap-option HUD flow.
 
 import fs from 'node:fs';
 import path from 'node:path';

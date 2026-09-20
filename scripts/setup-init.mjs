@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap Setup Init Hook (SessionStart, matcher: "init")
- * Runs initial setup when a new sc4sap project is initialized.
+ * sp4sap Setup Init Hook (SessionStart, matcher: "init")
+ * Runs initial setup when a new sp4sap project is initialized.
  * Creates .sc4sap directory structure and default configuration.
  */
 

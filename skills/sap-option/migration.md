@@ -15,7 +15,7 @@ Run the migration flow when ANY of the following are true:
 Before writing anything, render an explanation panel:
 
 ```
-⚙  sc4sap upgrade detected — multi-profile connection support is active.
+⚙  sp4sap upgrade detected — multi-profile connection support is active.
 
 Legacy .sc4sap/sap.env found. This wizard moves your current connection
 into a named profile so you can later add QA / PRD / other companies.
@@ -81,7 +81,7 @@ Expected JSON response:
    ```
 3. Remind the user how to add more profiles:
    ```
-   ℹ  Add another company or tier with:  /sc4sap:sap-option → Add profile
+   ℹ  Add another company or tier with:  /sp4sap:sap-option → Add profile
        (e.g., KR-QA, KR-PRD, US-DEV)
    ```
 
@@ -94,7 +94,7 @@ mv .sc4sap/sap.env.legacy .sc4sap/sap.env
 rm .sc4sap/active-profile.txt
 rm -rf ~/.sc4sap/profiles/<alias>
 # If password was stored in keychain:
-echo '{"service":"sc4sap","account":"<alias>/<user>"}' \
+echo '{"service":"sp4sap","account":"<alias>/<user>"}' \
   | node "$CLAUDE_PLUGIN_ROOT/scripts/sap-profile-cli.mjs" keychain-delete
 ```
 

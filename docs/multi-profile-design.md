@@ -1,7 +1,7 @@
 # Multi-Profile Design (Dev / QA / Prod multi-connection)
 
 **Status**: Design finalized 2026-04-21 — not yet implemented.
-**Scope**: sc4sap plugin + abap-mcp-adt-powerup MCP server + mcp-abap-adt-clients library.
+**Scope**: sp4sap plugin + abap-mcp-adt-powerup MCP server + mcp-abap-adt-clients library.
 
 ---
 
@@ -66,7 +66,7 @@ SAP_URL=http://dev.kr.corp:50000
 SAP_CLIENT=100
 SAP_AUTH_TYPE=basic
 SAP_USERNAME=DEVELOPER
-SAP_PASSWORD=keychain:sc4sap/KR-DEV/DEVELOPER    # OS keychain reference
+SAP_PASSWORD=keychain:sp4sap/KR-DEV/DEVELOPER    # OS keychain reference
 SAP_LANGUAGE=EN
 SAP_SYSTEM_TYPE=onprem
 
@@ -111,7 +111,7 @@ Passwords **never** live in plaintext `.env`. They are stored in the OS keychain
 | macOS | Keychain |
 | Linux | libsecret |
 
-The `sap.env` line `SAP_PASSWORD=keychain:sc4sap/{alias}/{user}` is a reference that the MCP server resolves at connect time via `keytar`.
+The `sap.env` line `SAP_PASSWORD=keychain:sp4sap/{alias}/{user}` is a reference that the MCP server resolves at connect time via `keytar`.
 
 ---
 
@@ -127,7 +127,7 @@ Ships with the plugin (`.claude/settings.json` installed by `sap-option` / `setu
 
 ### Layer 2: MCP server guard (uncircumventable)
 
-`abap-mcp-adt-powerup` attaches a `@readonly(tier)` decorator to every mutation tool. The decorator reads the tier cached at `ReloadProfile` time and returns `ERR_READONLY_TIER` if violated. This layer fires even when the hook is missing, misconfigured, manually edited out of `settings.json`, or the plugin has not been installed yet (MCP server connected directly without the sc4sap plugin).
+`abap-mcp-adt-powerup` attaches a `@readonly(tier)` decorator to every mutation tool. The decorator reads the tier cached at `ReloadProfile` time and returns `ERR_READONLY_TIER` if violated. This layer fires even when the hook is missing, misconfigured, manually edited out of `settings.json`, or the plugin has not been installed yet (MCP server connected directly without the sp4sap plugin).
 
 ### Why both layers
 
@@ -156,7 +156,7 @@ Ships with the plugin (`.claude/settings.json` installed by `sap-option` / `setu
 
 ## 5. `sap-option` UX
 
-Invoked as `/sc4sap:sap-option` (interactive) or with subcommands:
+Invoked as `/sp4sap:sap-option` (interactive) or with subcommands:
 
 | Subcommand | Purpose |
 |---|---|
@@ -181,7 +181,7 @@ When the new alias shares a prefix with an existing profile (e.g., adding `KR-QA
 On first run after upgrading, `sap-option` / `setup` detects legacy `.sc4sap/sap.env` and performs a **mandatory** prompt:
 
 ```
-⚙  sc4sap upgrade detected — switching to profile-based multi-connection.
+⚙  sp4sap upgrade detected — switching to profile-based multi-connection.
 
 Legacy .sc4sap/sap.env found.
 
@@ -192,7 +192,7 @@ Legacy .sc4sap/sap.env found.
 
 ✔ Created ~/.sc4sap/profiles/KR-DEV/sap.env
 ✔ Created ~/.sc4sap/profiles/KR-DEV/config.json  (from legacy config.json)
-✔ Moved password to OS keychain (sc4sap/KR-DEV/{user})
+✔ Moved password to OS keychain (sp4sap/KR-DEV/{user})
 ✔ Archived legacy → .sc4sap/sap.env.legacy
 ✔ Set active-profile → KR-DEV
 

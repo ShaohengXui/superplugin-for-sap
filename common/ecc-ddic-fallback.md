@@ -1,6 +1,6 @@
 # ECC DDIC Fallback
 
-Shared rule for any sc4sap skill that may create DDIC objects (Table, Data Element, Domain). Referenced from:
+Shared rule for any sp4sap skill that may create DDIC objects (Table, Data Element, Domain). Referenced from:
 - `skills/create-object/SKILL.md` → `<ECC_DDIC_Fallback>`
 - `skills/create-program/SKILL.md` → `<Shared_Conventions>`
 - Any other skill that creates or may create DDIC objects as part of its pipeline.

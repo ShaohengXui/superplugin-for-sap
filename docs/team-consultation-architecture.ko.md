@@ -1,6 +1,6 @@
-# sc4sap — 팀 컨설테이션 아키텍처
+# sp4sap — 팀 컨설테이션 아키텍처
 
-> Claude Code agent teams를 sc4sap의 멀티 전문가 협의 워크플로에 적용하기 위한 설계 문서. 상태: **draft**, ask-consultant 프로토타입 착수 대기.
+> Claude Code agent teams를 sp4sap의 멀티 전문가 협의 워크플로에 적용하기 위한 설계 문서. 상태: **draft**, ask-consultant 프로토타입 착수 대기.
 
 ## 1. 문제 정의
 
@@ -54,7 +54,7 @@ Agent teams (Claude Code 실험적 기능, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 ```
 
 - Lead = 호출한 스킬을 실행하는 Claude Code 세션 (frontmatter `model:`은 선언적; `skill-model-architecture.md` 참조).
-- Members = `Agent(..., team_name="...")`로 스폰되는 sc4sap 에이전트.
+- Members = `Agent(..., team_name="...")`로 스폰되는 sp4sap 에이전트.
 - `~/.claude/tasks/<team-name>/` 아래 task list가 공유 스크래치패드.
 - **팀원은 추가 에이전트를 스폰할 수 없음** — single-dispatch와 동일한 `Agent()` 제약. 협의 범위는 유한해야 함.
 - **이름 주소지정은 ephemeral** — `name=`으로는 활성 중일 때만 도달 가능; 턴을 넘겨 재지정하려면 spawn 반환의 UUID 필요.
@@ -68,10 +68,10 @@ Agent teams (Claude Code 실험적 기능, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 **목적**: 크로스모듈 질문에 대한 비즈니스 계층 합의.
 
 **적용 스킬**:
-- `/sc4sap:ask-consultant` — 2개 이상 모듈 매칭 AND (주제가 경계를 넘거나 답변이 갈릴 때).
-- `/sc4sap:create-program` Phase 1A (모듈 인터뷰) — 활성 모듈 ≥ 2.
-- `/sc4sap:create-program` Phase 2 (플래닝) — 스펙이 크로스모듈 접점 선언.
-- `/sc4sap:compare-programs` Step 4b — 샘플셋이 2개 이상 모듈 걸침.
+- `/sp4sap:ask-consultant` — 2개 이상 모듈 매칭 AND (주제가 경계를 넘거나 답변이 갈릴 때).
+- `/sp4sap:create-program` Phase 1A (모듈 인터뷰) — 활성 모듈 ≥ 2.
+- `/sp4sap:create-program` Phase 2 (플래닝) — 스펙이 크로스모듈 접점 선언.
+- `/sp4sap:compare-programs` Step 4b — 샘플셋이 2개 이상 모듈 걸침.
 
 **협의 스타일**: 대칭형. 각자 POSITION 제시 → 피어 CHALLENGE → REFINEMENT → CONCUR / ESCALATE.
 
@@ -90,8 +90,8 @@ Agent teams (Claude Code 실험적 기능, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 **목적**: 작성 중인 코드 산출물을 모듈 best-practice에 **즉시** 검증 (사후 아님).
 
 **적용 스킬**:
-- `/sc4sap:create-program` Phase 4 (구현) — executor가 여러 모듈에 걸친 코드 작성.
-- `/sc4sap:analyze-code` — reviewer가 14 차원 리뷰 중 business-alignment 차원(§ 1-2 업무 타당성, § 13 크로스모듈 사이드이펙트)에 컨설턴트 라이브 인풋.
+- `/sp4sap:create-program` Phase 4 (구현) — executor가 여러 모듈에 걸친 코드 작성.
+- `/sp4sap:analyze-code` — reviewer가 14 차원 리뷰 중 business-alignment 차원(§ 1-2 업무 타당성, § 13 크로스모듈 사이드이펙트)에 컨설턴트 라이브 인풋.
 
 **협의 스타일**: 작업자 중심.
 - 작업자가 DRAFT (코드 스니펫 + 의도) 게시.
@@ -111,7 +111,7 @@ Agent teams (Claude Code 실험적 기능, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 **목적**: 기술 렌즈(BC: 커널 / update-task / RFC / transport) + 업무 렌즈(모듈: 업무 흐름, TCode 목적, 커스터마이징)를 섞어서 근본 원인 분석.
 
 **적용 스킬**:
-- `/sc4sap:analyze-symptom` — 덤프 / 증상이 Z/Y 객체를 거치며 모듈 컨텍스트가 얽힐 때 (순수 커널 이슈는 제외).
+- `/sp4sap:analyze-symptom` — 덤프 / 증상이 Z/Y 객체를 거치며 모듈 컨텍스트가 얽힐 때 (순수 커널 이슈는 제외).
 
 **협의 스타일**: debugger 중심. debugger가 증거(덤프, 트레이스, where-used) 수집 → BC가 기술 렌즈 공유 → 모듈이 업무 렌즈 공유 → debugger가 가설 좁힘 → 두 렌즈 모두 살아남는 가설 하나 남을 때까지 반복.
 
@@ -128,7 +128,7 @@ Agent teams (Claude Code 실험적 기능, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
 **목적**: 인터뷰 중 업무 요건 ↔ 기술 타당성 라이브 크로스체크. 스펙 확정 전에 검증.
 
 **적용 스킬**:
-- `/sc4sap:create-program` Phase 1A ↔ 1B 브릿지 — 현재는 순차(1A 모듈 인터뷰, 1B 프로그램 구조 인터뷰). 팀화하면 컨설턴트가 "이 요건이면 ALV보다 CDS+Fiori가 맞다"를 턴 내 즉시 제기 가능.
+- `/sp4sap:create-program` Phase 1A ↔ 1B 브릿지 — 현재는 순차(1A 모듈 인터뷰, 1B 프로그램 구조 인터뷰). 팀화하면 컨설턴트가 "이 요건이면 ALV보다 CDS+Fiori가 맞다"를 턴 내 즉시 제기 가능.
 
 **협의 스타일**: analyst 주도.
 - analyst가 QUESTION (업무 의도) 게시.
@@ -263,18 +263,18 @@ ROI × 리스크 순으로 우선순위. 한 번에 전체 스킬에 적용 금�
 - 본 문서 갱신.
 
 ### Phase 4 — Type A 확장
-- `/sc4sap:create-program` Phase 1A / Phase 2.
-- `/sc4sap:compare-programs` Step 4b.
+- `/sp4sap:create-program` Phase 1A / Phase 2.
+- `/sp4sap:compare-programs` Step 4b.
 
 ### Phase 5 — Type B 확장 (Coder ↔ Consultant)
-- `/sc4sap:create-program` Phase 4 (in-loop 검증).
-- `/sc4sap:analyze-code` (§ 1-2 + § 13 차원).
+- `/sp4sap:create-program` Phase 4 (in-loop 검증).
+- `/sp4sap:analyze-code` (§ 1-2 + § 13 차원).
 
 ### Phase 6 — Type C 확장 (Incident Triage)
-- `/sc4sap:analyze-symptom`.
+- `/sp4sap:analyze-symptom`.
 
 ### Phase 7 — Type D 확장 (Interview Synthesis)
-- `/sc4sap:create-program` Phase 1A ↔ 1B 브릿지.
+- `/sp4sap:create-program` Phase 1A ↔ 1B 브릿지.
 
 ## 9. ask-consultant 프로토타입 전 해결할 open question
 

@@ -1,42 +1,42 @@
 <p align="center">
-  <img src="sc4sap.png" alt="SuperClaude for SAP" width="720"/>
+  <img src="sp4sap.png" alt="SuperPlugin for SAP" width="720"/>
 </p>
 
 <p align="center">
   <a href="README.md">English</a> | 한국어 | <a href="README.ja.md">日本語</a> | <a href="README.de.md">Deutsch</a>
 </p>
 
-# SuperClaude for SAP (sc4sap)
+# SuperPlugin for SAP (sp4sap)
 
 > SAP ABAP 개발을 위한 Claude Code 플러그인 — SAP ECC / S/4HANA On-Premise / S/4HANA Cloud (Public & Private) 지원
 
 [![MCP server on npm](https://img.shields.io/npm/v/@babamba2/abap-mcp-adt-powerup?label=mcp-server&color=cb3837&logo=npm)](https://www.npmjs.com/package/@babamba2/abap-mcp-adt-powerup)
-[![Plugin version](https://img.shields.io/badge/sc4sap-v0.6.0-6B4FBB)](https://github.com/babamba2/superclaude-for-sap/releases)
-[![GitHub stars](https://img.shields.io/github/stars/babamba2/superclaude-for-sap?style=flat&color=yellow)](https://github.com/babamba2/superclaude-for-sap)
+[![Plugin on npm](https://img.shields.io/npm/v/@shaohengxui/superplugin-for-sap?label=plugin&color=cb3837&logo=npm)](https://www.npmjs.com/package/@shaohengxui/superplugin-for-sap)
+[![GitHub stars](https://img.shields.io/github/stars/ShaohengXui/superplugin-for-sap?style=flat&color=yellow)](https://github.com/ShaohengXui/superplugin-for-sap)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## sc4sap이란?
+## sp4sap이란?
 
-SuperClaude for SAP은 Claude Code를 풀스택 SAP 개발 어시스턴트로 변환합니다. [MCP ABAP ADT 서버](https://github.com/babamba2/abap-mcp-adt-powerup) (150+ 툴)를 통해 SAP 시스템에 연결하여 클래스/함수모듈/리포트/CDS 뷰/Dynpro/GUI 스테이터스 등 ABAP 객체를 직접 생성·조회·수정·삭제합니다.
+SuperPlugin for SAP은 Claude Code를 풀스택 SAP 개발 어시스턴트로 변환합니다. [MCP ABAP ADT 서버](https://github.com/babamba2/abap-mcp-adt-powerup) (150+ 툴)를 통해 SAP 시스템에 연결하여 클래스/함수모듈/리포트/CDS 뷰/Dynpro/GUI 스테이터스 등 ABAP 객체를 직접 생성·조회·수정·삭제합니다.
 
 ## 핵심 기능
 
 | 기능 | 설명 |
 |------|------|
-| 🔌 **자동 MCP 설치** | `/sc4sap:setup` 중 `abap-mcp-adt-powerup` 자동 설치/설정/연결테스트. 수동 MCP 배선 불필요. |
-| 🌐 **다중 환경 프로파일 (Dev / QA / Prod)** | 회사별·티어별로 여러 SAP 시스템(`KR-DEV`, `KR-QA`, `KR-PRD`, `US-DEV` 등)을 등록하고 `/sc4sap:sap-option` 으로 세션 중에 즉시 전환. **QA / Prod 프로파일은 자동 읽기전용 보호**: PreToolUse 훅과 MCP 서버 가드 2계층이 `Create*/Update*/Delete*`, `CreateTransport`, 코드 실행 도구를 차단 — 훅을 우회해도 서버 단에서 여전히 거부됨. 비밀번호는 **OS 자격 증명 저장소** (`@napi-rs/keyring` — Windows Credential Manager / macOS Keychain / libsecret) 에 보관되어 `.sc4sap/` 가 git 에 시크릿을 누출할 위험이 없음. 산출물(스펙, CBO 카탈로그, 감사)은 프로파일별로 격리되며 읽기전용 크로스뷰를 지원 — QA 세션이 Dev 에서 만든 스펙을 오염시키지 않고 참조 가능. |
+| 🔌 **자동 MCP 설치** | `/sp4sap:setup` 중 `abap-mcp-adt-powerup` 자동 설치/설정/연결테스트. 수동 MCP 배선 불필요. |
+| 🌐 **다중 환경 프로파일 (Dev / QA / Prod)** | 회사별·티어별로 여러 SAP 시스템(`KR-DEV`, `KR-QA`, `KR-PRD`, `US-DEV` 등)을 등록하고 `/sp4sap:sap-option` 으로 세션 중에 즉시 전환. **QA / Prod 프로파일은 자동 읽기전용 보호**: PreToolUse 훅과 MCP 서버 가드 2계층이 `Create*/Update*/Delete*`, `CreateTransport`, 코드 실행 도구를 차단 — 훅을 우회해도 서버 단에서 여전히 거부됨. 비밀번호는 **OS 자격 증명 저장소** (`@napi-rs/keyring` — Windows Credential Manager / macOS Keychain / libsecret) 에 보관되어 `.sc4sap/` 가 git 에 시크릿을 누출할 위험이 없음. 산출물(스펙, CBO 카탈로그, 감사)은 프로파일별로 격리되며 읽기전용 크로스뷰를 지원 — QA 세션이 Dev 에서 만든 스펙을 오염시키지 않고 참조 가능. |
 | 🏗️ **자동 프로그램 생성기** | ABAP 프로그램 엔드-투-엔드 생성: Main + Include 컨벤션, OOP/Procedural, 풀 ALV + Docking, Dynpro + GUI 스테이터스, Text Elements, ABAP Unit — 플랫폼 인식(ECC / S4 On-Prem / Cloud). |
 | 🔍 **프로그램 분석** | MCP로 ABAP 객체 읽기 → Clean ABAP / 성능 / 보안 리뷰, 또는 Functional/Technical Spec 역공학 (Markdown/Excel). |
-| 🧪 **코드 분석** | `/sc4sap:analyze-code` — `sap-code-reviewer` 전용 정적 리뷰: Clean ABAP / 성능 / 보안 / SAP 표준 준수. 심각도별 이슈와 구체적 수정 제안. |
-| 🔀 **프로그램 비교** | `/sc4sap:compare-programs` — 같은 비즈니스 시나리오를 공유하지만 모듈(MM/CO)·국가(KR/EU)·Persona(컨트롤러/창고)로 분화된 2~5개 ABAP 프로그램을 컨설턴트 관점에서 10개 차원으로 비교 → Markdown 리포트. |
-| 🗺️ **패키지 → 프로세스** | `/sc4sap:package-to-process` — CBO 패키지를 **엔드-투-엔드 비즈니스 프로세스** 문서로 역공학: TCode 진입점 자동 감지 → AI 프로세스 그루핑(PR→PO→GR→IR) → 프로세스별 내러티브 + Mermaid 플로우차트 / 시퀀스 다이어그램 + 단계 테이블. CBO 인벤토리 없으면 `sap-stocker` 자동 연계 → `.sc4sap/processes/<MODULE>/<PACKAGE>/`. |
+| 🧪 **코드 분석** | `/sp4sap:analyze-code` — `sap-code-reviewer` 전용 정적 리뷰: Clean ABAP / 성능 / 보안 / SAP 표준 준수. 심각도별 이슈와 구체적 수정 제안. |
+| 🔀 **프로그램 비교** | `/sp4sap:compare-programs` — 같은 비즈니스 시나리오를 공유하지만 모듈(MM/CO)·국가(KR/EU)·Persona(컨트롤러/창고)로 분화된 2~5개 ABAP 프로그램을 컨설턴트 관점에서 10개 차원으로 비교 → Markdown 리포트. |
+| 🗺️ **패키지 → 프로세스** | `/sp4sap:package-to-process` — CBO 패키지를 **엔드-투-엔드 비즈니스 프로세스** 문서로 역공학: TCode 진입점 자동 감지 → AI 프로세스 그루핑(PR→PO→GR→IR) → 프로세스별 내러티브 + Mermaid 플로우차트 / 시퀀스 다이어그램 + 단계 테이블. CBO 인벤토리 없으면 `sap-stocker` 자동 연계 → `.sc4sap/processes/<MODULE>/<PACKAGE>/`. |
 | 🩺 **운영 진단** | 운영 트리아지 루프: ST22 덤프, SM02, /IWFND/ERROR_LOG, 프로파일러 트레이스, 로그, where-used — 모두 Claude에서. |
 | ♻️ **CBO 재사용** | Z-패키지 1회 인벤토리 → `create-program` / `program-to-spec`이 기존 CBO 자산 우선 재사용. 브라운필드에 필수. |
 | 🧷 **CBO Extension 인식 (CMOD / GGB1·2 / BAdI / APPEND)** | 사용자 익스짓(CMOD), 치환·검증(GGB1/GGB2), BAdI 구현, APPEND Structure 인벤토리. `create-program` / BAPI 호출 시 기존 Extension 필드(예: BAPI `EXTENSIONIN` / 테이블 append) 우선 재사용; 덤프·장애 대응 시 Extension 포인트를 1순위 용의자로 검토. |
 | 🏭 **산업 컨텍스트** | 14개 산업 레퍼런스 (retail, fashion, cosmetics, tire, automotive, pharma, F&B, chemical, electronics, construction, steel, utilities, banking, public-sector). |
 | 🌏 **국가/로컬라이제이션** | 15개 국가 + EU-common (KR/JP/CN/US/DE/GB/FR/IT/ES/NL/BR/MX/IN/AU/SG). e-인보이스, 뱅킹, 페이롤, 세제. |
 | 🧩 **활성 모듈 인식** | 교차 모듈 통합 힌트: MM + PS 활성 → MM CBO에 WBS 필드 자동 제안; SD + CO 활성 → CO-PA 파생. [상세 →](common/active-modules.md) |
-| 🤝 **모듈 컨설테이션** | `sap-analyst` / `sap-critic` / `sap-planner` / `sap-architect`가 업무 판단 필요 시 14개 모듈 컨설턴트 + 1개 BC 컨설턴트에 위임. 사용자가 직접 질의할 때는 `/sc4sap:ask-consultant` — 키워드로 SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC 자동 라우팅, 프로젝트에 설정된 SAP 환경(버전·산업·국가·활성 모듈)에 맞추어 답변, 읽기 전용. |
+| 🤝 **모듈 컨설테이션** | `sap-analyst` / `sap-critic` / `sap-planner` / `sap-architect`가 업무 판단 필요 시 14개 모듈 컨설턴트 + 1개 BC 컨설턴트에 위임. 사용자가 직접 질의할 때는 `/sp4sap:ask-consultant` — 키워드로 SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC 자동 라우팅, 프로젝트에 설정된 SAP 환경(버전·산업·국가·활성 모듈)에 맞추어 답변, 읽기 전용. |
 
 ## 문서
 
@@ -47,8 +47,8 @@ SuperClaude for SAP은 Claude Code를 풀스택 SAP 개발 어시스턴트로 �
 ## Unleashed
 
 <p align="center">
-  <a href="sc4sap_unleashed.png">
-    <img src="sc4sap_unleashed.png" alt="SC4SAP Unleashed" width="100%"/>
+  <a href="sp4sap_unleashed.png">
+    <img src="sp4sap_unleashed.png" alt="SC4SAP Unleashed" width="100%"/>
   </a>
 </p>
 

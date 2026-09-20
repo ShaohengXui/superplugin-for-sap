@@ -1,6 +1,6 @@
 # Phase 4 — Parallel Implementation Flow (5-Group Wave Model)
 
-Authoritative rule for the parallelized Phase 4 implementation in `/sc4sap:create-program`. Replaces the old per-include sequential loop with a 5-group, dependency-ordered parallel wave model. Referenced from `agent-pipeline.md`.
+Authoritative rule for the parallelized Phase 4 implementation in `/sp4sap:create-program`. Replaces the old per-include sequential loop with a 5-group, dependency-ordered parallel wave model. Referenced from `agent-pipeline.md`.
 
 ## Why a Wave Model
 
@@ -94,13 +94,13 @@ All three groups launch in a single multi-tool-use message. Within each group, m
 
 > **teamMode variant (Type B)** — same pattern as Wave 2 for novel cross-module business logic in event blocks / FORM routines. See [`team-mode-b.md`](team-mode-b.md). Skip for pure-structural includes (TOP decl, selection screen, PBO/PAI boilerplate).
 
-- **Context kit**: `../../common/include-structure.md`, `../../common/procedural-sample/main-program.abap` OR `../../common/oop-sample/zrsc4sap_oop_ex.prog.abap` (per paradigm), `../../common/clean-code-procedural.md` OR `../../common/clean-code-oop.md`, `../../common/ok-code-pattern.md` (if `CALL SCREEN` present)
+- **Context kit**: `../../common/include-structure.md`, `../../common/procedural-sample/main-program.abap` OR `../../common/oop-sample/zrsp4sap_oop_ex.prog.abap` (per paradigm), `../../common/clean-code-procedural.md` OR `../../common/clean-code-oop.md`, `../../common/ok-code-pattern.md` (if `CALL SCREEN` present)
 - **Model**: Opus — code layout + cross-include reference resolution
 
 Local source generation (executor, no MCP) happens first — `sap-executor` reads `spec.md` + `plan.md` and builds every include body + main program body in memory, referencing G1/G2/G3 artifacts by name.
 
 **Mandatory main-program template (gated on paradigm)**:
-- `paradigm = OOP` → executor MUST start from `../../common/oop-sample/zrsc4sap_oop_ex.prog.abap` (with companion includes / screens in the same folder) and adapt identifiers. See `common/clean-code-oop.md` § Mandatory Main Program Template.
+- `paradigm = OOP` → executor MUST start from `../../common/oop-sample/zrsp4sap_oop_ex.prog.abap` (with companion includes / screens in the same folder) and adapt identifiers. See `common/clean-code-oop.md` § Mandatory Main Program Template.
 - `paradigm = Procedural` → executor MUST start from `../../common/procedural-sample/main-program.abap` and adapt identifiers. See `common/clean-code-procedural.md` § Mandatory Main Program Template.
 
 Any structural deviation (event block reordering, include-suffix rename, bootstrap shortcut) requires a written justification in `spec.md`. Without it, Phase 6 B3 (Structure + Naming) bucket flags the deviation as MAJOR and escalates to Opus.

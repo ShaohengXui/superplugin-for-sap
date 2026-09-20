@@ -1,5 +1,5 @@
 ---
-name: sc4sap:create-program
+name: sp4sap:create-program
 description: Create ABAP programs (Report/CRUD/ALV/Batch) with Main+Include structure, OOP or Procedural, and full agent-driven coding/QA pipeline
 level: 4
 model: sonnet
@@ -7,11 +7,11 @@ model: sonnet
 
 # SC4SAP Create Program
 
-Core ABAP program creation skill. Generates a Main Program wrapped with conditional Includes following the sc4sap template convention. Supports both OOP (two-class split: Data + Screen/ALV) and Procedural (PERFORM) paradigms. Full pipeline: SAP version preflight → Socratic interview → planner → writer spec → user confirm → executor/qa/reviewer.
+Core ABAP program creation skill. Generates a Main Program wrapped with conditional Includes following the sp4sap template convention. Supports both OOP (two-class split: Data + Screen/ALV) and Procedural (PERFORM) paradigms. Full pipeline: SAP version preflight → Socratic interview → planner → writer spec → user confirm → executor/qa/reviewer.
 
 
 <Purpose>
-sc4sap:create-program is the flagship skill for creating new ABAP programs. It handles a wide range of purposes (Report, CRUD, ALV list, Batch, Interface). Before coding starts, it runs an internal Socratic interview to resolve ambiguity, then produces a confirmed spec, then orchestrates coding and QA agents to deliver activated, tested ABAP objects following sc4sap conventions.
+sp4sap:create-program is the flagship skill for creating new ABAP programs. It handles a wide range of purposes (Report, CRUD, ALV list, Batch, Interface). Before coding starts, it runs an internal Socratic interview to resolve ambiguity, then produces a confirmed spec, then orchestrates coding and QA agents to deliver activated, tested ABAP objects following sp4sap conventions.
 </Purpose>
 
 <Response_Prefix>Every response triggered by this skill MUST begin with `[Model: <main-model> · Dispatched: <sub-summary>]` per [`../../common/model-routing-rule.md`](../../common/model-routing-rule.md) § Response Prefix Convention.</Response_Prefix>
@@ -28,14 +28,14 @@ sc4sap:create-program is the flagship skill for creating new ABAP programs. It h
 </Use_When>
 
 <Do_Not_Use_When>
-- Creating a single class/interface/table — use `/sc4sap:create-object`
+- Creating a single class/interface/table — use `/sp4sap:create-object`
 - Modifying an existing program — use direct `UpdateProgram` / `UpdateInclude` MCP calls
-- Creating a RAP business object / OData service — use `/sc4sap:create-object` (with service binding + behavior definition)
-- User wants only scaffolding without coding — use `/sc4sap:create-object` with type=program
+- Creating a RAP business object / OData service — use `/sp4sap:create-object` (with service binding + behavior definition)
+- User wants only scaffolding without coding — use `/sp4sap:create-object` with type=program
 </Do_Not_Use_When>
 
 <Shared_Conventions>
-The following rules are **shared across sc4sap skills** and live in `sc4sap/common/`. Load and apply them during the relevant phases of this skill:
+The following rules are **shared across sp4sap skills** and live in `sp4sap/common/`. Load and apply them during the relevant phases of this skill:
 
 | Convention | Reference File | Applied In |
 |------------|----------------|------------|
@@ -50,10 +50,10 @@ The following rules are **shared across sc4sap skills** and live in `sc4sap/comm
 | Clean ABAP — shared baseline | `../../common/clean-code.md` | Executor, Reviewer (always) |
 | Clean ABAP — **OOP paradigm** | `../../common/clean-code-oop.md` | Executor, Reviewer — **only when Phase 1B `paradigm = OOP`** |
 | Clean ABAP — **Procedural paradigm** | `../../common/clean-code-procedural.md` | Executor, Reviewer — **only when Phase 1B `paradigm = Procedural`** |
-| **Mandatory main-program template (OOP)** | `../../common/oop-sample/zrsc4sap_oop_ex.prog.abap` (+ companion includes / screens in same folder) | Executor Wave 3 (starting skeleton) + Reviewer B3 bucket (structural match) — OOP paradigm |
+| **Mandatory main-program template (OOP)** | `../../common/oop-sample/zrsp4sap_oop_ex.prog.abap` (+ companion includes / screens in same folder) | Executor Wave 3 (starting skeleton) + Reviewer B3 bucket (structural match) — OOP paradigm |
 | **Mandatory main-program template (Procedural)** | `../../common/procedural-sample/main-program.abap` | Executor Wave 3 + Reviewer B3 bucket — Procedural paradigm |
 
-Paths are relative to this skill's directory (`sc4sap/skills/create-program/`).
+Paths are relative to this skill's directory (`sp4sap/skills/create-program/`).
 
 **ECC DDIC fallback gate.** When the planner's object list includes a new Table, Data Element, or Domain AND `SAP_VERSION = ECC`, Phase 4 (Executor) must not call `CreateTable` / `CreateDataElement` / `CreateDomain`. Instead, follow [`../../common/ecc-ddic-fallback.md`](../../common/ecc-ddic-fallback.md): generate a helper report in `$TMP` using the matching template under `skills/create-object/ecc/`, activate the helper, then emit the mandatory user message (SE38 run → uncheck dry-run → SE11 activate + assign transport). Do not treat the DDIC object as created until the user confirms activation. Remaining objects (classes, includes, screens, …) proceed on the normal flow; the plan should sequence the DDIC helpers first so the user can create them before code that depends on them is activated.
 </Shared_Conventions>
@@ -92,7 +92,7 @@ Full procedure (when-to-stock, three-option prompt, dispatch template, persisten
 </Inventory_Lookups>
 
 <Interview_Gating>
-**MANDATORY — never skip, never shortcut, never merge.** Phase 1 runs as **two sequential sub-phases** (1A then 1B) on every `sc4sap:create-program` invocation.
+**MANDATORY — never skip, never shortcut, never merge.** Phase 1 runs as **two sequential sub-phases** (1A then 1B) on every `sp4sap:create-program` invocation.
 
 Full procedure — two-stage rule, lead agents, dimension lists, skip rules, gates, output files, and enforcement contracts — lives in **[`interview-gating.md`](interview-gating.md)**. Read that file and follow it literally before asking the first question.
 
@@ -110,7 +110,7 @@ Full procedure — required steps, enforcement contract, rationale, spec templat
 </Spec_Approval_Gate>
 
 <Session_Trust_Bootstrap>
-**MANDATORY — runs at the very start of Phase 1A, BEFORE the module consultant asks the first question.** Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:create-program` to pre-grant MCP tool + file-op permissions for the entire session. This ensures interview-time MCP calls (consultant SPRO lookups, `SearchObject`, `GetWhereUsed`) and downstream Phase 4–8 activity both run without permission prompts.
+**MANDATORY — runs at the very start of Phase 1A, BEFORE the module consultant asks the first question.** Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:create-program` to pre-grant MCP tool + file-op permissions for the entire session. This ensures interview-time MCP calls (consultant SPRO lookups, `SearchObject`, `GetWhereUsed`) and downstream Phase 4–8 activity both run without permission prompts.
 
 - If `.sc4sap/session-trust.log` already has a line within the last 24h, skip silently.
 - **Exception**: `GetTableContents` and `GetSqlQuery` are NEVER auto-approved — they require explicit per-call user consent. See [`../trust-session/SKILL.md`](../trust-session/SKILL.md) Layer 1.
@@ -168,7 +168,7 @@ Do not inline or paraphrase phase logic here — update `agent-pipeline.md` inst
 - `.sc4sap/program/{PROG}/review-bucket-{B1|B2|B3|B4}.md` — Phase 6 per-bucket reviews (merged into review.md, see `phase6-buckets.md`)
 - `.sc4sap/program/{PROG}/review.md` — Phase 6 consolidated review
 - `.sc4sap/program/{PROG}/report.md` — final completion report
-- `.claude/settings.local.json` — permissions allowlist (written by `/sc4sap:trust-session` during Phase 3.5)
+- `.claude/settings.local.json` — permissions allowlist (written by `/sp4sap:trust-session` during Phase 3.5)
 - `.sc4sap/session-trust.log` — audit trail of `trust-session` invocations
 </State_Files>
 

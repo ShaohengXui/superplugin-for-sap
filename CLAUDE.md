@@ -1,6 +1,6 @@
-# SuperClaude for SAP (sc4sap) — Development Rules
+# SuperPlugin for SAP (sp4sap) — Development Rules
 
-This file is the **index** of development rules — NOT a payload to preload. Detailed rules live in `common/` and `exceptions/`. Consult files on demand per [`common/context-loading-protocol.md`](common/context-loading-protocol.md) — 4-tier model: **Tier 1** global mandatory safety baseline (always loaded: `data-extraction-policy`, `sap-version-reference`, `naming-conventions`, `context-loading-protocol`, `model-routing-rule`), **Tier 2** role-mandatory per agent group, **Tier 3** triggered reads, **Tier 4** per-task kit. Everything referenced below is MANDATORY for every sc4sap session (agents, skills, direct user requests, pipelines).
+This file is the **index** of development rules — NOT a payload to preload. Detailed rules live in `common/` and `exceptions/`. Consult files on demand per [`common/context-loading-protocol.md`](common/context-loading-protocol.md) — 4-tier model: **Tier 1** global mandatory safety baseline (always loaded: `data-extraction-policy`, `sap-version-reference`, `naming-conventions`, `context-loading-protocol`, `model-routing-rule`), **Tier 2** role-mandatory per agent group, **Tier 3** triggered reads, **Tier 4** per-task kit. Everything referenced below is MANDATORY for every sp4sap session (agents, skills, direct user requests, pipelines).
 
 ## Development Standards — References
 
@@ -45,25 +45,25 @@ Enforcement: L1 agent instructions → L2 this file → L3 `PreToolUse` hook (`s
 
 ## Plugin Usage
 
-### Skills (`/sc4sap:` prefix)
-- `/sc4sap:setup` — Initial plugin setup + SPRO config generation (auto-invokes `trust-session`)
-- `/sc4sap:create-program` — Full ABAP program pipeline (Phase 0–8) with execution-mode gate (auto/manual/hybrid) and parallel Phase 4/6; auto-invokes `trust-session` at Phase 1
-- `/sc4sap:create-object` — Single ABAP object creation (auto-invokes `trust-session`)
-- `/sc4sap:program-to-spec` — Reverse-engineer a program into a spec artifact
-- `/sc4sap:analyze-code` — Static code review (auto-invokes `trust-session`)
-- `/sc4sap:compare-programs` — Business-angle side-by-side comparison of 2–5 ABAP programs sharing the same scenario but differing by module / country / persona (reader = consultant) → `.sc4sap/comparisons/*.md` (auto-invokes `trust-session`)
-- `/sc4sap:analyze-symptom` — Dump/error root-cause analysis (auto-invokes `trust-session`)
-- `/sc4sap:analyze-cbo-obj` — Inventory a CBO package → save frequently-used Z objects to `.sc4sap/cbo/<MODULE>/<PACKAGE>/` for reuse by `create-program` / `program-to-spec` (auto-invokes `trust-session`)
-- `/sc4sap:package-to-process` — Reverse-engineer a CBO package into an End-to-End Business Process document (Markdown): auto-detected TCode entry points → AI process grouping (PR→PO→GR→IR style) → per-process narrative + Mermaid flowchart + sequenceDiagram + step tables. Auto-chains `sap-stocker` if CBO inventory missing. Progress bar at each step. Output: `.sc4sap/processes/<MODULE>/<PACKAGE>/process-<YYYYMMDD>-<lang>.md` (auto-invokes `trust-session`)
-- `/sc4sap:ask-consultant` — Direct user-facing Q&A with a module consultant agent (SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC). Auto-routes by keywords, answers against the configured SAP environment. Read-only (no writes, no row extraction).
-- `/sc4sap:mcp-setup` — MCP ABAP ADT server configuration guide
-- `/sc4sap:sap-option` — View and edit `.sc4sap/sap.env` (credentials, industry, blocklist profile, HUD limits)
-- `/sc4sap:sap-doctor` — Diagnose plugin / MCP / SAP connection health
-- `/sc4sap:trust-session` — INTERNAL-ONLY — session-wide MCP permission bootstrap; direct invocation is rejected
+### Skills (`/sp4sap:` prefix)
+- `/sp4sap:setup` — Initial plugin setup + SPRO config generation (auto-invokes `trust-session`)
+- `/sp4sap:create-program` — Full ABAP program pipeline (Phase 0–8) with execution-mode gate (auto/manual/hybrid) and parallel Phase 4/6; auto-invokes `trust-session` at Phase 1
+- `/sp4sap:create-object` — Single ABAP object creation (auto-invokes `trust-session`)
+- `/sp4sap:program-to-spec` — Reverse-engineer a program into a spec artifact
+- `/sp4sap:analyze-code` — Static code review (auto-invokes `trust-session`)
+- `/sp4sap:compare-programs` — Business-angle side-by-side comparison of 2–5 ABAP programs sharing the same scenario but differing by module / country / persona (reader = consultant) → `.sc4sap/comparisons/*.md` (auto-invokes `trust-session`)
+- `/sp4sap:analyze-symptom` — Dump/error root-cause analysis (auto-invokes `trust-session`)
+- `/sp4sap:analyze-cbo-obj` — Inventory a CBO package → save frequently-used Z objects to `.sc4sap/cbo/<MODULE>/<PACKAGE>/` for reuse by `create-program` / `program-to-spec` (auto-invokes `trust-session`)
+- `/sp4sap:package-to-process` — Reverse-engineer a CBO package into an End-to-End Business Process document (Markdown): auto-detected TCode entry points → AI process grouping (PR→PO→GR→IR style) → per-process narrative + Mermaid flowchart + sequenceDiagram + step tables. Auto-chains `sap-stocker` if CBO inventory missing. Progress bar at each step. Output: `.sc4sap/processes/<MODULE>/<PACKAGE>/process-<YYYYMMDD>-<lang>.md` (auto-invokes `trust-session`)
+- `/sp4sap:ask-consultant` — Direct user-facing Q&A with a module consultant agent (SD/MM/FI/CO/PP/PS/PM/QM/TR/HCM/WM/TM/BW/Ariba/BC). Auto-routes by keywords, answers against the configured SAP environment. Read-only (no writes, no row extraction).
+- `/sp4sap:mcp-setup` — MCP ABAP ADT server configuration guide
+- `/sp4sap:sap-option` — View and edit `.sc4sap/sap.env` (credentials, industry, blocklist profile, HUD limits)
+- `/sp4sap:sap-doctor` — Diagnose plugin / MCP / SAP connection health
+- `/sp4sap:trust-session` — INTERNAL-ONLY — session-wide MCP permission bootstrap; direct invocation is rejected
 
 ### Agents
 - Core: `sap-analyst`, `sap-architect`, `sap-code-reviewer`, `sap-critic`, `sap-debugger`, `sap-doc-specialist`, `sap-executor`, `sap-planner`, `sap-qa-tester`, `sap-writer`
-- Discovery: `sap-stocker` — CBO inventory / where-used graph / reusable object cataloging (Sonnet, R/O SAP + R/W on `.sc4sap/cbo/`). Consumed by `/sc4sap:analyze-cbo-obj`, `/sc4sap:create-program` (CBO reuse gate), and module consultants via their `<CBO_Stocking_Delegation>` block.
+- Discovery: `sap-stocker` — CBO inventory / where-used graph / reusable object cataloging (Sonnet, R/O SAP + R/W on `.sc4sap/cbo/`). Consumed by `/sp4sap:analyze-cbo-obj`, `/sp4sap:create-program` (CBO reuse gate), and module consultants via their `<CBO_Stocking_Delegation>` block.
 - Basis: `sap-bc-consultant`
 - Module consultants: `sap-sd-`, `sap-mm-`, `sap-pp-`, `sap-pm-`, `sap-qm-`, `sap-wm-`, `sap-tm-`, `sap-tr-`, `sap-fi-`, `sap-co-`, `sap-hcm-`, `sap-bw-`, `sap-ps-`, `sap-ariba-consultant`
 

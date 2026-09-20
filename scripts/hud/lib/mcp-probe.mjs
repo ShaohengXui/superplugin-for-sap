@@ -1,5 +1,5 @@
-// Active runtime probe for the sc4sap MCP server.
-// The HUD's install-file check (sc4sap-status.mjs/mcpInstalled) only sees whether
+// Active runtime probe for the sp4sap MCP server.
+// The HUD's install-file check (sp4sap-status.mjs/mcpInstalled) only sees whether
 // the vendor launcher exists on disk — it stays "green" even when Claude Code has
 // disconnected. This module shells out (30s cache) to check whether the actual
 // `bridge/mcp-server.cjs` child process is alive, so the HUD reflects runtime

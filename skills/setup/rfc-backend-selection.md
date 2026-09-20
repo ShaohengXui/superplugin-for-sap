@@ -34,7 +34,7 @@ Full detail on soap/native/gateway/odata is in `docs/user-guide/CLIENT_CONFIGURA
 `odata` / `zrfc` preflights have a **chicken-and-egg**: their probes target `ZCL_ZMCP_ADT_*` (odata) / `ZCL_MCP_RFC_HTTP_HANDLER` (zrfc) + service/SICF nodes that are installed by **Step 9c/9d — which come AFTER Step 4bis**. On first-time setup those objects don't exist yet, so a 404 is expected, not a bug.
 
 Each backend section below has a "Bootstrap order note" block explaining:
-- **First-time setup**: record choice, skip active probe, emit deferred-verification banner, continue to Step 5. Real verification happens after Step 9c/9d via `/sc4sap:sap-doctor`.
+- **First-time setup**: record choice, skip active probe, emit deferred-verification banner, continue to Step 5. Real verification happens after Step 9c/9d via `/sp4sap:sap-doctor`.
 - **Re-run / reconfiguration**: full probe; failures are genuine.
 
 If the user is re-running setup after 9c/9d have already installed the backend objects, treat all probe failures as fatal.
@@ -82,7 +82,7 @@ Then run the native preflight before Step 5:
 
 1. Verify `SAPNWRFC_HOME` env var is set **or** `libsapnwrfc` is resolvable from the system loader path. If missing: halt and direct the user to download the SAP NW RFC SDK (SAP Support Portal → SAP Development Tools → SAP NetWeaver RFC SDK 7.50) and set `SAPNWRFC_HOME` to the extracted folder.
 2. Trigger an install check — `cd <PLUGIN_ROOT>/vendor/abap-mcp-adt && npm rebuild node-rfc` — and surface the output. On failure (missing build tools, SDK not found, node version mismatch) stop and show the remediation.
-3. Verify RFC auth — after the MCP server restarts in Step 5, `/sc4sap:sap-doctor` Layer 6 will run `RFC_PING` + a `ZMCP_ADT_DISPATCH` dry-call. If the user is doing setup offline, tell them to run `/sc4sap:sap-doctor` as soon as connectivity is available.
+3. Verify RFC auth — after the MCP server restarts in Step 5, `/sp4sap:sap-doctor` Layer 6 will run `RFC_PING` + a `ZMCP_ADT_DISPATCH` dry-call. If the user is doing setup offline, tell them to run `/sp4sap:sap-doctor` as soon as connectivity is available.
 4. Warn: do NOT put the same ADT user and RFC user credentials in both blocks unless intentional — best practice is a separate RFC user with `S_RFC` (`RFC_NAME = ZMCP_ADT_DISPATCH, ZMCP_ADT_TEXTPOOL, RFC_PING, SYSTEM`) + minimal `S_DEVELOP` for TEXTPOOL INSERT.
 
 ## If the user chose `gateway`
@@ -116,14 +116,14 @@ SAP_RFC_ODATA_CSRF_TTL_SEC=600  # CSRF token cache TTL in seconds, min 60
 
 The OData preflight below **requires `ZCL_ZMCP_ADT_MPC_EXT` / `ZCL_ZMCP_ADT_DPC_EXT` + service registration to already exist on SAP**. These are installed by **Step 9c** — which happens AFTER Step 4bis in the wizard. So:
 
-- **First-time setup (fresh system)**: Step 9c backend objects do NOT exist yet. The metadata probe at 4bis WILL return 404. **That is expected** — record the choice, skip the active probe, emit a deferred-verification banner, and continue to Step 5. The `/sc4sap:sap-doctor` Layer 6.odata check (run after Step 9c completes) performs the real verification.
+- **First-time setup (fresh system)**: Step 9c backend objects do NOT exist yet. The metadata probe at 4bis WILL return 404. **That is expected** — record the choice, skip the active probe, emit a deferred-verification banner, and continue to Step 5. The `/sp4sap:sap-doctor` Layer 6.odata check (run after Step 9c completes) performs the real verification.
 - **Re-run / reconfiguration (Step 9c already done previously)**: Run the full probe below — failures are genuine.
 
 The preflight procedure itself detects the scenario: if step 1 fails with "classes missing" or step 2 returns 404 AND this is a fresh setup, treat as deferred (not a fatal error). If step 2 returns 200 but step 4 shows a 500, that IS a genuine bug (registration issue).
 
 ### OData preflight procedure
 
-1. Verify `ZCL_ZMCP_ADT_MPC_EXT` + `ZCL_ZMCP_ADT_DPC_EXT` exist on the SAP backend (installed by `odata-classes-install.md` — Step 9c). **Fresh setup**: classes absent → emit `"OData backend not yet installed — will verify after Step 9c via /sc4sap:sap-doctor"` and skip the remaining probe steps. **Re-run**: classes absent → halt, tell user to run Step 9c.
+1. Verify `ZCL_ZMCP_ADT_MPC_EXT` + `ZCL_ZMCP_ADT_DPC_EXT` exist on the SAP backend (installed by `odata-classes-install.md` — Step 9c). **Fresh setup**: classes absent → emit `"OData backend not yet installed — will verify after Step 9c via /sp4sap:sap-doctor"` and skip the remaining probe steps. **Re-run**: classes absent → halt, tell user to run Step 9c.
 2. Metadata probe:
    ```bash
    curl -sSu $SAP_USERNAME:$SAP_PASSWORD \
@@ -131,7 +131,7 @@ The preflight procedure itself detects the scenario: if step 1 fails with "class
    ```
    Must return HTTP 200 with XML containing `ComplexType Name="DispatchResult"` and `FunctionImport Name="Dispatch"`. If 404 on fresh setup → deferred. If 404 on re-run → halt, point to Step 9c + `docs/odata-backend.md` registration path.
 3. Tell the user: their `SAP_USERNAME` / `SAP_PASSWORD` are reused as Basic auth, `SAP_CLIENT` is appended as `?sap-client=<n>`. The client handles CSRF handshake automatically (GET `$metadata` with `X-CSRF-Token: Fetch` → cache token + cookie → use on POSTs).
-4. **IMPORTANT** — if the metadata probe returns 200 but POST FunctionImport calls return 500 "unknown internal server error", the backend `/IWBEP` service registration is missing. Run `/sc4sap:sap-doctor` Layer 6.odata for diagnosis, then follow the "Basis Team Request" template in `docs/odata-backend.md` — normal `/IWFND/MAINT_SERVICE` "Add Service" does not always populate the backend `/IWBEP` tables in all SAP releases; the standard fix is `/IWBEP/REG_SERVICE` which typically requires Basis authorization.
+4. **IMPORTANT** — if the metadata probe returns 200 but POST FunctionImport calls return 500 "unknown internal server error", the backend `/IWBEP` service registration is missing. Run `/sp4sap:sap-doctor` Layer 6.odata for diagnosis, then follow the "Basis Team Request" template in `docs/odata-backend.md` — normal `/IWFND/MAINT_SERVICE` "Add Service" does not always populate the backend `/IWBEP` tables in all SAP releases; the standard fix is `/IWBEP/REG_SERVICE` which typically requires Basis authorization.
 
 ## If the user chose `zrfc`
 
@@ -147,14 +147,14 @@ SAP_RFC_ZRFC_CSRF_TTL_SEC=600 # CSRF token cache TTL seconds, default 600, min 6
 
 The ZRFC preflight below **requires `ZCL_MCP_RFC_HTTP_HANDLER` + SICF node to already exist on SAP**. These are installed by **Step 9d** — which happens AFTER Step 4bis in the wizard. So:
 
-- **First-time setup (fresh system)**: Step 9d objects do NOT exist yet. The CSRF probe at 4bis WILL return 404. **That is expected** — record the choice, skip the active probe, emit a deferred-verification banner, and continue to Step 5. The `/sc4sap:sap-doctor` check (run after Step 9d completes) performs the real verification.
+- **First-time setup (fresh system)**: Step 9d objects do NOT exist yet. The CSRF probe at 4bis WILL return 404. **That is expected** — record the choice, skip the active probe, emit a deferred-verification banner, and continue to Step 5. The `/sp4sap:sap-doctor` check (run after Step 9d completes) performs the real verification.
 - **Re-run / reconfiguration (Step 9d already done previously)**: Run the full probe below — failures are genuine.
 
 The preflight procedure itself detects the scenario: if step 1 fails with "handler class missing" or step 2 returns 404 AND this is a fresh setup, treat as deferred (not a fatal error). If step 2 returns 401 or non-empty 5xx, that IS a genuine bug regardless of setup phase.
 
 ### ZRFC preflight procedure
 
-1. Verify `ZCL_MCP_RFC_HTTP_HANDLER` class exists on the SAP backend (installed by Step 9d). **Fresh setup**: class absent → emit `"ZRFC backend not yet installed — will verify after Step 9d via /sc4sap:sap-doctor"` and skip the remaining probe steps. **Re-run**: class absent → halt, tell user to run Step 9d.
+1. Verify `ZCL_MCP_RFC_HTTP_HANDLER` class exists on the SAP backend (installed by Step 9d). **Fresh setup**: class absent → emit `"ZRFC backend not yet installed — will verify after Step 9d via /sp4sap:sap-doctor"` and skip the remaining probe steps. **Re-run**: class absent → halt, tell user to run Step 9d.
 2. CSRF fetch probe:
    ```bash
    curl -sSu $SAP_USERNAME:$SAP_PASSWORD -H "X-CSRF-Token: Fetch" \

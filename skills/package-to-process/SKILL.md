@@ -1,5 +1,5 @@
 ---
-name: sc4sap:package-to-process
+name: sp4sap:package-to-process
 description: Reverse-engineer a CBO package into an End-to-End Business Process document (Markdown). Walks the package programs/FMs, infers business-document flow (PR→PO→GR→IR style), and emits a consultant-facing narrative with Mermaid flowchart + sequenceDiagram + per-step tables. CBO inventory auto-chain via sap-stocker if missing.
 level: 2
 model: sonnet
@@ -43,17 +43,17 @@ The bar is the **only** progress feedback for the user during long Steps 4–6 (
 </Use_When>
 
 <Do_Not_Use_When>
-- User wants only the **reusable-object catalog** → `/sc4sap:analyze-cbo-obj`
-- User wants a **single program** spec → `/sc4sap:program-to-spec`
-- User wants to **compare 2–5 programs** side-by-side → `/sc4sap:compare-programs`
-- User wants **code quality** review → `/sc4sap:analyze-code`
+- User wants only the **reusable-object catalog** → `/sp4sap:analyze-cbo-obj`
+- User wants a **single program** spec → `/sp4sap:program-to-spec`
+- User wants to **compare 2–5 programs** side-by-side → `/sp4sap:compare-programs`
+- User wants **code quality** review → `/sp4sap:analyze-code`
 - Package has zero PROG/FUGR (process narrative is meaningless without entry points)
 </Do_Not_Use_When>
 
 <Session_Trust_Bootstrap>
 **MANDATORY — runs as Step 0 before any MCP call or user interaction.**
 
-Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:package-to-process` to pre-grant MCP tool + file-op permissions (eliminates per-tool prompts during package walk + where-used graph + analyst/writer dispatches).
+Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:package-to-process` to pre-grant MCP tool + file-op permissions (eliminates per-tool prompts during package walk + where-used graph + analyst/writer dispatches).
 
 - If `.sc4sap/session-trust.log` already has a line within the last 24h, skip silently.
 - Otherwise run it and surface the one-line confirmation.
@@ -84,7 +84,7 @@ Per-step model allocation. Skill frontmatter pins the main thread to Sonnet; eac
 - **`sap-writer` (Sonnet 4.6 via `model: "sonnet"` override)** — Step 6 render. Master Markdown is L3-grade depth (TOC + multiple Mermaid blocks + per-process tables + cross-module gap section); Haiku is insufficient.
 - **Module consultant (optional, conditional)** — if Step 5 narrative discovers a strong cross-module integration (e.g., MM ↔ FI through `BAPI_ACC_DOC_POST`), the analyst MAY annotate via `sap-{module}-consultant` (Opus 4.7) for the boundary section only. NOT a default dispatch — costs additional context only when warranted.
 
-SAP MCP permission prompts are auto-approved by the sc4sap permission-approver PreToolUse hook.
+SAP MCP permission prompts are auto-approved by the sp4sap permission-approver PreToolUse hook.
 </Agent_Composition>
 
 <Language_Policy>
@@ -122,10 +122,10 @@ This skill reads **source code + DDIC metadata + where-used + transaction metada
 </Data_Extraction_Safety>
 
 <Related_Skills>
-- `/sc4sap:analyze-cbo-obj` — produces the `inventory.json` this skill consumes (auto-chained in Step 2 if missing)
-- `/sc4sap:program-to-spec` — drill into ONE program inside the process (vertical depth)
-- `/sc4sap:compare-programs` — when 2+ programs in the same process look similar, compare side-by-side
-- `/sc4sap:ask-consultant` — open follow-ups documented in the `Open Questions` section
+- `/sp4sap:analyze-cbo-obj` — produces the `inventory.json` this skill consumes (auto-chained in Step 2 if missing)
+- `/sp4sap:program-to-spec` — drill into ONE program inside the process (vertical depth)
+- `/sp4sap:compare-programs` — when 2+ programs in the same process look similar, compare side-by-side
+- `/sp4sap:ask-consultant` — open follow-ups documented in the `Open Questions` section
 </Related_Skills>
 
 <Execution_Summary>

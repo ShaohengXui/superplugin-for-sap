@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap PreCompact Hook
+ * sp4sap PreCompact Hook
  * Preserves important context before compaction occurs.
  * Adapted from OMC pre-compact.mjs.
  *

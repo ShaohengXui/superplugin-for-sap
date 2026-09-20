@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * sc4sap PreToolUse Hook: Reminder Enforcer
+ * sp4sap PreToolUse Hook: Reminder Enforcer
  * Injects contextual reminders before every tool execution.
  * Adapted from OMC pre-tool-enforcer.mjs with SAP-specific guidance.
  */

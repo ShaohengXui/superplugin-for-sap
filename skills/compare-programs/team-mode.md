@@ -23,7 +23,7 @@ Replaces the legacy Step 4b consultant dispatch. The lead:
    ```
    TEAM CHARTER
    team_name: <team_name>
-   invoked_by: /sc4sap:compare-programs
+   invoked_by: /sp4sap:compare-programs
    members: <sap-<module>-consultant for each module in module_set>
    round_cap: 3
    environment:
@@ -46,7 +46,7 @@ Replaces the legacy Step 4b consultant dispatch. The lead:
    Spawn shape:
    ```
    Agent({
-     subagent_type: "sc4sap:sap-<module>-consultant",
+     subagent_type: "sp4sap:sap-<module>-consultant",
      team_name: "<team_name>",
      name: "sap-<module>-consultant",
      description: "Round 1 POSITION — <MODULE> ownership claims",

@@ -1,5 +1,5 @@
 ---
-name: sc4sap:program-to-spec
+name: sp4sap:program-to-spec
 description: Reverse-engineer an ABAP program into a Functional/Technical Specification artifact (Markdown or Excel). Socratic scope narrowing from "everything" to "only what the user needs".
 level: 2
 model: sonnet
@@ -28,16 +28,16 @@ Turn legacy or unfamiliar ABAP objects into a reviewable Functional/Technical Sp
 </Use_When>
 
 <Do_Not_Use_When>
-- User wants a **code quality review** → `/sc4sap:analyze-code`
-- User wants to **create a new** program from a spec → `/sc4sap:create-program`
-- User wants to **fix** the program → direct MCP `Update*` calls or re-run `/sc4sap:create-program`
+- User wants a **code quality review** → `/sp4sap:analyze-code`
+- User wants to **create a new** program from a spec → `/sp4sap:create-program`
+- User wants to **fix** the program → direct MCP `Update*` calls or re-run `/sp4sap:create-program`
 - Object does not exist yet
 </Do_Not_Use_When>
 
 <Session_Trust_Bootstrap>
 **MANDATORY — runs as Step 0a before any MCP call or user interaction.**
 
-Invoke `/sc4sap:trust-session` with `parent_skill=sc4sap:program-to-spec` to pre-grant MCP tool + file-op permissions (eliminates per-tool prompts during structural reads + screen rendering pipeline).
+Invoke `/sp4sap:trust-session` with `parent_skill=sp4sap:program-to-spec` to pre-grant MCP tool + file-op permissions (eliminates per-tool prompts during structural reads + screen rendering pipeline).
 
 - If `.sc4sap/session-trust.log` already has a line within the last 24h, skip silently.
 - Otherwise run it and surface the one-line confirmation.
@@ -156,9 +156,9 @@ Next options:
 </MCP_Tools_Used>
 
 <Related_Skills>
-- `/sc4sap:analyze-code` — code quality review (what's wrong)
-- `/sc4sap:create-program` — spec → new program (forward direction)
-- `/sc4sap:deep-interview` — requirement clarification for new builds
+- `/sp4sap:analyze-code` — code quality review (what's wrong)
+- `/sp4sap:create-program` — spec → new program (forward direction)
+- `/sp4sap:deep-interview` — requirement clarification for new builds
 </Related_Skills>
 
 <Data_Extraction_Safety>

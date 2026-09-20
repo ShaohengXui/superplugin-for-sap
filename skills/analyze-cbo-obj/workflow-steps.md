@@ -36,7 +36,7 @@ Emit phase banner per `common/model-routing-rule.md` § Phase Banner Convention:
 Dispatch with the collected intake as context:
 ```
 Agent({
-  subagent_type: "sc4sap:sap-stocker",
+  subagent_type: "sp4sap:sap-stocker",
   description: "CBO inventory — <PACKAGE>",
   prompt: """
     Stock the CBO package <PACKAGE> (module <MODULE>).
@@ -110,7 +110,7 @@ Frequently used: N tables · M structures · K data elements · P classes · Q F
 Cross-module gaps: G (or "n/a — SAP_ACTIVE_MODULES unset")
 Sensitive objects flagged: X
 
-Downstream skills (/sc4sap:create-program, /sc4sap:program-to-spec, /sc4sap:create-object)
+Downstream skills (/sp4sap:create-program, /sp4sap:program-to-spec, /sp4sap:create-object)
 read inventory.json and prefer pinned objects > frequently-used objects > new creation.
 ```
 
@@ -126,7 +126,7 @@ Emit phase banner:
 Dispatch:
 ```
 Agent({
-  subagent_type: "sc4sap:sap-writer",
+  subagent_type: "sp4sap:sap-writer",
   description: "CBO briefing — <MODULE>/<PACKAGE>",
   prompt: """
     Read .sc4sap/cbo/<MODULE>/<PACKAGE>/inventory.json and produce a reader-facing briefing for the user (language = user's current conversation language; default Korean).

@@ -1,0 +1,30 @@
+# sp4sap — Codex MCP server configuration
+#
+# Append to ~/.codex/config.toml (user scope) or <repo>/.codex/config.toml.
+#
+# Codex resolves a stdio server's working directory from its own launch context,
+# so the reliable configuration is to name the profile env file explicitly with
+# SC4SAP_ENV_FILE (absolute path) rather than depending on cwd.
+#
+# Credentials: keep them out of this file. The profile sap.env holds a
+# `keychain:<service>/<account>` reference which the MCP server resolves from
+# the OS keychain itself. If you must inject secrets at launch, use
+# [mcp_servers.sap.env] with values from your secret manager — never commit them.
+
+[mcp_servers.sap]
+command = "node"
+args = ["<SC4SAP_ROOT>/bridge/mcp-server.cjs"]
+startup_timeout_sec = 60.0
+tool_timeout_sec = 300.0
+
+[mcp_servers.sap.env]
+# Absolute path to the active profile's env file.
+SC4SAP_ENV_FILE = "<HOME>/.sc4sap/profiles/<ALIAS>/sap.env"
+
+# Enforce the QA/PRD write guard inside the MCP layer. Codex has no Claude Code
+# PreToolUse hook, so without this only the server-side (L2) guard applies.
+# Set to "off" or remove to disable.
+SC4SAP_TIER_GUARD = "proxy"
+
+# Optional: point at a vendor checkout outside the plugin tree.
+# SC4SAP_VENDOR_DIR = "<SC4SAP_ROOT>/vendor/abap-mcp-adt"
